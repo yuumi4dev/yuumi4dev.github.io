@@ -1,0 +1,378 @@
+@font-face {
+    font-family: 'SD-Gothic';
+    src: url('https://cdn.jsdelivr.net/gh/webfontworld/sandbox/SandboxGothicNeo.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+    /* 토스/뱅크 앱 스타일 색상 */
+    --primary-color: #3182f6; /* 파란색 계열 */
+    --secondary-color: #f9fafb;
+    --accent-color: #3182f6;
+    --text-color: #191f28;
+    --text-light: #8b95a1;
+    --border-color: #e5e8eb;
+    --card-bg: #ffffff;
+    --error-color: #ff5a5a;
+    --success-color: #12b886;
+    --font-sans: 'SD-Gothic', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.dark-mode {
+    --primary-color: #3182f6;
+    --secondary-color: #151619;
+    --text-color: #f5f5f5;
+    --text-light: #b0b0b0;
+    --border-color: #333;
+    --card-bg: #1f2023;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 0 20px;
+}
+
+.login-card {
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.login-header {
+    padding: 32px 32px 20px;
+    text-align: center;
+}
+
+.login-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--primary-color);
+}
+
+.login-header p {
+    font-size: 16px;
+    color: var(--text-light);
+    margin: 0;
+}
+
+.login-form {
+    padding: 0 32px 32px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    transition: all 0.2s;
+    overflow: hidden;
+}
+
+.input-container:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(49, 130, 246, 0.1);
+}
+
+.input-container i {
+    color: var(--text-light);
+    padding: 0 16px;
+    font-size: 16px;
+}
+
+.input-container .toggle-password {
+    cursor: pointer;
+}
+
+.input-container input {
+    flex: 1;
+    border: none;
+    padding: 16px 0;
+    font-size: 15px;
+    background: transparent;
+    color: var(--text-color);
+    outline: none;
+    font-family: var(--font-sans);
+}
+
+.input-container input::placeholder {
+    color: var(--text-light);
+    opacity: 0.7;
+}
+
+.remember-me {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    font-size: 14px;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: relative;
+    height: 18px;
+    width: 18px;
+    background-color: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin-right: 8px;
+}
+
+.checkbox-container input:checked ~ .checkmark {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+    left: 6px;
+    top: 2px;
+    width: 4px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.forgot-password {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.btn-primary {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-bottom: 24px;
+    font-family: var(--font-sans);
+}
+
+.btn-primary:hover {
+    background-color: #1c6fdc;
+}
+
+.divider {
+    position: relative;
+    text-align: center;
+    margin: 24px 0;
+}
+
+.divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: var(--border-color);
+}
+
+.divider span {
+    position: relative;
+    padding: 0 16px;
+    background-color: var(--card-bg);
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+.social-login {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.btn-social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background-color: transparent;
+    color: var(--text-color);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-family: var(--font-sans);
+}
+
+.btn-social i {
+    margin-right: 12px;
+    font-size: 18px;
+}
+
+.btn-github:hover {
+    background-color: #f8f9fa;
+}
+
+.btn-google:hover {
+    background-color: #f8f9fa;
+}
+
+.signup-link {
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+.signup-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-footer {
+    padding: 16px 32px;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    font-size: 12px;
+    color: var(--text-light);
+}
+
+/* 회원가입 페이지 추가 스타일 */
+.signup-card {
+    max-width: 460px;
+}
+
+.password-strength {
+    margin-top: 8px;
+    font-size: 12px;
+}
+
+.strength-bar {
+    display: block;
+    height: 4px;
+    width: 100%;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    position: relative;
+}
+
+.strength-bar::before {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 30%;
+    background-color: var(--error-color);
+    border-radius: 4px;
+}
+
+.strength-text {
+    color: var(--error-color);
+    font-size: 12px;
+}
+
+.terms {
+    margin-bottom: 24px;
+}
+
+.terms-text {
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+.terms-text a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 480px) {
+    .login-card {
+        border-radius: 0;
+        box-shadow: none;
+        height: 100vh;
+    }
+    
+    .login-container {
+        height: 100vh;
+        max-width: 100%;
+        padding: 0;
+    }
+    
+    .login-header {
+        padding-top: 48px;
+    }
+}
+
+/* 다크 모드 스타일 추가 */
+.dark-mode .input-container {
+    background-color: #2a2a2a;
+}
+
+.dark-mode .btn-social {
+    background-color: #2a2a2a;
+}
+
+.dark-mode .btn-social:hover {
+    background-color: #333;
+}
+
+.dark-mode .divider span {
+    background-color: var(--card-bg);
+}
+
+.dark-mode .checkmark {
+    background-color: #2a2a2a;
+}
