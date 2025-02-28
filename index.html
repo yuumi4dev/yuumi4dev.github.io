@@ -3,262 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>포트폴리오 블로그</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Firebase SDK 추가 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.1/firebase-auth-compat.js"></script>
+    <title>포트폴리오 | 홈</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="assets/js/firebase-init.js"></script>
 </head>
 <body>
-    <!-- 로그인 모달 -->
-    <div id="login-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="auth-container">
-                <div class="auth-header">
-                    <h2>로그인</h2>
-                    <p>포트폴리오 블로그에 오신 것을 환영합니다</p>
-                </div>
-                <div class="auth-form">
-                    <div class="input-group">
-                        <label for="email">이메일</label>
-                        <input type="email" id="email" placeholder="이메일 주소를 입력하세요">
-                    </div>
-                    <div class="input-group">
-                        <label for="password">비밀번호</label>
-                        <input type="password" id="password" placeholder="비밀번호를 입력하세요">
-                    </div>
-                    <button id="login-btn" class="button primary-button">로그인</button>
-                    <div class="auth-divider">
-                        <span>또는</span>
-                    </div>
-                    <button id="google-login-btn" class="button secondary-button">
-                        <i class="fab fa-google"></i> Google로 계속하기
-                    </button>
-                    <button id="register-toggle" class="button text-button">계정이 없으신가요? 회원가입</button>
-                </div>
-                <div class="auth-footer">
-                    <p>로그인하면 <a href="#">이용약관</a>과 <a href="#">개인정보처리방침</a>에 동의하게 됩니다.</p>
-                </div>
-            </div>
-
-            <!-- 회원가입 폼 (기본적으로 숨김) -->
-            <div class="auth-container register-form" style="display: none;">
-                <div class="auth-header">
-                    <h2>회원가입</h2>
-                    <p>새 계정을 만들어 포트폴리오 블로그를 시작하세요</p>
-                </div>
-                <div class="auth-form">
-                    <div class="input-group">
-                        <label for="register-name">이름</label>
-                        <input type="text" id="register-name" placeholder="이름을 입력하세요">
-                    </div>
-                    <div class="input-group">
-                        <label for="register-email">이메일</label>
-                        <input type="email" id="register-email" placeholder="이메일 주소를 입력하세요">
-                    </div>
-                    <div class="input-group">
-                        <label for="register-password">비밀번호</label>
-                        <input type="password" id="register-password" placeholder="비밀번호를 입력하세요">
-                    </div>
-                    <div class="input-group">
-                        <label for="register-password-confirm">비밀번호 확인</label>
-                        <input type="password" id="register-password-confirm" placeholder="비밀번호를 다시 입력하세요">
-                    </div>
-                    <button id="register-btn" class="button primary-button">회원가입</button>
-                    <button id="login-toggle" class="button text-button">이미 계정이 있으신가요? 로그인</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="container">
-        <!-- 사이드바 영역 -->
-        <div class="sidebar">
-            <div class="profile">
-                <div class="profile-img">
-                    <img src="/api/placeholder/150/150" alt="프로필 이미지">
+        <!-- 사이드바 네비게이션 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="profile-image">
+                    <div class="profile-placeholder">
+                        <span class="profile-initial">P</span>
+                    </div>
                 </div>
-                <h3 class="profile-name">내 이름</h3>
-                <p class="profile-bio">간단한 소개글을 작성하세요</p>
-                <div id="login-status">
-                    <button id="login-button" class="button auth-button">로그인</button>
+                <div class="user-info">
+                    <h3 class="username">사용자님</h3>
+                    <p class="user-status">포트폴리오</p>
                 </div>
             </div>
-            <nav class="menu">
-                <ul>
-                    <li class="active"><i class="fas fa-home"></i> 홈</li>
-                    <li><i class="fas fa-book"></i> 블로그</li>
-                    <li><i class="fas fa-folder"></i> 프로젝트</li>
-                    <li><i class="fas fa-user"></i> 소개</li>
-                    <li><i class="fas fa-envelope"></i> 연락처</li>
-                </ul>
-            </nav>
-            <div class="social-links">
-                <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
-                <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
-                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-            </div>
-        </div>
-
-        <!-- 메인 콘텐츠 영역 -->
-        <div class="main-content">
-            <header>
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="검색...">
+            
+            <ul class="sidebar-menu">
+                <li class="menu-item active">
+                    <a href="index.html">
+                        <span class="icon">🏠</span>
+                        <span class="menu-text">홈</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="blog.html">
+                        <span class="icon">📝</span>
+                        <span class="menu-text">블로그</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="portfolio.html">
+                        <span class="icon">🎨</span>
+                        <span class="menu-text">포트폴리오</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="projects.html">
+                        <span class="icon">💻</span>
+                        <span class="menu-text">프로젝트</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="login-status">
+                <div id="login-container">
+                    <a href="auth.html" class="login-btn">로그인</a>
                 </div>
-                <div class="header-controls">
-                    <div class="theme-toggle">
-                        <i class="fas fa-moon"></i>
-                    </div>
-                    <div id="user-profile-menu" class="user-profile hidden">
-                        <div class="user-avatar">
-                            <img src="/api/placeholder/32/32" alt="사용자 프로필">
-                        </div>
-                        <div class="dropdown-menu">
-                            <ul>
-                                <li><i class="fas fa-user"></i> 내 프로필</li>
-                                <li><i class="fas fa-cog"></i> 설정</li>
-                                <li id="logout-button"><i class="fas fa-sign-out-alt"></i> 로그아웃</li>
-                            </ul>
-                        </div>
-                    </div>
+                <div id="user-container" style="display: none;">
+                    <p id="user-email"></p>
+                    <button id="logout-btn" class="logout-btn">로그아웃</button>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- 메인 콘텐츠 -->
+        <main class="main-content">
+            <header class="page-header">
+                <h1 class="page-title">안녕하세요 👋</h1>
+                <div class="theme-toggle">
+                    <button id="theme-toggle-btn">🌙</button>
                 </div>
             </header>
-
-            <!-- 메인 콘텐츠 -->
-            <div class="content">
-                <div class="page-title">
-                    <h1>안녕하세요! 👋</h1>
-                    <p class="subtitle">제 포트폴리오 블로그에 오신 것을 환영합니다</p>
+            
+            <section class="hero-section">
+                <div class="hero-content">
+                    <h2 class="hero-title">포트폴리오 & 블로그에 오신 것을 환영합니다</h2>
+                    <p class="hero-description">
+                        이곳에서 제 작업물, 프로젝트, 그리고 생각들을 공유합니다.
+                        깔끔한 노션 스타일의 인터페이스로 편안하게 둘러보세요.
+                    </p>
+                    <div class="cta-buttons">
+                        <a href="portfolio.html" class="cta-btn primary">포트폴리오 보기</a>
+                        <a href="blog.html" class="cta-btn secondary">블로그 읽기</a>
+                    </div>
                 </div>
-
-                <div class="cards-container">
-                    <!-- 최근 게시물 카드 -->
-                    <div class="section-title">
-                        <h2>최근 게시물</h2>
-                        <a href="#" class="view-all">전체보기 <i class="fas fa-arrow-right"></i></a>
+                <div class="hero-image">
+                    <div class="image-placeholder">
+                        <span>🚀</span>
                     </div>
-                    <div class="cards">
-                        <div class="card">
-                            <div class="card-image">
-                                <img src="/api/placeholder/300/160" alt="게시물 이미지">
-                            </div>
-                            <div class="card-content">
-                                <h3>첫 번째 블로그 포스트</h3>
-                                <p class="date">2025년 2월 28일</p>
-                                <p class="excerpt">이것은 첫 번째 블로그 포스트의 내용 미리보기입니다. 여기에 짧은 설명을 적어주세요.</p>
-                                <div class="tags">
-                                    <span class="tag">HTML</span>
-                                    <span class="tag">CSS</span>
-                                    <span class="tag">JavaScript</span>
-                                </div>
+                </div>
+            </section>
+            
+            <section class="featured-section">
+                <h3 class="section-title">주요 프로젝트</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-image">
+                            <div class="image-placeholder">
+                                <span>📱</span>
                             </div>
                         </div>
-                        <div class="card">
-                            <div class="card-content no-image">
-                                <h3>두 번째 블로그 포스트</h3>
-                                <p class="date">2025년 2월 25일</p>
-                                <p class="excerpt">이것은 두 번째 블로그 포스트의 내용 미리보기입니다. 여기에 짧은 설명을 적어주세요.</p>
-                                <div class="tags">
-                                    <span class="tag">웹개발</span>
-                                    <span class="tag">GitHub</span>
-                                </div>
-                            </div>
+                        <div class="card-content">
+                            <h4 class="card-title">모바일 앱 프로젝트</h4>
+                            <p class="card-description">사용자 경험에 중점을 둔 iOS/Android 애플리케이션 디자인 및 개발</p>
+                            <a href="projects.html" class="card-link">자세히 보기 →</a>
                         </div>
                     </div>
-
-                    <!-- 프로젝트 카드 -->
-                    <div class="section-title">
-                        <h2>프로젝트</h2>
-                        <a href="#" class="view-all">전체보기 <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                    <div class="cards">
-                        <div class="card">
-                            <div class="card-content no-image">
-                                <h3>프로젝트 제목</h3>
-                                <p class="excerpt">프로젝트에 대한 간략한 설명을 여기에 작성하세요.</p>
-                                <div class="tags">
-                                    <span class="tag">React</span>
-                                    <span class="tag">Node.js</span>
-                                </div>
-                                <a href="#" class="project-link"><i class="fab fa-github"></i> GitHub 저장소</a>
+                    
+                    <div class="card">
+                        <div class="card-image">
+                            <div class="image-placeholder">
+                                <span>🖥️</span>
                             </div>
                         </div>
+                        <div class="card-content">
+                            <h4 class="card-title">웹 개발 프로젝트</h4>
+                            <p class="card-description">최신 웹 기술을 활용한 반응형 웹사이트 및 웹 애플리케이션 개발</p>
+                            <a href="projects.html" class="card-link">자세히 보기 →</a>
+                        </div>
                     </div>
-
-                    <!-- 노트 섹션 -->
-                    <div class="section-title">
-                        <h2>최근 활동</h2>
-                    </div>
-                    <div class="activity-feed">
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-code"></i>
-                            </div>
-                            <div class="activity-content">
-                                <p class="activity-text">GitHub에 새 프로젝트를 추가했습니다</p>
-                                <p class="activity-date">2025년 2월 28일</p>
+                    
+                    <div class="card">
+                        <div class="card-image">
+                            <div class="image-placeholder">
+                                <span>🎨</span>
                             </div>
                         </div>
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-pencil-alt"></i>
-                            </div>
-                            <div class="activity-content">
-                                <p class="activity-text">새 블로그 게시물을 작성했습니다</p>
-                                <p class="activity-date">2025년 2월 25일</p>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-trophy"></i>
-                            </div>
-                            <div class="activity-content">
-                                <p class="activity-text">웹 개발 경진대회에서 수상했습니다</p>
-                                <p class="activity-date">2025년 2월 15일</p>
-                            </div>
+                        <div class="card-content">
+                            <h4 class="card-title">UI/UX 디자인</h4>
+                            <p class="card-description">직관적이고 미니멀한 사용자 인터페이스 디자인 및 사용자 경험 개선</p>
+                            <a href="portfolio.html" class="card-link">자세히 보기 →</a>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <footer>
-                <div class="footer-content">
-                    <div class="footer-logo">
-                        <h3>포트폴리오 블로그</h3>
-                        <p>© 2025 내 이름. 모든 권리 보유.</p>
-                    </div>
-                    <div class="footer-links">
-                        <div class="footer-links-column">
-                            <h4>사이트맵</h4>
-                            <ul>
-                                <li><a href="#">홈</a></li>
-                                <li><a href="#">블로그</a></li>
-                                <li><a href="#">프로젝트</a></li>
-                                <li><a href="#">소개</a></li>
-                                <li><a href="#">연락처</a></li>
-                            </ul>
+            </section>
+            
+            <section class="latest-posts-section">
+                <h3 class="section-title">최근 블로그 포스트</h3>
+                <div class="post-list">
+                    <!-- 블로그 포스트는 JavaScript로 동적 로드 -->
+                    <div id="latest-posts-container">
+                        <div class="post-item skeleton">
+                            <div class="post-date skeleton-text"></div>
+                            <h4 class="post-title skeleton-text"></h4>
+                            <p class="post-excerpt skeleton-text"></p>
                         </div>
-                        <div class="footer-links-column">
-                            <h4>소셜 미디어</h4>
-                            <ul>
-                                <li><a href="#"><i class="fab fa-github"></i> GitHub</a></li>
-                                <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
-                                <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
-                                <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
-                            </ul>
+                        <div class="post-item skeleton">
+                            <div class="post-date skeleton-text"></div>
+                            <h4 class="post-title skeleton-text"></h4>
+                            <p class="post-excerpt skeleton-text"></p>
                         </div>
                     </div>
+                    <a href="blog.html" class="see-all-link">모든 포스트 보기 →</a>
                 </div>
-            </footer>
-        </div>
+            </section>
+        </main>
     </div>
-
-    <script src="script.js"></script>
-    <script src="auth.js"></script>
+    
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/blog.js"></script>
 </body>
 </html>

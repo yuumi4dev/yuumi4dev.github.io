@@ -1,0 +1,539 @@
+/* SD산돌고딕 폰트 설정 */
+@font-face {
+    font-family: 'SD Gothic';
+    src: url('../fonts/SDGothic/AppleSDGothicNeoL.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SD Gothic';
+    src: url('../fonts/SDGothic/AppleSDGothicNeoR.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SD Gothic';
+    src: url('../fonts/SDGothic/AppleSDGothicNeoM.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SD Gothic';
+    src: url('../fonts/SDGothic/AppleSDGothicNeoB.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* 변수 설정 */
+:root {
+    /* 라이트 모드 색상 */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f7f7f7;
+    --bg-tertiary: #f0f0f0;
+    --text-primary: #191919;
+    --text-secondary: #4b4b4b;
+    --text-muted: #6e6e6e;
+    --border-color: #e6e6e6;
+    --accent-color: #007aff;
+    --accent-hover: #0062cc;
+    --sidebar-bg: #f9f9f9;
+    --card-bg: #ffffff;
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --header-height: 64px;
+    --sidebar-width: 260px;
+}
+
+/* 다크 모드 색상 */
+[data-theme="dark"] {
+    --bg-primary: #111111;
+    --bg-secondary: #1c1c1e;
+    --bg-tertiary: #2c2c2e;
+    --text-primary: #ffffff;
+    --text-secondary: #d1d1d6;
+    --text-muted: #8e8e93;
+    --border-color: #38383a;
+    --accent-color: #0a84ff;
+    --accent-hover: #409cff;
+    --sidebar-bg: #1c1c1e;
+    --card-bg: #2c2c2e;
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* 기본 스타일 초기화 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'SD Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    transition: background-color 0.3s ease;
+}
+
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--accent-hover);
+}
+
+ul {
+    list-style: none;
+}
+
+/* 레이아웃 */
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* 사이드바 */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--border-color);
+    padding: 20px 0;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    padding: 0 24px 24px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 16px;
+}
+
+.profile-image {
+    width: 42px;
+    height: 42px;
+    margin-right: 12px;
+}
+
+.profile-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+}
+
+.user-info {
+    flex: 1;
+}
+
+.username {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.user-status {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.sidebar-menu {
+    flex: 1;
+    padding: 0 12px;
+}
+
+.menu-item {
+    margin-bottom: 4px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.menu-item a {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    color: var(--text-secondary);
+    border-radius: 8px;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.menu-item.active a,
+.menu-item a:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-tertiary);
+}
+
+.menu-item .icon {
+    margin-right: 12px;
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+}
+
+.login-status {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-color);
+    margin-top: auto;
+}
+
+.login-btn, .logout-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.login-btn {
+    color: var(--accent-color);
+    background-color: transparent;
+    border: 1px solid var(--accent-color);
+    width: 100%;
+}
+
+.login-btn:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.logout-btn {
+    background-color: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    width: 100%;
+    margin-top: 8px;
+}
+
+.logout-btn:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+#user-email {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    word-break: break-all;
+}
+
+/* 메인 콘텐츠 */
+.main-content {
+    flex: 1;
+    padding: 24px 32px;
+    max-width: calc(100% - var(--sidebar-width));
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.page-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.theme-toggle button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.theme-toggle button:hover {
+    background-color: var(--bg-tertiary);
+}
+
+/* 히어로 섹션 */
+.hero-section {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 48px;
+}
+
+.hero-content {
+    flex: 1.5;
+}
+
+.hero-image {
+    flex: 1;
+}
+
+.hero-title {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    line-height: 1.3;
+    color: var(--text-primary);
+}
+
+.hero-description {
+    font-size: 18px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.cta-btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cta-btn.primary {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.cta-btn.primary:hover {
+    background-color: var(--accent-hover);
+}
+
+.cta-btn.secondary {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.cta-btn.secondary:hover {
+    background-color: var(--border-color);
+}
+
+.image-placeholder {
+    background-color: var(--bg-secondary);
+    border-radius: 16px;
+    height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 64px;
+}
+
+/* 섹션 타이틀 */
+.section-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: var(--text-primary);
+}
+
+/* 카드 그리드 */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 48px;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-image {
+    height: 160px;
+}
+
+.card-image .image-placeholder {
+    height: 100%;
+    border-radius: 0;
+    font-size: 48px;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.card-description {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+}
+
+.card-link {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--accent-color);
+}
+
+/* 포스트 리스트 */
+.post-list {
+    margin-bottom: 48px;
+}
+
+.post-item {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.post-date {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.post-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.post-excerpt {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+}
+
+.see-all-link {
+    display: inline-block;
+    margin-top: 16px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* 스켈레톤 로딩 효과 */
+.skeleton {
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton-text {
+    height: 14px;
+    margin-bottom: 10px;
+    background-color: var(--bg-tertiary);
+    border-radius: 4px;
+}
+
+.skeleton-text:last-child {
+    width: 80%;
+}
+
+.skeleton::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0.2) 20%,
+        rgba(255, 255, 255, 0.5) 60%,
+        rgba(255, 255, 255, 0)
+    );
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* 반응형 */
+@media (max-width: 1024px) {
+    .hero-section {
+        flex-direction: column;
+    }
+    
+    .hero-image {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .main-content {
+        max-width: 100%;
+    }
+    
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        padding: 16px;
+    }
+    
+    .hero-title {
+        font-size: 28px;
+    }
+    
+    .hero-description {
+        font-size: 16px;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+    }
+}

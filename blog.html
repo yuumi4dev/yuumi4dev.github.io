@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>포트폴리오 | 블로그</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/blog.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="assets/js/firebase-init.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 사이드바 네비게이션 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="profile-image">
+                    <div class="profile-placeholder">
+                        <span class="profile-initial">P</span>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <h3 class="username">사용자님</h3>
+                    <p class="user-status">포트폴리오</p>
+                </div>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li class="menu-item">
+                    <a href="index.html">
+                        <span class="icon">🏠</span>
+                        <span class="menu-text">홈</span>
+                    </a>
+                </li>
+                <li class="menu-item active">
+                    <a href="blog.html">
+                        <span class="icon">📝</span>
+                        <span class="menu-text">블로그</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="portfolio.html">
+                        <span class="icon">🎨</span>
+                        <span class="menu-text">포트폴리오</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="projects.html">
+                        <span class="icon">💻</span>
+                        <span class="menu-text">프로젝트</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="login-status">
+                <div id="login-container">
+                    <a href="auth.html" class="login-btn">로그인</a>
+                </div>
+                <div id="user-container" style="display: none;">
+                    <p id="user-email"></p>
+                    <button id="logout-btn" class="logout-btn">로그아웃</button>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- 메인 콘텐츠 -->
+        <main class="main-content">
+            <header class="page-header">
+                <h1 class="page-title">블로그</h1>
+                <div class="blog-actions">
+                    <div class="search-container">
+                        <input type="text" id="search-input" placeholder="검색..." class="search-input">
+                        <button id="search-button" class="search-button">🔍</button>
+                    </div>
+                    <div class="theme-toggle">
+                        <button id="theme-toggle-btn">🌙</button>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="blog-container">
+                <div class="blog-sidebar">
+                    <div class="categories-section">
+                        <h3 class="sidebar-title">카테고리</h3>
+                        <ul class="categories-list">
+                            <li class="category-item active">
+                                <a href="#" data-category="all">전체 <span class="count">(12)</span></a>
+                            </li>
+                            <li class="category-item">
+                                <a href="#" data-category="web-dev">웹 개발 <span class="count">(5)</span></a>
+                            </li>
+                            <li class="category-item">
+                                <a href="#" data-category="ui-design">UI 디자인 <span class="count">(3)</span></a>
+                            </li>
+                            <li class="category-item">
+                                <a href="#" data-category="productivity">생산성 <span class="count">(2)</span></a>
+                            </li>
+                            <li class="category-item">
+                                <a href="#" data-category="other">기타 <span class="count">(2)</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="recent-posts-section">
+                        <h3 class="sidebar-title">최근 포스트</h3>
+                        <ul class="recent-posts-list">
+                            <li class="recent-post-item">
+                                <a href="blog-post.html?id=post1">모던 웹 개발 트렌드</a>
+                            </li>
+                            <li class="recent-post-item">
+                                <a href="blog-post.html?id=post2">효과적인 UI 디자인 팁</a>
+                            </li>
+                            <li class="recent-post-item">
+                                <a href="blog-post.html?id=post3">개발자를 위한 생산성 도구</a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tags-section">
+                        <h3 class="sidebar-title">태그</h3>
+                        <div class="tags-cloud">
+                            <a href="#" class="tag" data-tag="javascript">JavaScript</a>
+                            <a href="#" class="tag" data-tag="html">HTML</a>
+                            <a href="#" class="tag" data-tag="css">CSS</a>
+                            <a href="#" class="tag" data-tag="react">React</a>
+                            <a href="#" class="tag" data-tag="design">디자인</a>
+                            <a href="#" class="tag" data-tag="tools">도구</a>
+                            <a href="#" class="tag" data-tag="tips">팁</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="blog-content">
+                    <div class="posts-container">
+                        <!-- 블로그 포스트 아이템 -->
+                        <article class="post-card">
+                            <a href="blog-post.html?id=post1" class="post-link">
+                                <div class="post-image">
+                                    <div class="image-placeholder">
+                                        <span>📱</span>
+                                    </div>
+                                </div>
+                                <div class="post-content">
+                                    <div class="post-meta">
+                                        <span class="post-category">웹 개발</span>
+                                        <span class="post-date">2023년 05월 15일</span>
+                                    </div>
+                                    <h2 class="post-title">모던 웹 개발 트렌드: 2023년 알아야 할 것들</h2>
+                                    <p class="post-excerpt">
+                                        웹 개발 생태계는 빠르게 변화하고 있습니다. 이 글에서는 2023년 현재 주목해야 할 웹 개발 트렌드와 기술들을 소개합니다.
+                                    </p>
+                                    <div class="post-tags">
+                                        <span class="tag">JavaScript</span>
+                                        <span class="tag">웹 개발</span>
+                                        <span class="tag">트렌드</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </article>
+                        
+                        <article class="post-card">
+                            <a href="blog-post.html?id=post2" class="post-link">
+                                <div class="post-image">
+                                    <div class="image-placeholder">
+                                        <span>🎨</span>
+                                    </div>
+                                </div>
+                                <div class="post-content">
+                                    <div class="post-meta">
+                                        <span class="post-category">UI 디자인</span>
+                                        <span class="post-date">2023년 04월 28일</span>
+                                    </div>
+                                    <h2 class="post-title">효과적인 UI 디자인을 위한 10가지 팁</h2>
+                                    <p class="post-excerpt">
+                                        사용자 경험을 향상시키는 효과적인 UI 디자인을 위한 10가지 실용적인 팁을 소개합니다. 이 팁들은 즉시 적용할 수 있으며 디자인 품질을 향상시킬 것입니다.
+                                    </p>
+                                    <div class="post-tags">
+                                        <span class="tag">디자인</span>
+                                        <span class="tag">UI</span>
+                                        <span class="tag">UX</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </article>
+                        
+                        <article class="post-card">
+                            <a href="blog-post.html?id=post3" class="post-link">
+                                <div class="post-image">
+                                    <div class="image-placeholder">
+                                        <span>⚙️</span>
+                                    </div>
+                                </div>
+                                <div class="post-content">
+                                    <div class="post-meta">
+                                        <span class="post-category">생산성</span>
+                                        <span class="post-date">2023년 04월 15일</span>
+                                    </div>
+                                    <h2 class="post-title">개발자를 위한 필수 생산성 도구와 확장 프로그램</h2>
+                                    <p class="post-excerpt">
+                                        개발 생산성을 크게 향상시키는 도구와 확장 프로그램들을 소개합니다. 코드 에디터 플러그인부터 협업 도구까지, 개발 워크플로우를 개선하는 방법을 알아보세요.
+                                    </p>
+                                    <div class="post-tags">
+                                        <span class="tag">도구</span>
+                                        <span class="tag">생산성</span>
+                                        <span class="tag">개발</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </article>
+                        
+                        <!-- 더 많은 블로그 포스트 추가 -->
+                    </div>
+                    
+                    <!-- 페이지네이션 -->
+                    <div class="pagination">
+                        <button class="pagination-btn" disabled>이전</button>
+                        <div class="pagination-numbers">
+                            <a href="#" class="pagination-number active">1</a>
+                            <a href="#" class="pagination-number">2</a>
+                            <a href="#" class="pagination-number">3</a>
+                        </div>
+                        <button class="pagination-btn">다음</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/blog.js"></script>
+</body>
+</html>

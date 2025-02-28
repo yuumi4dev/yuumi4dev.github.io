@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>포트폴리오 | 로그인</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/auth.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="assets/js/firebase-init.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 사이드바 네비게이션 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="profile-image">
+                    <div class="profile-placeholder">
+                        <span class="profile-initial">P</span>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <h3 class="username">사용자님</h3>
+                    <p class="user-status">포트폴리오</p>
+                </div>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li class="menu-item">
+                    <a href="index.html">
+                        <span class="icon">🏠</span>
+                        <span class="menu-text">홈</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="blog.html">
+                        <span class="icon">📝</span>
+                        <span class="menu-text">블로그</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="portfolio.html">
+                        <span class="icon">🎨</span>
+                        <span class="menu-text">포트폴리오</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="projects.html">
+                        <span class="icon">💻</span>
+                        <span class="menu-text">프로젝트</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <!-- 메인 콘텐츠 -->
+        <main class="main-content">
+            <header class="page-header">
+                <h1 class="page-title">계정</h1>
+                <div class="theme-toggle">
+                    <button id="theme-toggle-btn">🌙</button>
+                </div>
+            </header>
+            
+            <div class="auth-container">
+                <div class="auth-card">
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" data-tab="login">로그인</button>
+                        <button class="auth-tab" data-tab="signup">회원가입</button>
+                </div>
+                
+                <!-- 비밀번호 재설정 카드 -->
+                <div class="auth-card" id="reset-password-card" style="display: none;">
+                    <h3 class="card-title">비밀번호 재설정</h3>
+                    <p class="card-description">가입하신 이메일 주소로 비밀번호 재설정 링크를 보내드립니다.</p>
+                    <div class="form-group">
+                        <label for="reset-email">이메일</label>
+                        <input type="email" id="reset-email" placeholder="이메일 주소를 입력하세요" required>
+                    </div>
+                    <div class="form-action">
+                        <button id="reset-button" class="auth-button">비밀번호 재설정 링크 보내기</button>
+                        <button id="back-to-login" class="auth-button secondary">로그인으로 돌아가기</button>
+                    </div>
+                </div>
+                
+                <!-- 알림 메시지 -->
+                <div id="auth-message" class="auth-message"></div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/theme.js"></script>
+</body>
+</html>
+                    
+                    <!-- 로그인 폼 -->
+                    <div class="auth-form active" id="login-form">
+                        <div class="form-group">
+                            <label for="login-email">이메일</label>
+                            <input type="email" id="login-email" placeholder="이메일 주소를 입력하세요" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">비밀번호</label>
+                            <input type="password" id="login-password" placeholder="비밀번호를 입력하세요" required>
+                        </div>
+                        <div class="form-action">
+                            <button id="login-button" class="auth-button">로그인</button>
+                        </div>
+                        <div class="auth-divider">
+                            <span>또는</span>
+                        </div>
+                        <div class="social-login">
+                            <button id="google-login" class="social-button google">
+                                <span class="social-icon">G</span>
+                                <span>Google 계정으로 로그인</span>
+                            </button>
+                            <button id="github-login" class="social-button github">
+                                <span class="social-icon">GH</span>
+                                <span>GitHub 계정으로 로그인</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 회원가입 폼 -->
+                    <div class="auth-form" id="signup-form">
+                        <div class="form-group">
+                            <label for="signup-name">이름</label>
+                            <input type="text" id="signup-name" placeholder="이름을 입력하세요" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-email">이메일</label>
+                            <input type="email" id="signup-email" placeholder="이메일 주소를 입력하세요" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-password">비밀번호</label>
+                            <input type="password" id="signup-password" placeholder="비밀번호를 입력하세요" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-confirm-password">비밀번호 확인</label>
+                            <input type="password" id="signup-confirm-password" placeholder="비밀번호를 다시 입력하세요" required>
+                        </div>
+                        <div class="form-action">
+                            <button id="signup-button" class="auth-button">회원가입</button>
+                        </div>
+                        <div class="auth-divider">
+                            <span>또는</span>
+                        </div>
+                        <div class="social-login">
+                            <button id="google-signup" class="social-button google">
+                                <span class="social-icon">G</span>
+                                <span>Google 계정으로 가입</span>
+                            </button>
+                            <button id="github-signup" class="social-button github">
+                                <span class="social-icon">GH</span>
+                                <span>GitHub 계정으로 가입</span>
+                            </button>
+                        </div>
+                    </div>
