@@ -1,244 +1,310 @@
-// Firebase 설정
-const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
-};
-
-// Firebase 초기화
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-
-// 로그인 처리
-const loginForm = document.getElementById('loginForm');
-if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        const remember = document.getElementById('remember').checked;
-        
-        // 로그인 상태 지속 설정
-        if (remember) {
-            auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-        } else {
-            auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
-        }
-        
-        // Firebase 로그인
-        auth.signInWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                // 로그인 성공
-                const user = userCredential.user;
-                showToast('로그인 성공!');
-                
-                // 로그인 후 메인 페이지로 이동
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1000);
-            })
-            .catch((error) => {
-                // 로그인 실패
-                const errorCode = error.code;
-                let errorMessage = '로그인에 실패했습니다.';
-                
-                if (errorCode === 'auth/user-not-found') {
-                    errorMessage = '등록되지 않은 이메일입니다.';
-                } else if (errorCode === 'auth/wrong-password') {
-                    errorMessage = '비밀번호가 일치하지 않습니다.';
-                } else if (errorCode === 'auth/invalid-email') {
-                    errorMessage = '유효하지 않은 이메일 형식입니다.';
-                }
-                
-                showToast(errorMessage, 'error');
-            });
-    });
+@font-face {
+    font-family: 'SD산돌고딕';
+    src: url('https://cdn.jsdelivr.net/gh/webfontworld/amore/SDSamliphopangcheBasic.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
 }
 
-// 회원가입 처리
-const registerForm = document.getElementById('registerForm');
-if (registerForm) {
-    registerForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('register-email').value;
-        const password = document.getElementById('register-password').value;
-        const confirmPassword = document.getElementById('confirm-password').value;
-        
-        // 비밀번호 확인
-        if (password !== confirmPassword) {
-            showToast('비밀번호가 일치하지 않습니다.', 'error');
-            return;
-        }
-        
-        // 비밀번호 길이 확인
-        if (password.length < 8) {
-            showToast('비밀번호는 8자 이상이어야 합니다.', 'error');
-            return;
-        }
-        
-        // Firebase 회원가입
-        auth.createUserWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                // 회원가입 성공
-                const user = userCredential.user;
-                
-                // 사용자 프로필 업데이트
-                return user.updateProfile({
-                    displayName: name
-                }).then(() => {
-                    showToast('회원가입 성공!');
-                    
-                    // 회원가입 후 로그인 페이지로 이동
-                    setTimeout(() => {
-                        window.location.href = 'login.html';
-                    }, 1500);
-                });
-            })
-            .catch((error) => {
-                // 회원가입 실패
-                const errorCode = error.code;
-                let errorMessage = '회원가입에 실패했습니다.';
-                
-                if (errorCode === 'auth/email-already-in-use') {
-                    errorMessage = '이미 사용 중인 이메일입니다.';
-                } else if (errorCode === 'auth/invalid-email') {
-                    errorMessage = '유효하지 않은 이메일 형식입니다.';
-                } else if (errorCode === 'auth/weak-password') {
-                    errorMessage = '보안에 취약한 비밀번호입니다.';
-                }
-                
-                showToast(errorMessage, 'error');
-            });
-    });
+:root {
+    --primary-color: #0066FF;
+    --primary-light: #E8F0FE;
+    --secondary-color: #f5f5f5;
+    --text-color: #333333;
+    --text-light: #666666;
+    --text-lighter: #999999;
+    --border-color: #EEEEEE;
+    --card-bg: #FFFFFF;
+    --error-color: #FF3B30;
+    --success-color: #34C759;
+    --warning-color: #FF9500;
+    --shadow-color: rgba(0, 0, 0, 0.05);
+    --google-color: #4285F4;
+    --github-color: #24292E;
+    --font-sans: 'SD산돌고딕', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-// 소셜 로그인 - Google
-const googleButtons = document.querySelectorAll('.btn-google');
-googleButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        auth.signInWithPopup(provider)
-            .then((result) => {
-                showToast('Google 로그인 성공!');
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1000);
-            }).catch((error) => {
-                showToast('Google 로그인 실패', 'error');
-            });
-    });
-});
-
-// 소셜 로그인 - GitHub
-const githubButtons = document.querySelectorAll('.btn-github');
-githubButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        const provider = new firebase.auth.GithubAuthProvider();
-        auth.signInWithPopup(provider)
-            .then((result) => {
-                showToast('GitHub 로그인 성공!');
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1000);
-            }).catch((error) => {
-                showToast('GitHub 로그인 실패', 'error');
-            });
-    });
-});
-
-// 비밀번호 표시/숨김 토글
-const togglePasswordButtons = document.querySelectorAll('.toggle-password');
-togglePasswordButtons.forEach(button => {
-    button.addEventListener('click', function() {
-        const passwordInput = this.previousElementSibling;
-        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
-        this.classList.toggle('fa-eye');
-        this.classList.toggle('fa-eye-slash');
-    });
-});
-
-// 로그인 상태 확인
-document.addEventListener('DOMContentLoaded', () => {
-    auth.onAuthStateChanged((user) => {
-        const authLinks = document.querySelector('.auth-links');
-        const userProfileMenu = document.querySelector('.user-profile-menu');
-        
-        if (authLinks && userProfileMenu) {
-            if (user) {
-                // 로그인된 경우
-                authLinks.style.display = 'none';
-                userProfileMenu.style.display = 'flex';
-                
-                // 사용자 이름 표시
-                const userNameElement = document.querySelector('.user-name');
-                if (userNameElement) {
-                    userNameElement.textContent = user.displayName || '사용자';
-                }
-                
-                // 프로필 이미지 설정
-                const userImgElement = document.querySelector('.user-img img');
-                if (userImgElement) {
-                    if (user.photoURL) {
-                        userImgElement.src = user.photoURL;
-                    } else {
-                        // 기본 이미지 사용
-                        userImgElement.src = '/api/placeholder/40/40';
-                    }
-                }
-            } else {
-                // 로그아웃된 경우
-                authLinks.style.display = 'flex';
-                userProfileMenu.style.display = 'none';
-            }
-        }
-    });
-});
-
-// 로그아웃 기능
-function logout() {
-    auth.signOut().then(() => {
-        showToast('로그아웃 되었습니다.');
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 1000);
-    }).catch((error) => {
-        showToast('로그아웃 실패', 'error');
-    });
+.dark-mode {
+    --primary-color: #0A84FF;
+    --primary-light: #1C1C1E;
+    --secondary-color: #1C1C1E;
+    --text-color: #FFFFFF;
+    --text-light: #EBEBEB;
+    --text-lighter: #8E8E93;
+    --border-color: #38383A;
+    --card-bg: #2C2C2E;
+    --shadow-color: rgba(0, 0, 0, 0.2);
 }
 
-// 알림 표시 함수
-function showToast(message, type = 'success') {
-    // 기존 토스트 제거
-    const existingToast = document.querySelector('.toast');
-    if (existingToast) {
-        existingToast.remove();
+body {
+    font-family: var(--font-sans);
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.auth-card {
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 10px 25px var(--shadow-color);
+    width: 100%;
+    max-width: 450px;
+    padding: 2.5rem;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.auth-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+}
+
+.auth-header p {
+    color: var(--text-light);
+    font-size: 1rem;
+}
+
+.auth-form {
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 1rem;
+    color: var(--text-lighter);
+}
+
+.input-with-icon input {
+    width: 100%;
+    padding: 0.9rem 1rem 0.9rem 2.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    transition: border-color 0.3s;
+}
+
+.input-with-icon input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+}
+
+.input-with-icon input::placeholder {
+    color: var(--text-lighter);
+}
+
+.toggle-password {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--text-lighter);
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.remember-me, .terms-agreement {
+    display: flex;
+    align-items: center;
+}
+
+.remember-me input, .terms-agreement input {
+    margin-right: 0.5rem;
+}
+
+.forgot-password, .terms-link {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.auth-button {
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family: var(--font-sans);
+}
+
+.auth-button:hover {
+    background-color: #0052CC;
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+    color: var(--text-lighter);
+    font-size: 0.9rem;
+}
+
+.auth-divider::before, .auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: var(--border-color);
+}
+
+.auth-divider span {
+    padding: 0 1rem;
+}
+
+.social-login {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.social-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.9rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family: var(--font-sans);
+}
+
+.social-button i {
+    margin-right: 0.8rem;
+    font-size: 1.2rem;
+}
+
+.social-button.google {
+    color: var(--google-color);
+    border-color: rgba(66, 133, 244, 0.3);
+}
+
+.social-button.google:hover {
+    background-color: rgba(66, 133, 244, 0.05);
+}
+
+.social-button.github {
+    color: var(--github-color);
+    border-color: rgba(36, 41, 46, 0.3);
+}
+
+.social-button.github:hover {
+    background-color: rgba(36, 41, 46, 0.05);
+}
+
+.auth-footer {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+.auth-footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.password-strength {
+    margin-top: 0.8rem;
+}
+
+.strength-meter {
+    height: 4px;
+    background-color: var(--border-color);
+    border-radius: 2px;
+    margin-bottom: 0.3rem;
+}
+
+.strength-meter-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s;
+}
+
+.strength-meter-fill[data-strength="weak"] {
+    width: 33%;
+    background-color: var(--error-color);
+}
+
+.strength-meter-fill[data-strength="medium"] {
+    width: 66%;
+    background-color: var(--warning-color);
+}
+
+.strength-meter-fill[data-strength="strong"] {
+    width: 100%;
+    background-color: var(--success-color);
+}
+
+.strength-text {
+    font-size: 0.8rem;
+    color: var(--text-lighter);
+}
+
+/* 반응형 스타일 */
+@media (max-width: 500px) {
+    .auth-card {
+        padding: 1.5rem;
     }
     
-    // 새 토스트 생성
-    const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
-    toast.textContent = message;
+    .auth-header {
+        margin-bottom: 1.5rem;
+    }
     
-    // 토스트 추가
-    document.body.appendChild(toast);
-    
-    // 토스트 애니메이션
-    setTimeout(() => {
-        toast.classList.add('show');
-    }, 10);
-    
-    // 토스트 자동 제거
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => {
-            toast.remove();
-        }, 300);
-    }, 3000);
+    .auth-header h1 {
+        font-size: 1.8rem;
+    }
 }

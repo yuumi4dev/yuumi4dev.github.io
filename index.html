@@ -3,11 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>포트폴리오 | 홈</title>
+    <title>포트폴리오 블로그</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Firebase SDK 추가 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.1/firebase-auth-compat.js"></script>
 </head>
 <body>
+    <!-- 로그인 모달 -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h2>로그인</h2>
+                    <p>포트폴리오 블로그에 오신 것을 환영합니다</p>
+                </div>
+                <div class="auth-form">
+                    <div class="input-group">
+                        <label for="email">이메일</label>
+                        <input type="email" id="email" placeholder="이메일 주소를 입력하세요">
+                    </div>
+                    <div class="input-group">
+                        <label for="password">비밀번호</label>
+                        <input type="password" id="password" placeholder="비밀번호를 입력하세요">
+                    </div>
+                    <button id="login-btn" class="button primary-button">로그인</button>
+                    <div class="auth-divider">
+                        <span>또는</span>
+                    </div>
+                    <button id="google-login-btn" class="button secondary-button">
+                        <i class="fab fa-google"></i> Google로 계속하기
+                    </button>
+                    <button id="register-toggle" class="button text-button">계정이 없으신가요? 회원가입</button>
+                </div>
+                <div class="auth-footer">
+                    <p>로그인하면 <a href="#">이용약관</a>과 <a href="#">개인정보처리방침</a>에 동의하게 됩니다.</p>
+                </div>
+            </div>
+
+            <!-- 회원가입 폼 (기본적으로 숨김) -->
+            <div class="auth-container register-form" style="display: none;">
+                <div class="auth-header">
+                    <h2>회원가입</h2>
+                    <p>새 계정을 만들어 포트폴리오 블로그를 시작하세요</p>
+                </div>
+                <div class="auth-form">
+                    <div class="input-group">
+                        <label for="register-name">이름</label>
+                        <input type="text" id="register-name" placeholder="이름을 입력하세요">
+                    </div>
+                    <div class="input-group">
+                        <label for="register-email">이메일</label>
+                        <input type="email" id="register-email" placeholder="이메일 주소를 입력하세요">
+                    </div>
+                    <div class="input-group">
+                        <label for="register-password">비밀번호</label>
+                        <input type="password" id="register-password" placeholder="비밀번호를 입력하세요">
+                    </div>
+                    <div class="input-group">
+                        <label for="register-password-confirm">비밀번호 확인</label>
+                        <input type="password" id="register-password-confirm" placeholder="비밀번호를 다시 입력하세요">
+                    </div>
+                    <button id="register-btn" class="button primary-button">회원가입</button>
+                    <button id="login-toggle" class="button text-button">이미 계정이 있으신가요? 로그인</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <!-- 사이드바 영역 -->
         <div class="sidebar">
@@ -16,23 +81,25 @@
                     <img src="/api/placeholder/150/150" alt="프로필 이미지">
                 </div>
                 <h3 class="profile-name">내 이름</h3>
-                <p class="profile-bio">웹 개발자 | UI/UX 디자이너</p>
+                <p class="profile-bio">간단한 소개글을 작성하세요</p>
+                <div id="login-status">
+                    <button id="login-button" class="button auth-button">로그인</button>
+                </div>
             </div>
             <nav class="menu">
                 <ul>
                     <li class="active"><i class="fas fa-home"></i> 홈</li>
-                    <li><i class="fas fa-code"></i> 프로젝트</li>
                     <li><i class="fas fa-book"></i> 블로그</li>
-                    <li><i class="fas fa-certificate"></i> 기술 스택</li>
+                    <li><i class="fas fa-folder"></i> 프로젝트</li>
                     <li><i class="fas fa-user"></i> 소개</li>
                     <li><i class="fas fa-envelope"></i> 연락처</li>
                 </ul>
             </nav>
             <div class="social-links">
                 <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
-                <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
                 <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
             </div>
         </div>
 
@@ -43,172 +110,117 @@
                     <i class="fas fa-search"></i>
                     <input type="text" placeholder="검색...">
                 </div>
-                <div class="header-right">
+                <div class="header-controls">
                     <div class="theme-toggle">
                         <i class="fas fa-moon"></i>
                     </div>
-                    
-                    <!-- 인증 링크 (비로그인 시) -->
-                    <div class="auth-links">
-                        <a href="login.html" class="btn-login">로그인</a>
-                        <a href="register.html" class="btn-register">회원가입</a>
-                    </div>
-                    
-                    <!-- 사용자 프로필 메뉴 (로그인 시) -->
-                    <div class="user-profile-menu">
-                        <div class="user-img">
-                            <img src="/api/placeholder/40/40" alt="사용자 이미지">
+                    <div id="user-profile-menu" class="user-profile hidden">
+                        <div class="user-avatar">
+                            <img src="/api/placeholder/32/32" alt="사용자 프로필">
                         </div>
-                        <span class="user-name">사용자</span>
-                        <i class="fas fa-chevron-down dropdown-icon"></i>
-                        
                         <div class="dropdown-menu">
-                            <a href="#" class="dropdown-item">
-                                <i class="fas fa-user-circle"></i>
-                                <span>내 프로필</span>
-                            </a>
-                            <a href="#" class="dropdown-item">
-                                <i class="fas fa-cog"></i>
-                                <span>설정</span>
-                            </a>
-                            <a href="#" class="dropdown-item" onclick="logout()">
-                                <i class="fas fa-sign-out-alt"></i>
-                                <span>로그아웃</span>
-                            </a>
+                            <ul>
+                                <li><i class="fas fa-user"></i> 내 프로필</li>
+                                <li><i class="fas fa-cog"></i> 설정</li>
+                                <li id="logout-button"><i class="fas fa-sign-out-alt"></i> 로그아웃</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </header>
 
+            <!-- 메인 콘텐츠 -->
             <div class="content">
-                <div class="welcome-section">
-                    <div class="welcome-text">
-                        <h1>환영합니다 👋</h1>
-                        <p class="subtitle">저의 포트폴리오 사이트에 방문해 주셔서 감사합니다.</p>
-                        <p class="description">이곳에서 저의 프로젝트와 기술 스택을 확인하실 수 있습니다.</p>
-                        <div class="welcome-buttons">
-                            <a href="#" class="btn-primary">프로젝트 보기</a>
-                            <a href="#" class="btn-secondary">연락하기</a>
-                        </div>
-                    </div>
-                    <div class="welcome-image">
-                        <img src="/api/placeholder/400/300" alt="웰컴 이미지">
-                    </div>
+                <div class="page-title">
+                    <h1>안녕하세요! 👋</h1>
+                    <p class="subtitle">제 포트폴리오 블로그에 오신 것을 환영합니다</p>
                 </div>
 
-                <div class="section">
-                    <div class="section-header">
-                        <h2>최근 프로젝트</h2>
-                        <a href="#" class="view-all">모두 보기 <i class="fas fa-arrow-right"></i></a>
+                <div class="cards-container">
+                    <!-- 최근 게시물 카드 -->
+                    <div class="section-title">
+                        <h2>최근 게시물</h2>
+                        <a href="#" class="view-all">전체보기 <i class="fas fa-arrow-right"></i></a>
                     </div>
                     <div class="cards">
-                        <div class="card project-card">
+                        <div class="card">
                             <div class="card-image">
-                                <img src="/api/placeholder/300/160" alt="프로젝트 이미지">
-                                <div class="card-badge">New</div>
+                                <img src="/api/placeholder/300/160" alt="게시물 이미지">
                             </div>
                             <div class="card-content">
+                                <h3>첫 번째 블로그 포스트</h3>
+                                <p class="date">2025년 2월 28일</p>
+                                <p class="excerpt">이것은 첫 번째 블로그 포스트의 내용 미리보기입니다. 여기에 짧은 설명을 적어주세요.</p>
+                                <div class="tags">
+                                    <span class="tag">HTML</span>
+                                    <span class="tag">CSS</span>
+                                    <span class="tag">JavaScript</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-content no-image">
+                                <h3>두 번째 블로그 포스트</h3>
+                                <p class="date">2025년 2월 25일</p>
+                                <p class="excerpt">이것은 두 번째 블로그 포스트의 내용 미리보기입니다. 여기에 짧은 설명을 적어주세요.</p>
+                                <div class="tags">
+                                    <span class="tag">웹개발</span>
+                                    <span class="tag">GitHub</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 프로젝트 카드 -->
+                    <div class="section-title">
+                        <h2>프로젝트</h2>
+                        <a href="#" class="view-all">전체보기 <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="cards">
+                        <div class="card">
+                            <div class="card-content no-image">
                                 <h3>프로젝트 제목</h3>
-                                <p class="card-date">2025년 2월</p>
-                                <p class="card-description">이 프로젝트는 최신 웹 기술을 활용하여 개발된 반응형 웹 애플리케이션입니다.</p>
+                                <p class="excerpt">프로젝트에 대한 간략한 설명을 여기에 작성하세요.</p>
                                 <div class="tags">
                                     <span class="tag">React</span>
                                     <span class="tag">Node.js</span>
-                                    <span class="tag">Firebase</span>
                                 </div>
-                                <div class="card-actions">
-                                    <a href="#" class="card-link"><i class="fas fa-external-link-alt"></i> 사이트 보기</a>
-                                    <a href="#" class="card-link"><i class="fab fa-github"></i> 코드 보기</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card project-card">
-                            <div class="card-image">
-                                <img src="/api/placeholder/300/160" alt="프로젝트 이미지">
-                            </div>
-                            <div class="card-content">
-                                <h3>프로젝트 제목</h3>
-                                <p class="card-date">2025년 1월</p>
-                                <p class="card-description">사용자 경험을 최적화한 모바일 우선 디자인의 웹 애플리케이션입니다.</p>
-                                <div class="tags">
-                                    <span class="tag">Vue.js</span>
-                                    <span class="tag">Express</span>
-                                    <span class="tag">MongoDB</span>
-                                </div>
-                                <div class="card-actions">
-                                    <a href="#" class="card-link"><i class="fas fa-external-link-alt"></i> 사이트 보기</a>
-                                    <a href="#" class="card-link"><i class="fab fa-github"></i> 코드 보기</a>
-                                </div>
+                                <a href="#" class="project-link"><i class="fab fa-github"></i> GitHub 저장소</a>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="section">
-                    <div class="section-header">
-                        <h2>최근 포스트</h2>
-                        <a href="#" class="view-all">모두 보기 <i class="fas fa-arrow-right"></i></a>
+                    <!-- 노트 섹션 -->
+                    <div class="section-title">
+                        <h2>최근 활동</h2>
                     </div>
-                    <div class="cards">
-                        <div class="card blog-card">
-                            <div class="card-content">
-                                <p class="card-date">2025년 2월 28일</p>
-                                <h3>React와 Firebase로 인증 시스템 구현하기</h3>
-                                <p class="card-description">이 포스트에서는 React 애플리케이션에 Firebase Authentication을 통합하는 방법을 다룹니다.</p>
-                                <div class="tags">
-                                    <span class="tag">React</span>
-                                    <span class="tag">Firebase</span>
-                                    <span class="tag">Authentication</span>
-                                </div>
-                                <a href="#" class="read-more">계속 읽기 <i class="fas fa-arrow-right"></i></a>
+                    <div class="activity-feed">
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p class="activity-text">GitHub에 새 프로젝트를 추가했습니다</p>
+                                <p class="activity-date">2025년 2월 28일</p>
                             </div>
                         </div>
-
-                        <div class="card blog-card">
-                            <div class="card-content">
-                                <p class="card-date">2025년 2월 20일</p>
-                                <h3>모던 UI/UX 디자인 트렌드 2025</h3>
-                                <p class="card-description">2025년 웹 및 모바일 애플리케이션 디자인에서 주목해야 할 최신 UI/UX 트렌드를 알아봅니다.</p>
-                                <div class="tags">
-                                    <span class="tag">UI/UX</span>
-                                    <span class="tag">디자인</span>
-                                    <span class="tag">트렌드</span>
-                                </div>
-                                <a href="#" class="read-more">계속 읽기 <i class="fas fa-arrow-right"></i></a>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-pencil-alt"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p class="activity-text">새 블로그 게시물을 작성했습니다</p>
+                                <p class="activity-date">2025년 2월 25일</p>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="section">
-                    <div class="section-header">
-                        <h2>기술 스택</h2>
-                    </div>
-                    <div class="skills-container">
-                        <div class="skill-card">
-                            <div class="skill-icon"><i class="fab fa-html5"></i></div>
-                            <div class="skill-name">HTML5</div>
-                        </div>
-                        <div class="skill-card">
-                            <div class="skill-icon"><i class="fab fa-css3-alt"></i></div>
-                            <div class="skill-name">CSS3</div>
-                        </div>
-                        <div class="skill-card">
-                            <div class="skill-icon"><i class="fab fa-js"></i></div>
-                            <div class="skill-name">JavaScript</div>
-                        </div>
-                        <div class="skill-card">
-                            <div class="skill-icon"><i class="fab fa-react"></i></div>
-                            <div class="skill-name">React</div>
-                        </div>
-                        <div class="skill-card">
-                            <div class="skill-icon"><i class="fab fa-node-js"></i></div>
-                            <div class="skill-name">Node.js</div>
-                        </div>
-                        <div class="skill-card">
-                            <div class="skill-icon"><i class="fas fa-database"></i></div>
-                            <div class="skill-name">MongoDB</div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p class="activity-text">웹 개발 경진대회에서 수상했습니다</p>
+                                <p class="activity-date">2025년 2월 15일</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -216,36 +228,37 @@
 
             <footer>
                 <div class="footer-content">
-                    <div class="footer-about">
-                        <h3>포트폴리오</h3>
-                        <p>프론트엔드 개발자의 작업과 기술을 소개하는 포트폴리오 사이트입니다.</p>
+                    <div class="footer-logo">
+                        <h3>포트폴리오 블로그</h3>
+                        <p>© 2025 내 이름. 모든 권리 보유.</p>
                     </div>
                     <div class="footer-links">
-                        <h3>바로가기</h3>
-                        <ul>
-                            <li><a href="#">홈</a></li>
-                            <li><a href="#">프로젝트</a></li>
-                            <li><a href="#">블로그</a></li>
-                            <li><a href="#">연락처</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-contact">
-                        <h3>연락처</h3>
-                        <p><i class="fas fa-envelope"></i> email@example.com</p>
-                        <p><i class="fas fa-phone"></i> +82 10-1234-5678</p>
-                        <div class="social-links">
-                            <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
-                            <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                            <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <div class="footer-links-column">
+                            <h4>사이트맵</h4>
+                            <ul>
+                                <li><a href="#">홈</a></li>
+                                <li><a href="#">블로그</a></li>
+                                <li><a href="#">프로젝트</a></li>
+                                <li><a href="#">소개</a></li>
+                                <li><a href="#">연락처</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-links-column">
+                            <h4>소셜 미디어</h4>
+                            <ul>
+                                <li><a href="#"><i class="fab fa-github"></i> GitHub</a></li>
+                                <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                                <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                                <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                            </ul>
                         </div>
                     </div>
-                </div>
-                <div class="footer-bottom">
-                    <p>© 2025 포트폴리오. All rights reserved.</p>
                 </div>
             </footer>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://
+    <script src="script.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html>
