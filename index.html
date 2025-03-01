@@ -18,10 +18,15 @@
     <!-- 언어 선택 모달 -->
     <div id="language-modal" class="language-modal">
         <div class="language-modal-content">
+            <h2 class="language-title" data-lang="ko">Select a language</h2>
             <h2 class="language-title" data-lang="en">Select a language</h2>
             <h2 class="language-title" data-lang="es">Seleccione un idioma</h2>
             
             <div class="language-options">
+                <button class="language-option" data-lang="ko">
+                    <span class="language-flag">kr</span>
+                    <span class="language-name">한국어</span>
+                </button>
                 <button class="language-option" data-lang="en">
                     <span class="language-flag">🇺🇸</span>
                     <span class="language-name">English</span>
@@ -43,6 +48,7 @@
         </div>
         
         <div class="site-title">
+            <h1 data-lang="ko">포트폴리오</h1>
             <h1 data-lang="en">Portfolio</h1>
             <h1 data-lang="es">Portafolio</h1>
         </div>
@@ -61,6 +67,10 @@
                 </button>
                 <div id="profile-dropdown" class="profile-dropdown">
                     <ul>
+                        <li><a href="settings.html" data-lang="en">Settings</a><a href="settings.html" data-lang="ko">설정</a></li>
+                        <li><button id="logout-btn" data-lang="en">Logout</button><button id="logout-btn" data-lang="ko">로그아웃</button></li>
+                        <li><a href="settings.html" data-lang="en">Settings</a><a href="settings.html" data-lang="en">Setting</a></li>
+                        <li><button id="logout-btn" data-lang="en">Logout</button><button id="logout-btn" data-lang="en">Logout</button></li>
                         <li><a href="settings.html" data-lang="en">Settings</a><a href="settings.html" data-lang="es">Configuración</a></li>
                         <li><button id="logout-btn" data-lang="en">Logout</button><button id="logout-btn" data-lang="es">Cerrar sesión</button></li>
                     </ul>
@@ -85,6 +95,7 @@
                 <li class="menu-item active">
                     <a href="index.html">
                         <span class="icon"><i class="fas fa-home"></i></span>
+                        <span class="menu-text" data-lang="ko">홈</span>
                         <span class="menu-text" data-lang="en">Home</span>
                         <span class="menu-text" data-lang="es">Inicio</span>
                     </a>
@@ -166,60 +177,71 @@
             </section>
             
             <section class="featured-section">
-                <h3 class="section-title" data-lang="en">Featured Projects</h3>
-                <h3 class="section-title" data-lang="es">Proyectos Destacados</h3>
-                <div class="card-grid">
-                    <div class="card">
-                        <div class="card-image">
-                            <div class="image-placeholder">
-                                <span>📱</span>
+                <section class="featured-section">
+                    <h3 class="section-title" data-lang="ko">주요 프로젝트</h3>
+                    <h3 class="section-title" data-lang="en">Featured Projects</h3>
+                    <h3 class="section-title" data-lang="es">Proyectos Destacados</h3>
+                    <div class="card-grid">
+                        <div class="card">
+                            <div class="card-image">
+                                <div class="image-placeholder">
+                                    <span>📱</span>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title" data-lang="ko">모바일 앱 프로젝트</h4>
+                                <h4 class="card-title" data-lang="en">Mobile App Project</h4>
+                                <h4 class="card-title" data-lang="es">Proyecto de Aplicación Móvil</h4>
+                                <p class="card-description" data-lang="ko">사용자 경험에 중점을 둔 iOS/Android 애플리케이션 디자인 및 개발</p>
+                                <p class="card-description" data-lang="en">Design and development of iOS/Android applications focused on user experience</p>
+                                <p class="card-description" data-lang="es">Diseño y desarrollo de aplicaciones iOS/Android centradas en la experiencia del usuario</p>
+                                <a href="projects.html" class="card-link" data-lang="ko">자세히 보기 →</a>
+                                <a href="projects.html" class="card-link" data-lang="en">Learn more →</a>
+                                <a href="projects.html" class="card-link" data-lang="es">Más información →</a>
                             </div>
                         </div>
-                        <div class="card-content">
-                            <h4 class="card-title" data-lang="en">Mobile App Project</h4>
-                            <h4 class="card-title" data-lang="es">Proyecto de Aplicación Móvil</h4>
-                            <p class="card-description" data-lang="en">Design and development of iOS/Android applications focused on user experience</p>
-                            <p class="card-description" data-lang="es">Diseño y desarrollo de aplicaciones iOS/Android centradas en la experiencia del usuario</p>
-                            <a href="projects.html" class="card-link" data-lang="en">Learn more →</a>
-                            <a href="projects.html" class="card-link" data-lang="es">Más información →</a>
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-image">
-                            <div class="image-placeholder">
-                                <span>🖥️</span>
+                        
+                        <div class="card">
+                            <div class="card-image">
+                                <div class="image-placeholder">
+                                    <span>🖥️</span>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title" data-lang="ko">웹 개발 프로젝트</h4>
+                                <h4 class="card-title" data-lang="en">Web Development Project</h4>
+                                <h4 class="card-title" data-lang="es">Proyecto de Desarrollo Web</h4>
+                                <p class="card-description" data-lang="ko">최신 웹 기술을 활용한 반응형 웹사이트 및 웹 애플리케이션 개발</p>
+                                <p class="card-description" data-lang="en">Responsive websites and web applications using the latest web technologies</p>
+                                <p class="card-description" data-lang="es">Sitios web responsivos y aplicaciones web utilizando las últimas tecnologías web</p>
+                                <a href="projects.html" class="card-link" data-lang="ko">자세히 보기 →</a>
+                                <a href="projects.html" class="card-link" data-lang="en">Learn more →</a>
+                                <a href="projects.html" class="card-link" data-lang="es">Más información →</a>
                             </div>
                         </div>
-                        <div class="card-content">
-                            <h4 class="card-title" data-lang="en">Web Development Project</h4>
-                            <h4 class="card-title" data-lang="es">Proyecto de Desarrollo Web</h4>
-                            <p class="card-description" data-lang="en">Responsive websites and web applications using the latest web technologies</p>
-                            <p class="card-description" data-lang="es">Sitios web responsivos y aplicaciones web utilizando las últimas tecnologías web</p>
-                            <a href="projects.html" class="card-link" data-lang="en">Learn more →</a>
-                            <a href="projects.html" class="card-link" data-lang="es">Más información →</a>
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-image">
-                            <div class="image-placeholder">
-                                <span>🎨</span>
+                        
+                        <div class="card">
+                            <div class="card-image">
+                                <div class="image-placeholder">
+                                    <span>🎨</span>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title" data-lang="ko">UI/UX 디자인</h4>
+                                <h4 class="card-title" data-lang="en">UI/UX Design</h4>
+                                <h4 class="card-title" data-lang="es">Diseño UI/UX</h4>
+                                <p class="card-description" data-lang="ko">직관적이고 미니멀한 사용자 인터페이스 디자인 및 사용자 경험 개선</p>
+                                <p class="card-description" data-lang="en">Intuitive and minimal user interface design and user experience enhancement</p>
+                                <p class="card-description" data-lang="es">Diseño de interfaz de usuario intuitivo y minimalista y mejora de la experiencia del usuario</p>
+                                <a href="portfolio.html" class="card-link" data-lang="ko">자세히 보기 →</a>
+                                <a href="portfolio.html" class="card-link" data-lang="en">Learn more →</a>
+                                <a href="portfolio.html" class="card-link" data-lang="es">Más información →</a>
                             </div>
                         </div>
-                        <div class="card-content">
-                            <h4 class="card-title" data-lang="en">UI/UX Design</h4>
-                            <h4 class="card-title" data-lang="es">Diseño UI/UX</h4>
-                            <p class="card-description" data-lang="en">Intuitive and minimal user interface design and user experience enhancement</p>
-                            <p class="card-description" data-lang="es">Diseño de interfaz de usuario intuitivo y minimalista y mejora de la experiencia del usuario</p>
-                            <a href="portfolio.html" class="card-link" data-lang="en">Learn more →</a>
-                            <a href="portfolio.html" class="card-link" data-lang="es">Más información →</a>
-                        </div>
                     </div>
-                </div>
-            </section>
-            
+                </section>            
             <section class="latest-posts-section">
+                <h3 class="section-title" data-lang="ko">최근 블로그 포스트</h3>
                 <h3 class="section-title" data-lang="en">Latest Blog Posts</h3>
                 <h3 class="section-title" data-lang="es">Publicaciones Recientes del Blog</h3>
                 <div class="post-list">
@@ -236,10 +258,16 @@
                             <p class="post-excerpt skeleton-text"></p>
                         </div>
                     </div>
+                    <a href="blog.html" class="see-all-link" data-lang="ko">모든 포스트 보기 →</a>
                     <a href="blog.html" class="see-all-link" data-lang="en">View all posts →</a>
                     <a href="blog.html" class="see-all-link" data-lang="es">Ver todas las publicaciones →</a>
                 </div>
             </section>
+            <footer class="footer">
+                <p data-lang="ko">© 2023 포트폴리오 사이트 · 모든 권리 보유</p>
+                <p data-lang="en">© 2023 Portfolio Site · All Rights Reserved</p>
+                <p data-lang="es">© 2023 Sitio Portafolio · Todos los derechos reservados</p>
+            </footer>
         </main>
     </div>
     
