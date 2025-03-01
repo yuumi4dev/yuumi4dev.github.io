@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateThemeButton(theme) {
         if (!themeToggleBtn) return;
         
-        themeToggleBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
+        themeToggleBtn.textContent = theme === 'dark' ? '☀️ 라이트 모드' : '🌙 다크 모드';
         themeToggleBtn.setAttribute('aria-label', theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환');
     }
 });
