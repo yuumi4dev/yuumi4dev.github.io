@@ -3,92 +3,121 @@
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
+    width: 100%;
+    height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
     display: flex;
-    justify-content: center;
     align-items: center;
-    z-index: 9999;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.language-modal.show {
+    opacity: 1;
+    visibility: visible;
 }
 
 .language-modal-content {
     background-color: var(--card-bg);
     border-radius: 16px;
     padding: 32px;
-    max-width: 400px;
     width: 90%;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    max-width: 480px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
     text-align: center;
+}
+
+.language-modal.show .language-modal-content {
+    transform: translateY(0);
 }
 
 .language-title {
     font-size: 24px;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 24px;
+    text-align: center;
     color: var(--text-primary);
 }
 
 .language-options {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
+    margin-bottom: 20px;
 }
 
 .language-option {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
     background-color: var(--bg-secondary);
-    border: 1px solid var(--border-color);
+    border: 2px solid transparent;
     border-radius: 12px;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.25s ease;
     cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 18px;
-    font-weight: 500;
-    color: var(--text-primary);
 }
 
-.language-option:hover {
+.language-option:hover, 
+.language-option.active {
     background-color: var(--bg-tertiary);
-    transform: translateY(-2px);
+    border-color: var(--accent-color);
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .language-flag {
-    font-size: 24px;
-    margin-right: 12px;
+    font-size: 36px;
+    margin-bottom: 12px;
 }
 
 .language-name {
-    font-size: 18px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* 언어 모달 닫기 버튼 */
+.language-close-btn {
+    margin-top: 16px;
+    padding: 12px 24px;
+    background-color: var(--accent-color);
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    display: inline-block;
+}
+
+.language-close-btn:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-2px);
 }
 
 /* 언어 전환 버튼 */
 .language-switcher {
     padding: 16px;
+    border-top: 1px solid var(--border-color);
     margin-top: auto;
-    position: relative;
 }
 
 .language-switch-btn {
     display: flex;
     align-items: center;
-    padding: 10px 16px;
-    background-color: var(--bg-tertiary);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-primary);
     width: 100%;
-    justify-content: space-between;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background-color: var(--bg-secondary);
+    transition: background-color 0.2s ease;
 }
 
 .language-switch-btn:hover {
-    background-color: var(--bg-secondary);
+    background-color: var(--bg-tertiary);
 }
 
 #current-language-icon {
@@ -96,7 +125,19 @@
     font-size: 16px;
 }
 
-/* 언어 드롭다운 메뉴 */
+#current-language-text {
+    flex: 1;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.language-switch-btn i {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
 .language-dropdown {
     position: absolute;
     bottom: 100%;
@@ -104,8 +145,8 @@
     right: 16px;
     background-color: var(--card-bg);
     border-radius: 8px;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 10;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 100;
     display: none;
     margin-bottom: 8px;
     border: 1px solid var(--border-color);
@@ -116,16 +157,14 @@
 }
 
 .language-dropdown ul {
-    list-style: none;
     padding: 8px 0;
-    margin: 0;
 }
 
 .language-dropdown li {
-    padding: 10px 16px;
-    cursor: pointer;
+    padding: 12px 16px;
     display: flex;
     align-items: center;
+    cursor: pointer;
     transition: background-color 0.2s ease;
 }
 
@@ -133,92 +172,97 @@
     background-color: var(--bg-tertiary);
 }
 
-.language-dropdown .lang-flag {
+.lang-flag {
     margin-right: 10px;
-    font-size: 16px;
+    font-size: 18px;
 }
 
-/* 다국어 지원 */
+/* 다국어 처리 */
 [data-lang] {
     display: none;
 }
 
-/* 한국어 모드 (기본) */
-html[lang="ko"] [data-lang="ko"],
-[data-lang="ko"] {
+body[data-language="ko"] [data-lang="ko"],
+body[data-language="en"] [data-lang="en"],
+body[data-language="es"] [data-lang="es"] {
     display: block;
 }
 
-html[lang="ko"] a[data-lang="ko"],
-html[lang="ko"] button[data-lang="ko"],
-html[lang="ko"] span[data-lang="ko"],
-a[data-lang="ko"],
-button[data-lang="ko"],
-span[data-lang="ko"] {
-    display: inline-block;
-}
-
-/* 영어 모드 */
-html[lang="en"] [data-lang="en"] {
-    display: block;
-}
-
-html[lang="en"] [data-lang="ko"],
-html[lang="en"] [data-lang="es"] {
+/* 인라인 요소에 대한 처리 */
+span[data-lang], 
+a[data-lang], 
+button[data-lang] {
     display: none;
 }
 
-html[lang="en"] a[data-lang="en"],
-html[lang="en"] button[data-lang="en"],
-html[lang="en"] span[data-lang="en"] {
-    display: inline-block;
+body[data-language="ko"] span[data-lang="ko"],
+body[data-language="ko"] a[data-lang="ko"],
+body[data-language="ko"] button[data-lang="ko"],
+body[data-language="en"] span[data-lang="en"],
+body[data-language="en"] a[data-lang="en"],
+body[data-language="en"] button[data-lang="en"],
+body[data-language="es"] span[data-lang="es"],
+body[data-language="es"] a[data-lang="es"],
+body[data-language="es"] button[data-lang="es"] {
+    display: inline-flex;
 }
 
-/* 스페인어 모드 */
-html[lang="es"] [data-lang="es"] {
-    display: block;
+/* 상단에 언어 선택 버튼 배치 */
+.top-language-selector {
+    position: fixed;
+    top: 11px;
+    right: 70px;
+    z-index: 1001;
+    display: flex;
+    gap: 8px;
 }
 
-html[lang="es"] [data-lang="ko"],
-html[lang="es"] [data-lang="en"] {
-    display: none;
+.top-language-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
 }
 
-html[lang="es"] a[data-lang="es"],
-html[lang="es"] button[data-lang="es"],
-html[lang="es"] span[data-lang="es"] {
-    display: inline-block;
+.top-language-btn:hover, 
+.top-language-btn.active {
+    background-color: var(--accent-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* 인라인 요소 처리 */
-button [data-lang],
-a [data-lang] {
-    display: inline;
+.top-language-btn.active {
+    border-color: var(--accent-color);
 }
 
 /* 반응형 */
 @media (max-width: 480px) {
-    .language-modal-content {
-        padding: 24px;
-    }
-    
-    .language-title {
-        font-size: 20px;
+    .language-options {
+        grid-template-columns: 1fr;
     }
     
     .language-option {
-        padding: 12px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 14px 16px;
     }
     
     .language-flag {
-        font-size: 20px;
+        margin-right: 16px;
+        margin-bottom: 0;
     }
     
-    .language-name {
-        font-size: 16px;
-    }
-    
-    .sidebar.collapsed .language-switcher {
-        display: none;
+    .top-language-selector {
+        top: 70px;
+        right: 16px;
     }
 }

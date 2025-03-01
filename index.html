@@ -15,6 +15,22 @@
     <script src="assets/js/firebase-init.js"></script>
 </head>
 <body>
+    <!-- 상단 언어 선택 버튼 -->
+    <div class="top-language-selector">
+        <button class="top-language-btn" data-lang="ko" onclick="setLanguage('ko')">
+            <span class="lang-flag">🇰🇷</span>
+            <span>한국어</span>
+        </button>
+        <button class="top-language-btn" data-lang="en" onclick="setLanguage('en')">
+            <span class="lang-flag">🇺🇸</span>
+            <span>English</span>
+        </button>
+        <button class="top-language-btn" data-lang="es" onclick="setLanguage('es')">
+            <span class="lang-flag">🇪🇸</span>
+            <span>Español</span>
+        </button>
+    </div>
+
     <!-- 언어 선택 모달 -->
     <div id="language-modal" class="language-modal">
         <div class="language-modal-content">
@@ -23,19 +39,25 @@
             <h2 class="language-title" data-lang="es">Seleccione un idioma</h2>
             
             <div class="language-options">
-                <button class="language-option" data-lang="ko">
+                <button class="language-option" data-lang="ko" onclick="setLanguage('ko')">
                     <span class="language-flag">🇰🇷</span>
                     <span class="language-name">한국어</span>
                 </button>
-                <button class="language-option" data-lang="en">
+                <button class="language-option" data-lang="en" onclick="setLanguage('en')">
                     <span class="language-flag">🇺🇸</span>
                     <span class="language-name">English</span>
                 </button>
-                <button class="language-option" data-lang="es">
+                <button class="language-option" data-lang="es" onclick="setLanguage('es')">
                     <span class="language-flag">🇪🇸</span>
                     <span class="language-name">Español</span>
                 </button>
             </div>
+            
+            <button class="language-close-btn" onclick="hideLanguageModal()">
+                <span data-lang="ko">확인</span>
+                <span data-lang="en">Confirm</span>
+                <span data-lang="es">Confirmar</span>
+            </button>
         </div>
     </div>
 
