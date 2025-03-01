@@ -43,7 +43,12 @@
     --card-bg: #ffffff;
     --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     --header-height: 64px;
-    --sidebar-width: 260px;
+    --sidebar-width: 240px;
+    --top-header-height: 60px;
+    --danger-color: #ff3b30;
+    --success-color: #34c759;
+    --warning-color: #ffcc00;
+    --sidebar-collapsed-width: 64px;
 }
 
 /* 다크 모드 색상 */
@@ -60,6 +65,9 @@
     --sidebar-bg: #1c1c1e;
     --card-bg: #2c2c2e;
     --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --danger-color: #ff453a;
+    --success-color: #30d158;
+    --warning-color: #ffd60a;
 }
 
 /* 기본 스타일 초기화 */
@@ -92,157 +100,254 @@ ul {
     list-style: none;
 }
 
-/* 레이아웃 */
-.container {
-    display: flex;
-    min-height: 100vh;
+input, button, textarea, select {
+    font-family: 'SD Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* 사이드바 */
-.sidebar {
-    width: var(--sidebar-width);
-    background-color: var(--sidebar-bg);
-    border-right: 1px solid var(--border-color);
-    padding: 20px 0;
-    height: 100vh;
-    position: sticky;
+button {
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+/* 상단 헤더 */
+.top-header {
+    position: fixed;
     top: 0;
-    display: flex;
-    flex-direction: column;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.sidebar-header {
+    left: 0;
+    right: 0;
+    height: var(--top-header-height);
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
-    padding: 0 24px 24px;
-    border-bottom: 1px solid var(--border-color);
-    margin-bottom: 16px;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 100;
+    transition: background-color 0.3s ease, left 0.3s ease;
 }
 
-.profile-image {
-    width: 42px;
-    height: 42px;
-    margin-right: 12px;
-}
-
-.profile-placeholder {
-    width: 100%;
-    height: 100%;
-    background-color: var(--accent-color);
+.menu-toggle button {
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--text-primary);
+    transition: background-color 0.2s ease;
+}
+
+.menu-toggle button:hover {
+    background-color: var(--bg-tertiary);
+}
+
+.menu-toggle button i {
+    font-size: 20px;
+}
+
+.site-title h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* 사용자 프로필 (상단 헤더) */
+.user-profile {
+    position: relative;
+}
+
+.profile-button {
+    display: flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 20px;
+    background: none;
+    border: none;
+    transition: background-color 0.2s ease;
+}
+
+.profile-button:hover {
+    background-color: var(--bg-tertiary);
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--accent-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: white;
-    font-weight: 700;
+    font-weight: 600;
+    margin-right: 8px;
 }
 
 .user-info {
-    flex: 1;
+    text-align: left;
 }
 
-.username {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 2px;
-}
-
-.user-status {
+.user-name {
     font-size: 14px;
-    color: var(--text-muted);
+    font-weight: 500;
+    color: var(--text-primary);
+    display: block;
 }
 
+.user-id {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: block;
+}
+
+.profile-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 180px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    display: none;
+    margin-top: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.profile-dropdown.show {
+    display: block;
+}
+
+.profile-dropdown ul {
+    padding: 8px 0;
+}
+
+.profile-dropdown li {
+    padding: 0;
+}
+
+.profile-dropdown a,
+.profile-dropdown button {
+    display: block;
+    padding: 10px 16px;
+    width: 100%;
+    text-align: left;
+    font-size: 14px;
+    color: var(--text-primary);
+    background: none;
+    border: none;
+    transition: background-color 0.2s ease;
+}
+
+.profile-dropdown a:hover,
+.profile-dropdown button:hover {
+    background-color: var(--bg-tertiary);
+}
+
+/* 로그인 버튼 (비로그인 상태) */
+.login-button {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.login-button i {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.login-button:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+/* 레이아웃 */
+.container {
+    display: flex;
+    padding-top: var(--top-header-height);
+    min-height: 100vh;
+    transition: padding-left 0.3s ease;
+}
+
+/* 사이드바 */
+.sidebar {
+    position: fixed;
+    top: var(--top-header-height);
+    left: 0;
+    width: var(--sidebar-width);
+    height: calc(100vh - var(--top-header-height));
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+    overflow-y: auto;
+    z-index: 90;
+}
+
+.sidebar.collapsed {
+    width: var(--sidebar-collapsed-width);
+}
+
+/* 사이드바 메뉴 */
 .sidebar-menu {
     flex: 1;
-    padding: 0 12px;
+    padding: 16px 0;
 }
 
 .menu-item {
+    padding: 2px 16px;
     margin-bottom: 4px;
-    border-radius: 8px;
-    transition: background-color 0.2s ease;
 }
 
 .menu-item a {
     display: flex;
     align-items: center;
-    padding: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
     color: var(--text-secondary);
-    border-radius: 8px;
-    transition: color 0.2s ease, background-color 0.2s ease;
-}
-
-.menu-item.active a,
-.menu-item a:hover {
-    color: var(--text-primary);
-    background-color: var(--bg-tertiary);
-}
-
-.menu-item .icon {
-    margin-right: 12px;
-    font-size: 18px;
-    width: 24px;
-    text-align: center;
-}
-
-.login-status {
-    padding: 16px 24px;
-    border-top: 1px solid var(--border-color);
-    margin-top: auto;
-}
-
-.login-btn, .logout-btn {
-    display: inline-block;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    text-align: center;
-    cursor: pointer;
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.login-btn {
-    color: var(--accent-color);
-    background-color: transparent;
-    border: 1px solid var(--accent-color);
-    width: 100%;
-}
-
-.login-btn:hover {
-    background-color: var(--accent-color);
-    color: white;
-}
-
-.logout-btn {
-    background-color: transparent;
-    color: var(--text-muted);
-    border: 1px solid var(--border-color);
-    width: 100%;
-    margin-top: 8px;
-}
-
-.logout-btn:hover {
+.menu-item a:hover,
+.menu-item.active a {
     background-color: var(--bg-tertiary);
     color: var(--text-primary);
 }
 
-#user-email {
-    font-size: 14px;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-    word-break: break-all;
+.menu-item .icon {
+    width: 24px;
+    text-align: center;
+    margin-right: 12px;
+    font-size: 16px;
+}
+
+.sidebar.collapsed .menu-text,
+.sidebar.collapsed .language-switcher {
+    display: none;
 }
 
 /* 메인 콘텐츠 */
 .main-content {
     flex: 1;
     padding: 24px 32px;
-    max-width: calc(100% - var(--sidebar-width));
+    margin-left: var(--sidebar-width);
+    transition: margin-left 0.3s ease;
 }
 
+.sidebar.collapsed + .main-content,
+.sidebar.collapsed ~ .main-content {
+    margin-left: var(--sidebar-collapsed-width);
+}
+
+/* 페이지 헤더 */
 .page-header {
     display: flex;
     justify-content: space-between;
@@ -251,7 +356,7 @@ ul {
 }
 
 .page-title {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 700;
     color: var(--text-primary);
 }
@@ -291,7 +396,7 @@ ul {
 }
 
 .hero-title {
-    font-size: 36px;
+    font-size: 32px;
     font-weight: 700;
     margin-bottom: 16px;
     line-height: 1.3;
@@ -308,6 +413,7 @@ ul {
 .cta-buttons {
     display: flex;
     gap: 12px;
+    flex-wrap: wrap;
 }
 
 .cta-btn {
@@ -327,6 +433,7 @@ ul {
 
 .cta-btn.primary:hover {
     background-color: var(--accent-hover);
+    transform: translateY(-2px);
 }
 
 .cta-btn.secondary {
@@ -336,6 +443,7 @@ ul {
 
 .cta-btn.secondary:hover {
     background-color: var(--border-color);
+    transform: translateY(-2px);
 }
 
 .image-placeholder {
@@ -463,6 +571,21 @@ ul {
     width: 80%;
 }
 
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--bg-tertiary);
+    border-top-color: var(--accent-color);
+    border-radius: 50%;
+    animation: spinner 1s infinite linear;
+}
+
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .skeleton::after {
     content: "";
     position: absolute;
@@ -499,20 +622,24 @@ ul {
 }
 
 @media (max-width: 768px) {
-    .container {
-        flex-direction: column;
+    .sidebar {
+        transform: translateX(-100%);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 100;
     }
     
-    .sidebar {
-        width: 100%;
-        height: auto;
-        position: static;
-        border-right: none;
-        border-bottom: 1px solid var(--border-color);
+    .sidebar.expanded {
+        transform: translateX(0);
+        width: var(--sidebar-width);
+    }
+    
+    .sidebar.collapsed {
+        transform: translateX(-100%);
     }
     
     .main-content {
-        max-width: 100%;
+        margin-left: 0 !important;
+        padding: 24px 16px;
     }
     
     .card-grid {
@@ -521,10 +648,6 @@ ul {
 }
 
 @media (max-width: 480px) {
-    .main-content {
-        padding: 16px;
-    }
-    
     .hero-title {
         font-size: 28px;
     }
@@ -535,5 +658,21 @@ ul {
     
     .cta-buttons {
         flex-direction: column;
+    }
+    
+    .user-info {
+        display: none;
+    }
+    
+    .profile-button {
+        padding: 6px;
+    }
+    
+    .top-header {
+        padding: 0 12px;
+    }
+    
+    .site-title h1 {
+        font-size: 18px;
     }
 }
