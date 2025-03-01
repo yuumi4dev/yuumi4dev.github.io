@@ -1,0 +1,224 @@
+/* 언어 선택 모달 */
+.language-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.language-modal-content {
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.language-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: var(--text-primary);
+}
+
+.language-options {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.language-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.language-option:hover {
+    background-color: var(--bg-tertiary);
+    transform: translateY(-2px);
+}
+
+.language-flag {
+    font-size: 24px;
+    margin-right: 12px;
+}
+
+.language-name {
+    font-size: 18px;
+}
+
+/* 언어 전환 버튼 */
+.language-switcher {
+    padding: 16px;
+    margin-top: auto;
+    position: relative;
+}
+
+.language-switch-btn {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    width: 100%;
+    justify-content: space-between;
+}
+
+.language-switch-btn:hover {
+    background-color: var(--bg-secondary);
+}
+
+#current-language-icon {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+/* 언어 드롭다운 메뉴 */
+.language-dropdown {
+    position: absolute;
+    bottom: 100%;
+    left: 16px;
+    right: 16px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    display: none;
+    margin-bottom: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.language-dropdown.show {
+    display: block;
+}
+
+.language-dropdown ul {
+    list-style: none;
+    padding: 8px 0;
+    margin: 0;
+}
+
+.language-dropdown li {
+    padding: 10px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.language-dropdown li:hover {
+    background-color: var(--bg-tertiary);
+}
+
+.language-dropdown .lang-flag {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+/* 다국어 지원 */
+[data-lang] {
+    display: none;
+}
+
+/* 한국어 모드 (기본) */
+html[lang="ko"] [data-lang="ko"],
+[data-lang="ko"] {
+    display: block;
+}
+
+html[lang="ko"] a[data-lang="ko"],
+html[lang="ko"] button[data-lang="ko"],
+html[lang="ko"] span[data-lang="ko"],
+a[data-lang="ko"],
+button[data-lang="ko"],
+span[data-lang="ko"] {
+    display: inline-block;
+}
+
+/* 영어 모드 */
+html[lang="en"] [data-lang="en"] {
+    display: block;
+}
+
+html[lang="en"] [data-lang="ko"],
+html[lang="en"] [data-lang="es"] {
+    display: none;
+}
+
+html[lang="en"] a[data-lang="en"],
+html[lang="en"] button[data-lang="en"],
+html[lang="en"] span[data-lang="en"] {
+    display: inline-block;
+}
+
+/* 스페인어 모드 */
+html[lang="es"] [data-lang="es"] {
+    display: block;
+}
+
+html[lang="es"] [data-lang="ko"],
+html[lang="es"] [data-lang="en"] {
+    display: none;
+}
+
+html[lang="es"] a[data-lang="es"],
+html[lang="es"] button[data-lang="es"],
+html[lang="es"] span[data-lang="es"] {
+    display: inline-block;
+}
+
+/* 인라인 요소 처리 */
+button [data-lang],
+a [data-lang] {
+    display: inline;
+}
+
+/* 반응형 */
+@media (max-width: 480px) {
+    .language-modal-content {
+        padding: 24px;
+    }
+    
+    .language-title {
+        font-size: 20px;
+    }
+    
+    .language-option {
+        padding: 12px;
+    }
+    
+    .language-flag {
+        font-size: 20px;
+    }
+    
+    .language-name {
+        font-size: 16px;
+    }
+    
+    .sidebar.collapsed .language-switcher {
+        display: none;
+    }
+}

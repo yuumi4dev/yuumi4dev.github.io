@@ -1,58 +1,46 @@
 document.addEventListener('DOMContentLoaded', function() {
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     
-    // Check if theme preference exists in localStorage
+    // 로컬 스토리지에서 테마 설정 가져오기
     const savedTheme = localStorage.getItem('theme');
     
-    // Check for system preference
+    // 시스템 테마 감지
     const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
-    // Set initial theme based on preference
+    // 초기 테마 설정
     if (savedTheme) {
-        // Use saved preference
-        setTheme(savedTheme);
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeButton(savedTheme);
     } else {
-        // Use system preference
+        // 시스템 테마에 따라 초기 테마 설정
         const initialTheme = prefersDarkMode ? 'dark' : 'light';
-        setTheme(initialTheme);
+        document.documentElement.setAttribute('data-theme', initialTheme);
         localStorage.setItem('theme', initialTheme);
+        updateThemeButton(initialTheme);
     }
     
-    // Handle theme toggle button click
+    // 테마 전환 버튼 클릭 이벤트
     if (themeToggleBtn) {
         themeToggleBtn.addEventListener('click', function() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             
-            // Set new theme
-            setTheme(newTheme);
+            // 테마 변경
+            document.documentElement.setAttribute('data-theme', newTheme);
             
-            // Save preference
+            // 로컬 스토리지에 테마 설정 저장
             localStorage.setItem('theme', newTheme);
+            
+            // 버튼 아이콘 업데이트
+            updateThemeButton(newTheme);
         });
     }
     
-    // Set theme and update button
-    function setTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        updateThemeButton(theme);
-    }
-    
-    // Update theme toggle button appearance
+    // 테마 버튼 아이콘 업데이트 함수
     function updateThemeButton(theme) {
         if (!themeToggleBtn) return;
         
-        // Update button icon
-        themeToggleBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
-        themeToggleBtn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        themeToggleBtn.textContent = theme === 'dark' ? '☀️ 라이트 모드' : '🌙 다크 모드';
+        themeToggleBtn.setAttribute('aria-label', theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환');
     }
-    
-    // Listen for system preference changes
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-        // Only change theme if user hasn't set a preference
-        if (!localStorage.getItem('theme')) {
-            const newTheme = e.matches ? 'dark' : 'light';
-            setTheme(newTheme);
-        }
-    });
 });
