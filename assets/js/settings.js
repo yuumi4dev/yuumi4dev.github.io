@@ -1,388 +1,509 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // 설정 폼 요소
-    const displayNameInput = document.getElementById('display-name');
-    const usernameInput = document.getElementById('username');
-    const userEmailInput = document.getElementById('user-email');
-    const saveProfileBtn = document.getElementById('save-profile-btn');
+    // Check if user is logged in
+    const currentUser = auth.currentUser;
     
-    // 비밀번호 변경 요소
-    const currentPasswordInput = document.getElementById('current-password');
-    const newPasswordInput = document.getElementById('new-password');
-    const confirmPasswordInput = document.getElementById('confirm-password');
-    const changePasswordBtn = document.getElementById('change-password-btn');
-    
-    // 계정 삭제 버튼
-    const deleteAccountBtn = document.getElementById('delete-account-btn');
-    
-    // 알림 메시지
+    // Settings page elements
+    const settingsNavItems = document.querySelectorAll('.settings-nav-item');
+    const settingsSections = document.querySelectorAll('.settings-section');
     const settingsMessage = document.getElementById('settings-message');
     
-    // 현재 페이지가 설정 페이지인지 확인
-    const isSettingsPage = window.location.pathname.includes('settings.html');
+    // Profile settings elements
+    const displayNameInput = document.getElementById('display-name-input');
+    const bioInput = document.getElementById('bio-input');
+    const websiteInput = document.getElementById('website-input');
+    const saveProfileBtn = document.getElementById('save-profile-btn');
+    const avatarInitial = document.getElementById('avatar-initial');
+    const uploadAvatarBtn = document.getElementById('upload-avatar-btn');
+    const removeAvatarBtn = document.getElementById('remove-avatar-btn');
+    const avatarUpload = document.getElementById('avatar-upload');
     
-    if (!isSettingsPage) return;
+    // Account settings elements
+    const usernameInput = document.getElementById('username-input');
+    const emailInput = document.getElementById('email-input');
+    const saveAccountBtn = document.getElementById('save-account-btn');
+    const settingsUsernameStatus = document.getElementById('settings-username-status');
     
-    // Firebase 인증 상태 변경 감지
-    firebase.auth().onAuthStateChanged(function(user) {
+    // Security settings elements
+    const currentPassword = document.getElementById('current-password');
+    const newPassword = document.getElementById('new-password');
+    const confirmNewPassword = document.getElementById('confirm-new-password');
+    const changePasswordBtn = document.getElementById('change-password-btn');
+    const passwordChangeForm = document.getElementById('password-change-form');
+    const socialAuthPasswordMessage = document.getElementById('social-auth-password-message');
+    
+    // Notification settings elements
+    const commentNotifications = document.getElementById('comment-notifications');
+    const updateNotifications = document.getElementById('update-notifications');
+    const saveNotificationsBtn = document.getElementById('save-notifications-btn');
+    
+    // Initialize user data
+    let userData = {};
+    
+    // Check auth state and redirect if not logged in
+    auth.onAuthStateChanged(async function(user) {
         if (user) {
-            // 사용자 정보 로드
-            loadUserData(user);
-            
-            // 프로필 저장 버튼 이벤트 리스너
-            if (saveProfileBtn) {
-                saveProfileBtn.addEventListener('click', function() {
-                    saveUserProfile(user);
-                });
+            // User is logged in, fetch user data
+            try {
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                userData = userDoc.data() || {};
+                
+                // Display user data in form fields
+                populateUserData(userData);
+                
+                // Show/hide password change form based on auth provider
+                handlePasswordChangeForm(user);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                showMessage('Error loading user data', 'error');
             }
-            
-            // 비밀번호 변경 버튼 이벤트 리스너
-            if (changePasswordBtn) {
-                changePasswordBtn.addEventListener('click', function() {
-                    changePassword(user);
-                });
-            }
-            
-            // 계정 삭제 버튼 이벤트 리스너
-            if (deleteAccountBtn) {
-                deleteAccountBtn.addEventListener('click', function() {
-                    confirmDeleteAccount(user);
-                });
-            }
+        } else {
+            // User is not logged in, redirect to login page
+            window.location.href = 'auth.html';
         }
     });
     
-    // 사용자 데이터 로드 함수
-    function loadUserData(user) {
-        // 이메일 표시
-        if (userEmailInput) {
-            userEmailInput.value = user.email;
-        }
-        
-        // 표시 이름 설정
-        if (displayNameInput && user.displayName) {
-            displayNameInput.value = user.displayName;
-        }
-        
-        // Firestore에서 추가 데이터 불러오기
-        if (firebase.firestore) {
-            firebase.firestore().collection('users').doc(user.uid).get()
-                .then(doc => {
-                    if (doc.exists) {
-                        const userData = doc.data();
-                        
-                        // 사용자명 설정
-                        if (usernameInput && userData.username) {
-                            usernameInput.value = userData.username;
-                        } else if (usernameInput) {
-                            // 기본값 설정 (이메일에서 추출)
-                            const emailName = user.email.split('@')[0];
-                            usernameInput.value = emailName.toLowerCase().replace(/[^a-z0-9_]/g, '');
-                        }
-                        
-                        // 표시 이름 설정 (Firestore 데이터 우선)
-                        if (displayNameInput && userData.displayName) {
-                            displayNameInput.value = userData.displayName;
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('사용자 데이터 로드 오류:', error);
-                    showMessage('사용자 정보를 불러오는 중 오류가 발생했습니다.', 'error');
+    // Settings navigation
+    if (settingsNavItems.length > 0) {
+        settingsNavItems.forEach(function(item) {
+            item.addEventListener('click', function() {
+                // Remove active class from all items
+                settingsNavItems.forEach(function(navItem) {
+                    navItem.classList.remove('active');
                 });
-        }
-    }
-    
-    // 사용자 프로필 저장 함수
-    function saveUserProfile(user) {
-        // 입력값 가져오기
-        const displayName = displayNameInput.value.trim();
-        const username = usernameInput.value.trim();
-        
-        // 유효성 검사
-        if (!displayName) {
-            showMessage('닉네임을 입력해주세요.', 'error');
-            return;
-        }
-        
-        if (!username) {
-            showMessage('사용자 ID를 입력해주세요.', 'error');
-            return;
-        }
-        
-        // 사용자 ID 유효성 검사 (영문, 숫자, 밑줄만 허용)
-        const usernameRegex = /^[a-z0-9_]+$/;
-        if (!usernameRegex.test(username)) {
-            showMessage('사용자 ID는 영문 소문자, 숫자, 밑줄(_)만 사용 가능합니다.', 'error');
-            return;
-        }
-        
-        // 로딩 메시지 표시
-        showMessage('저장 중...', 'info');
-        
-        // 사용자 ID 중복 확인
-        if (firebase.firestore) {
-            firebase.firestore().collection('usernames')
-                .doc(username)
-                .get()
-                .then(doc => {
-                    if (doc.exists && doc.data().uid !== user.uid) {
-                        showMessage('이미 사용 중인 사용자 ID입니다.', 'error');
-                        return;
-                    }
-                    
-                    // Firebase Auth에 표시 이름 업데이트
-                    user.updateProfile({
-                        displayName: displayName
-                    }).then(() => {
-                        console.log('프로필 업데이트 성공');
-                        
-                        // Firestore에 사용자 정보 업데이트
-                        if (firebase.firestore) {
-                            // 기존 사용자명 가져오기
-                            firebase.firestore().collection('users').doc(user.uid).get()
-                                .then(doc => {
-                                    const oldUsername = doc.exists && doc.data().username ? doc.data().username : null;
-                                    
-                                    // 새 정보로 사용자 문서 업데이트
-                                    firebase.firestore().collection('users').doc(user.uid).set({
-                                        displayName: displayName,
-                                        username: username,
-                                        updatedAt: new Date()
-                                    }, { merge: true })
-                                    .then(() => {
-                                        // 사용자명 매핑 업데이트
-                                        const batch = firebase.firestore().batch();
-                                        
-                                        // 새 사용자명 추가
-                                        batch.set(firebase.firestore().collection('usernames').doc(username), {
-                                            uid: user.uid
-                                        });
-                                        
-                                        // 이전 사용자명 삭제 (다른 경우에만)
-                                        if (oldUsername && oldUsername !== username) {
-                                            batch.delete(firebase.firestore().collection('usernames').doc(oldUsername));
-                                        }
-                                        
-                                        batch.commit()
-                                            .then(() => {
-                                                showMessage('프로필이 성공적으로 저장되었습니다.', 'success');
-                                                
-                                                // 헤더 프로필 정보 업데이트
-                                                const userNameElement = document.getElementById('user-name');
-                                                const userIdElement = document.getElementById('user-id');
-                                                
-                                                if (userNameElement) userNameElement.textContent = displayName;
-                                                if (userIdElement) userIdElement.textContent = '@' + username;
-                                            })
-                                            .catch(error => {
-                                                console.error('사용자명 매핑 업데이트 오류:', error);
-                                                showMessage('사용자 ID 업데이트 중 오류가 발생했습니다.', 'error');
-                                            });
-                                    })
-                                    .catch(error => {
-                                        console.error('사용자 정보 저장 오류:', error);
-                                        showMessage('사용자 정보 저장 중 오류가 발생했습니다.', 'error');
-                                    });
-                                })
-                                .catch(error => {
-                                    console.error('기존 사용자 정보 로드 오류:', error);
-                                    showMessage('사용자 정보 로드 중 오류가 발생했습니다.', 'error');
-                                });
-                        }
-                    }).catch(error => {
-                        console.error('프로필 업데이트 오류:', error);
-                        showMessage('프로필 업데이트 중 오류가 발생했습니다.', 'error');
-                    });
-                })
-                .catch(error => {
-                    console.error('사용자 ID 중복 확인 오류:', error);
-                    showMessage('사용자 ID 확인 중 오류가 발생했습니다.', 'error');
-                });
-        }
-    }
-    
-    // 비밀번호 변경 함수
-    function changePassword(user) {
-        // 입력값 가져오기
-        const currentPassword = currentPasswordInput.value;
-        const newPassword = newPasswordInput.value;
-        const confirmPassword = confirmPasswordInput.value;
-        
-        // 유효성 검사
-        if (!currentPassword || !newPassword || !confirmPassword) {
-            showMessage('모든 필드를 입력해주세요.', 'error');
-            return;
-        }
-        
-        if (newPassword !== confirmPassword) {
-            showMessage('새 비밀번호가 일치하지 않습니다.', 'error');
-            return;
-        }
-        
-        if (newPassword.length < 6) {
-            showMessage('비밀번호는 최소 6자 이상이어야 합니다.', 'error');
-            return;
-        }
-        
-        // 로딩 메시지 표시
-        showMessage('비밀번호 변경 중...', 'info');
-        
-        // 현재 사용자 재인증
-        const credential = firebase.auth.EmailAuthProvider.credential(
-            user.email,
-            currentPassword
-        );
-        
-        user.reauthenticateWithCredential(credential)
-            .then(() => {
-                // 재인증 성공, 비밀번호 변경
-                user.updatePassword(newPassword)
-                    .then(() => {
-                        // 비밀번호 변경 성공
-                        showMessage('비밀번호가 성공적으로 변경되었습니다.', 'success');
-                        
-                        // 입력 필드 초기화
-                        currentPasswordInput.value = '';
-                        newPasswordInput.value = '';
-                        confirmPasswordInput.value = '';
-                    })
-                    .catch(error => {
-                        console.error('비밀번호 변경 오류:', error);
-                        showMessage('비밀번호 변경 중 오류가 발생했습니다.', 'error');
-                    });
-            })
-            .catch(error => {
-                console.error('재인증 오류:', error);
-                showMessage('현재 비밀번호가 일치하지 않습니다.', 'error');
-            });
-    }
-    
-    // 계정 삭제 확인 함수
-    function confirmDeleteAccount(user) {
-        if (confirm('정말로 계정을 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.')) {
-            // 사용자 비밀번호 재확인 (보안 강화)
-            const password = prompt('계정 삭제를 확인하려면 비밀번호를 입력하세요:');
-            
-            if (password) {
-                // 재인증
-                const credential = firebase.auth.EmailAuthProvider.credential(
-                    user.email,
-                    password
-                );
                 
-                user.reauthenticateWithCredential(credential)
-                    .then(() => {
-                        // Firestore 데이터 삭제
-                        if (firebase.firestore) {
-                            deleteUserData(user.uid)
-                                .then(() => {
-                                    // 사용자 계정 삭제
-                                    user.delete()
-                                        .then(() => {
-                                            alert('계정이 성공적으로 삭제되었습니다.');
-                                            window.location.href = 'index.html';
-                                        })
-                                        .catch(error => {
-                                            console.error('계정 삭제 오류:', error);
-                                            showMessage('계정 삭제 중 오류가 발생했습니다.', 'error');
-                                        });
-                                })
-                                .catch(error => {
-                                    console.error('사용자 데이터 삭제 오류:', error);
-                                    showMessage('사용자 데이터 삭제 중 오류가 발생했습니다.', 'error');
-                                });
-                        } else {
-                            // Firestore가 없는 경우 바로 계정 삭제
-                            user.delete()
-                                .then(() => {
-                                    alert('계정이 성공적으로 삭제되었습니다.');
-                                    window.location.href = 'index.html';
-                                })
-                                .catch(error => {
-                                    console.error('계정 삭제 오류:', error);
-                                    showMessage('계정 삭제 중 오류가 발생했습니다.', 'error');
-                                });
-                        }
-                    })
-                    .catch(error => {
-                        console.error('재인증 오류:', error);
-                        showMessage('비밀번호가 일치하지 않습니다.', 'error');
-                    });
-            }
-        }
-    }
-    
-    // 사용자 데이터 삭제 함수
-    function deleteUserData(uid) {
-        return new Promise((resolve, reject) => {
-            if (!firebase.firestore) return resolve();
-            
-            // 사용자 문서 삭제 전에 사용자명 정보 가져오기
-            firebase.firestore().collection('users').doc(uid).get()
-                .then(doc => {
-                    if (doc.exists && doc.data().username) {
-                        const username = doc.data().username;
-                        
-                        // 트랜잭션으로 여러 컬렉션의 데이터 삭제
-                        const batch = firebase.firestore().batch();
-                        
-                        // 사용자 문서 삭제
-                        batch.delete(firebase.firestore().collection('users').doc(uid));
-                        
-                        // 사용자명 매핑 삭제
-                        batch.delete(firebase.firestore().collection('usernames').doc(username));
-                        
-                        // 추후 다른 사용자 관련 데이터 삭제 추가
-                        
-                        batch.commit()
-                            .then(() => {
-                                resolve();
-                            })
-                            .catch(error => {
-                                reject(error);
-                            });
-                    } else {
-                        // 사용자명 정보가 없는 경우 사용자 문서만 삭제
-                        firebase.firestore().collection('users').doc(uid).delete()
-                            .then(() => {
-                                resolve();
-                            })
-                            .catch(error => {
-                                reject(error);
-                            });
+                // Add active class to clicked item
+                this.classList.add('active');
+                
+                // Show corresponding section
+                const sectionId = this.getAttribute('data-settings');
+                settingsSections.forEach(function(section) {
+                    section.classList.remove('active');
+                    if (section.id === sectionId + '-settings') {
+                        section.classList.add('active');
                     }
-                })
-                .catch(error => {
-                    reject(error);
                 });
+                
+                // Hide message
+                if (settingsMessage) {
+                    settingsMessage.style.display = 'none';
+                }
+            });
         });
     }
     
-    // 알림 메시지 표시 함수
+    // Populate form fields with user data
+    function populateUserData(data) {
+        // Profile settings
+        if (displayNameInput) displayNameInput.value = data.displayName || '';
+        if (bioInput) bioInput.value = data.bio || '';
+        if (websiteInput) websiteInput.value = data.website || '';
+        if (avatarInitial && data.displayName) {
+            avatarInitial.textContent = data.displayName.charAt(0).toUpperCase();
+        }
+        
+        // Account settings
+        if (usernameInput) usernameInput.value = data.username || '';
+        if (emailInput) emailInput.value = data.email || '';
+        
+        // Notification settings
+        if (commentNotifications) commentNotifications.checked = data.notifications?.comments !== false;
+        if (updateNotifications) updateNotifications.checked = data.notifications?.updates !== false;
+    }
+    
+    // Handle password change form based on auth provider
+    function handlePasswordChangeForm(user) {
+        if (!passwordChangeForm || !socialAuthPasswordMessage) return;
+        
+        // Check if user signed in with email/password
+        const emailProvider = user.providerData.find(provider => provider.providerId === 'password');
+        
+        if (emailProvider) {
+            // User has email/password auth, show password change form
+            passwordChangeForm.style.display = 'block';
+            socialAuthPasswordMessage.style.display = 'none';
+        } else {
+            // User signed in with social auth, show message
+            passwordChangeForm.style.display = 'none';
+            socialAuthPasswordMessage.style.display = 'block';
+        }
+    }
+    
+    // Username availability check
+    let usernameCheckTimeout;
+    let lastCheckedUsername = '';
+    
+    if (usernameInput && settingsUsernameStatus) {
+        usernameInput.addEventListener('input', function() {
+            const username = this.value.trim().toLowerCase();
+            
+            // Clear previous timeout
+            clearTimeout(usernameCheckTimeout);
+            
+            // Clear status
+            settingsUsernameStatus.textContent = '';
+            settingsUsernameStatus.className = 'username-status';
+            
+            // If username is the same as current username, it's available
+            if (username === userData.username) {
+                return;
+            }
+            
+            // Validate username format
+            if (username.length < 3) {
+                settingsUsernameStatus.textContent = 'Username must be at least 3 characters';
+                settingsUsernameStatus.classList.add('username-unavailable');
+                return;
+            }
+            
+            if (!/^[a-z0-9_]+$/.test(username)) {
+                settingsUsernameStatus.textContent = 'Username can only contain letters, numbers, and underscores';
+                settingsUsernameStatus.classList.add('username-unavailable');
+                return;
+            }
+            
+            // If username is same as last checked, don't check again
+            if (username === lastCheckedUsername) return;
+            
+            // Show checking status
+            settingsUsernameStatus.textContent = 'Checking availability...';
+            settingsUsernameStatus.classList.add('username-checking');
+            
+            // Check username availability after 500ms delay
+            usernameCheckTimeout = setTimeout(() => {
+                checkUsernameAvailability(username);
+                lastCheckedUsername = username;
+            }, 500);
+        });
+    }
+    
+    // Check username availability
+    async function checkUsernameAvailability(username) {
+        try {
+            const querySnapshot = await db.collection('users')
+                .where('username', '==', username)
+                .limit(1)
+                .get();
+            
+            if (querySnapshot.empty) {
+                // Username is available
+                settingsUsernameStatus.textContent = 'Username is available';
+                settingsUsernameStatus.className = 'username-status username-available';
+            } else {
+                // Username is taken
+                settingsUsernameStatus.textContent = 'Username is already taken';
+                settingsUsernameStatus.className = 'username-status username-unavailable';
+            }
+        } catch (error) {
+            console.error('Error checking username:', error);
+            settingsUsernameStatus.textContent = 'Error checking username';
+            settingsUsernameStatus.className = 'username-status username-unavailable';
+        }
+    }
+    
+    // Save profile settings
+    if (saveProfileBtn) {
+        saveProfileBtn.addEventListener('click', async function() {
+            const name = displayNameInput.value.trim();
+            const bio = bioInput.value.trim();
+            const website = websiteInput.value.trim();
+            
+            if (!name) {
+                showMessage('Display name is required', 'error');
+                return;
+            }
+            
+            // Validate website URL if provided
+            if (website && !isValidUrl(website)) {
+                showMessage('Please enter a valid website URL', 'error');
+                return;
+            }
+            
+            try {
+                // Get current user
+                const user = auth.currentUser;
+                if (!user) throw new Error('User not logged in');
+                
+                // Update Firebase Auth display name
+                await user.updateProfile({
+                    displayName: name
+                });
+                
+                // Update Firestore user document
+                await db.collection('users').doc(user.uid).update({
+                    displayName: name,
+                    bio: bio,
+                    website: website,
+                    updatedAt: new Date()
+                });
+                
+                // Update user data object
+                userData.displayName = name;
+                userData.bio = bio;
+                userData.website = website;
+                
+                // Update avatar initial
+                if (avatarInitial) {
+                    avatarInitial.textContent = name.charAt(0).toUpperCase();
+                }
+                
+                // Update localStorage data
+                updateLocalStorageUserData(user.uid, {
+                    displayName: name,
+                    username: userData.username
+                });
+                
+                // Show success message
+                showMessage('Profile updated successfully', 'success');
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showMessage('Error updating profile: ' + error.message, 'error');
+            }
+        });
+    }
+    
+    // Save account settings
+    if (saveAccountBtn) {
+        saveAccountBtn.addEventListener('click', async function() {
+            const username = usernameInput.value.trim().toLowerCase();
+            
+            if (!username) {
+                showMessage('Username is required', 'error');
+                return;
+            }
+            
+            if (username.length < 3 || !/^[a-z0-9_]+$/.test(username)) {
+                showMessage('Username must be at least 3 characters and can only contain letters, numbers, and underscores', 'error');
+                return;
+            }
+            
+            // If username hasn't changed, skip username check
+            if (username === userData.username) {
+                showMessage('No changes to save', 'info');
+                return;
+            }
+            
+            try {
+                // Check username availability
+                const usernameSnapshot = await db.collection('users')
+                    .where('username', '==', username)
+                    .limit(1)
+                    .get();
+                
+                if (!usernameSnapshot.empty) {
+                    showMessage('This username is already taken', 'error');
+                    return;
+                }
+                
+                // Get current user
+                const user = auth.currentUser;
+                if (!user) throw new Error('User not logged in');
+                
+                // Update Firestore user document
+                await db.collection('users').doc(user.uid).update({
+                    username: username,
+                    updatedAt: new Date()
+                });
+                
+                // Update user data object
+                userData.username = username;
+                
+                // Update localStorage data
+                updateLocalStorageUserData(user.uid, {
+                    displayName: userData.displayName,
+                    username: username
+                });
+                
+                // Show success message
+                showMessage('Username updated successfully', 'success');
+            } catch (error) {
+                console.error('Error updating account:', error);
+                showMessage('Error updating account: ' + error.message, 'error');
+            }
+        });
+    }
+    
+    // Change password
+    if (changePasswordBtn) {
+        changePasswordBtn.addEventListener('click', async function() {
+            const currentPwd = currentPassword.value;
+            const newPwd = newPassword.value;
+            const confirmPwd = confirmNewPassword.value;
+            
+            // Validate inputs
+            if (!currentPwd || !newPwd || !confirmPwd) {
+                showMessage('Please fill in all password fields', 'error');
+                return;
+            }
+            
+            if (newPwd !== confirmPwd) {
+                showMessage('New passwords do not match', 'error');
+                return;
+            }
+            
+            if (newPwd.length < 6) {
+                showMessage('New password must be at least 6 characters', 'error');
+                return;
+            }
+            
+            try {
+                // Get current user
+                const user = auth.currentUser;
+                if (!user) throw new Error('User not logged in');
+                
+                // Get user's email
+                const email = user.email;
+                
+                // Re-authenticate user
+                const credential = firebase.auth.EmailAuthProvider.credential(email, currentPwd);
+                await user.reauthenticateWithCredential(credential);
+                
+                // Update password
+                await user.updatePassword(newPwd);
+                
+                // Clear password fields
+                currentPassword.value = '';
+                newPassword.value = '';
+                confirmNewPassword.value = '';
+                
+                // Show success message
+                showMessage('Password updated successfully', 'success');
+            } catch (error) {
+                console.error('Error updating password:', error);
+                
+                // Handle specific errors
+                let errorMessage;
+                switch (error.code) {
+                    case 'auth/wrong-password':
+                        errorMessage = 'Current password is incorrect';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = 'New password is too weak';
+                        break;
+                    default:
+                        errorMessage = error.message;
+                }
+                
+                showMessage('Error updating password: ' + errorMessage, 'error');
+            }
+        });
+    }
+    
+    // Save notification settings
+    if (saveNotificationsBtn) {
+        saveNotificationsBtn.addEventListener('click', async function() {
+            try {
+                // Get current user
+                const user = auth.currentUser;
+                if (!user) throw new Error('User not logged in');
+                
+                // Get notification preferences
+                const commentsEnabled = commentNotifications.checked;
+                const updatesEnabled = updateNotifications.checked;
+                
+                // Update Firestore user document
+                await db.collection('users').doc(user.uid).update({
+                    'notifications.comments': commentsEnabled,
+                    'notifications.updates': updatesEnabled,
+                    updatedAt: new Date()
+                });
+                
+                // Update user data object
+                if (!userData.notifications) userData.notifications = {};
+                userData.notifications.comments = commentsEnabled;
+                userData.notifications.updates = updatesEnabled;
+                
+                // Show success message
+                showMessage('Notification preferences saved', 'success');
+            } catch (error) {
+                console.error('Error saving notification preferences:', error);
+                showMessage('Error saving preferences: ' + error.message, 'error');
+            }
+        });
+    }
+    
+    // Handle avatar upload
+    if (uploadAvatarBtn && avatarUpload) {
+        uploadAvatarBtn.addEventListener('click', function() {
+            avatarUpload.click();
+        });
+        
+        avatarUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Here you would typically upload the file to Firebase Storage
+                // and save the URL to the user's profile
+                // For now, we'll just show a message
+                showMessage('Avatar upload will be implemented soon', 'info');
+            }
+        });
+    }
+    
+    // Handle avatar removal
+    if (removeAvatarBtn) {
+        removeAvatarBtn.addEventListener('click', function() {
+            // Here you would typically remove the user's avatar from Firebase Storage
+            // and remove the URL from the user's profile
+            // For now, we'll just show a message
+            showMessage('Avatar removal will be implemented soon', 'info');
+        });
+    }
+    
+    // Helper Functions
+    
+    // Show message
     function showMessage(message, type) {
         if (!settingsMessage) return;
         
-        // 클래스 초기화
-        settingsMessage.className = 'settings-message';
-        
-        // 타입에 따라 클래스 추가
-        if (type === 'success') {
-            settingsMessage.classList.add('success');
-        } else if (type === 'error') {
-            settingsMessage.classList.add('error');
-        }
-        
-        // 메시지 설정
         settingsMessage.textContent = message;
-        
-        // 메시지 표시
+        settingsMessage.className = 'settings-message';
+        settingsMessage.classList.add(type);
         settingsMessage.style.display = 'block';
         
-        // 성공 메시지는 자동으로 사라지도록 설정
-        if (type === 'success') {
-            setTimeout(() => {
-                settingsMessage.style.display = 'none';
-            }, 5000);
+        // Scroll to message
+        settingsMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+        // Hide message after 5 seconds
+        setTimeout(() => {
+            settingsMessage.style.display = 'none';
+        }, 5000);
+    }
+    
+    // Update localStorage user data
+    function updateLocalStorageUserData(uid, updates) {
+        const localData = JSON.parse(localStorage.getItem('userData') || '{}');
+        const updatedData = { ...localData, ...updates };
+        localStorage.setItem('userData', JSON.stringify(updatedData));
+        
+        // Update navbar display
+        const displayNameEl = document.getElementById('display-name');
+        const userHandleEl = document.getElementById('user-handle');
+        const dropdownNameEl = document.getElementById('dropdown-name');
+        const dropdownHandleEl = document.getElementById('dropdown-handle');
+        
+        if (displayNameEl && updates.displayName) {
+            displayNameEl.textContent = updates.displayName;
+        }
+        
+        if (userHandleEl && updates.username) {
+            userHandleEl.textContent = '@' + updates.username;
+        }
+        
+        if (dropdownNameEl && updates.displayName) {
+            dropdownNameEl.textContent = updates.displayName;
+        }
+        
+        if (dropdownHandleEl && updates.username) {
+            dropdownHandleEl.textContent = '@' + updates.username;
+        }
+    }
+    
+    // Validate URL
+    function isValidUrl(string) {
+        try {
+            new URL(string);
+            return true;
+        } catch (_) {
+            return false;
         }
     }
 });

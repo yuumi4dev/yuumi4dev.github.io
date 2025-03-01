@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio | Home</title>
+    <title>Portfolio | Profile</title>
     <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" href="assets/css/home.css">
+    <link rel="stylesheet" href="assets/css/profile.css">
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -73,7 +73,7 @@
             <!-- Sidebar Navigation -->
             <nav class="sidebar" id="sidebar">
                 <ul class="sidebar-menu">
-                    <li class="menu-item active">
+                    <li class="menu-item">
                         <a href="index.html">
                             <span class="icon">🏠</span>
                             <span class="menu-text">Home</span>
@@ -103,87 +103,75 @@
             <!-- Main Content -->
             <main class="main-content" id="main-content">
                 <div class="content-container">
-                    <section class="hero-section">
-                        <div class="hero-content">
-                            <h1 class="hero-title">Welcome to My Portfolio</h1>
-                            <p class="hero-description">
-                                asdf
-                            </p>
-                            <div class="cta-buttons">
-                                <a href="portfolio.html" class="cta-btn primary">View Portfolio</a>
-                                <a href="blog.html" class="cta-btn secondary">Read Blog</a>
+                    <div class="profile-container">
+                        <div class="profile-header">
+                            <div class="profile-avatar" id="profile-avatar">
+                                <div class="avatar large">
+                                    <span class="avatar-initial">P</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="hero-image">
-                            <div class="image-placeholder">
-                                <span>🚀</span>
-                            </div>
-                        </div>
-                    </section>
-                    
-                    <section class="featured-section">
-                        <h2 class="section-title">Featured Projects</h2>
-                        <div class="card-grid">
-                            <div class="card">
-                                <div class="card-image">
-                                    <div class="image-placeholder">
-                                        <span>📱</span>
+                            <div class="profile-info">
+                                <h1 class="profile-name" id="profile-name">Username</h1>
+                                <p class="profile-username" id="profile-username">@username</p>
+                                <p class="profile-bio" id="profile-bio"></p>
+                                <div class="profile-meta">
+                                    <div class="profile-website">
+                                        <span class="meta-icon">🔗</span>
+                                        <a href="#" id="profile-website" target="_blank" rel="noopener">website.com</a>
+                                    </div>
+                                    <div class="profile-join-date">
+                                        <span class="meta-icon">📅</span>
+                                        <span id="profile-join-date">Joined January 2023</span>
                                     </div>
                                 </div>
-                                <div class="card-content">
-                                    <h3 class="card-title">Mobile App Project</h3>
-                                    <p class="card-description">iOS/Android application design and development focused on user experience</p>
-                                    <a href="projects.html" class="card-link">View Details →</a>
+                                <div class="profile-actions">
+                                    <a href="settings.html" id="edit-profile-btn" class="edit-profile-btn" style="display: none;">
+                                        <span class="btn-icon">✏️</span>
+                                        <span>Edit Profile</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-content">
+                            <div class="profile-tabs">
+                                <button class="profile-tab active" data-tab="posts">Posts</button>
+                                <button class="profile-tab" data-tab="portfolio">Portfolio</button>
+                                <button class="profile-tab" data-tab="projects">Projects</button>
+                            </div>
+                            
+                            <div class="profile-tab-content active" id="posts-tab">
+                                <h2 class="content-title">Recent Posts</h2>
+                                <div class="posts-list" id="user-posts">
+                                    <!-- Loading skeleton -->
+                                    <div class="post-item skeleton">
+                                        <div class="post-date skeleton-text"></div>
+                                        <h3 class="post-title skeleton-text"></h3>
+                                        <p class="post-excerpt skeleton-text"></p>
+                                    </div>
+                                    <div class="post-item skeleton">
+                                        <div class="post-date skeleton-text"></div>
+                                        <h3 class="post-title skeleton-text"></h3>
+                                        <p class="post-excerpt skeleton-text"></p>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div class="card">
-                                <div class="card-image">
-                                    <div class="image-placeholder">
-                                        <span>🖥️</span>
-                                    </div>
-                                </div>
-                                <div class="card-content">
-                                    <h3 class="card-title">Web Development Project</h3>
-                                    <p class="card-description">Responsive websites and web applications using modern web technologies</p>
-                                    <a href="projects.html" class="card-link">View Details →</a>
+                            <div class="profile-tab-content" id="portfolio-tab">
+                                <h2 class="content-title">Portfolio Items</h2>
+                                <div class="portfolio-grid" id="user-portfolio">
+                                    <div class="no-content-message">Portfolio items will appear here</div>
                                 </div>
                             </div>
                             
-                            <div class="card">
-                                <div class="card-image">
-                                    <div class="image-placeholder">
-                                        <span>🎨</span>
-                                    </div>
-                                </div>
-                                <div class="card-content">
-                                    <h3 class="card-title">UI/UX Design</h3>
-                                    <p class="card-description">Intuitive and minimal user interface design and experience enhancement</p>
-                                    <a href="portfolio.html" class="card-link">View Details →</a>
+                            <div class="profile-tab-content" id="projects-tab">
+                                <h2 class="content-title">Projects</h2>
+                                <div class="projects-list" id="user-projects">
+                                    <div class="no-content-message">Projects will appear here</div>
                                 </div>
                             </div>
                         </div>
-                    </section>
-                    
-                    <section class="latest-posts-section">
-                        <h2 class="section-title">Latest Blog Posts</h2>
-                        <div class="post-list">
-                            <!-- Blog posts loaded dynamically via JavaScript -->
-                            <div id="latest-posts-container">
-                                <div class="post-item skeleton">
-                                    <div class="post-date skeleton-text"></div>
-                                    <h3 class="post-title skeleton-text"></h3>
-                                    <p class="post-excerpt skeleton-text"></p>
-                                </div>
-                                <div class="post-item skeleton">
-                                    <div class="post-date skeleton-text"></div>
-                                    <h3 class="post-title skeleton-text"></h3>
-                                    <p class="post-excerpt skeleton-text"></p>
-                                </div>
-                            </div>
-                            <a href="blog.html" class="see-all-link">View All Posts →</a>
-                        </div>
-                    </section>
+                    </div>
                 </div>
             </main>
         </div>
@@ -193,6 +181,28 @@
     <script src="assets/js/sidebar.js"></script>
     <script src="assets/js/theme.js"></script>
     <script src="assets/js/profile.js"></script>
-    <script src="assets/js/blog.js"></script>
+    
+    <!-- Profile tabs script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileTabs = document.querySelectorAll('.profile-tab');
+            const tabContents = document.querySelectorAll('.profile-tab-content');
+            
+            profileTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs and contents
+                    profileTabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Show corresponding content
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId + '-tab').classList.add('active');
+                });
+            });
+        });
+    </script>
 </body>
 </html>

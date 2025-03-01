@@ -1,6 +1,277 @@
-<script src="assets/js/auth.js"></script>
-<script src="assets/js/theme.js"></script>
-<script src="assets/js/language.js"></script>
-<script src="assets/js/sidebar.js"></script>
-<script src="assets/js/profile.js"></script>
-<script src="assets/js/settings.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Settings</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/settings.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="assets/js/firebase-init.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navigation Bar -->
+        <header class="top-navbar">
+            <div class="navbar-left">
+                <button id="sidebar-toggle" class="sidebar-toggle-btn" aria-label="Toggle sidebar">
+                    <span class="toggle-icon"></span>
+                </button>
+                <a href="index.html" class="logo">Portfolio</a>
+            </div>
+            
+            <div class="navbar-right">
+                <div class="theme-language-controls">
+                    <div class="language-selector">
+                        <button class="lang-btn">EN</button>
+                    </div>
+                    <div class="theme-toggle">
+                        <button id="theme-toggle-btn" aria-label="Toggle theme">🌙</button>
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <div id="login-container">
+                        <a href="auth.html" class="login-btn">
+                            <span class="login-icon">👤</span>
+                            <span class="login-text">Login</span>
+                        </a>
+                    </div>
+                    <div id="user-container" style="display: none;">
+                        <div class="user-profile-btn" id="profile-dropdown-btn">
+                            <div class="avatar">
+                                <span class="avatar-initial">P</span>
+                            </div>
+                            <div class="user-info">
+                                <span class="username" id="display-name">Username</span>
+                                <span class="user-id" id="user-handle">@username</span>
+                            </div>
+                        </div>
+                        <div class="profile-dropdown" id="profile-dropdown">
+                            <div class="dropdown-header">
+                                <div class="dropdown-user-info">
+                                    <span class="dropdown-username" id="dropdown-name">Username</span>
+                                    <span class="dropdown-user-id" id="dropdown-handle">@username</span>
+                                </div>
+                            </div>
+                            <ul class="dropdown-menu">
+                                <li><a href="profile.html" class="dropdown-item">My Profile</a></li>
+                                <li><a href="settings.html" class="dropdown-item">Settings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><button id="logout-btn" class="dropdown-item logout-item">Logout</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    
+        <div class="main-wrapper">
+            <!-- Sidebar Navigation -->
+            <nav class="sidebar" id="sidebar">
+                <ul class="sidebar-menu">
+                    <li class="menu-item">
+                        <a href="index.html">
+                            <span class="icon">🏠</span>
+                            <span class="menu-text">Home</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="blog.html">
+                            <span class="icon">📝</span>
+                            <span class="menu-text">Blog</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="portfolio.html">
+                            <span class="icon">🎨</span>
+                            <span class="menu-text">Portfolio</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="projects.html">
+                            <span class="icon">💻</span>
+                            <span class="menu-text">Projects</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <!-- Main Content -->
+            <main class="main-content" id="main-content">
+                <div class="content-container">
+                    <h1 class="page-title">Account Settings</h1>
+                    
+                    <div class="settings-container">
+                        <!-- Settings Navigation -->
+                        <div class="settings-nav">
+                            <button class="settings-nav-item active" data-settings="profile">Profile</button>
+                            <button class="settings-nav-item" data-settings="account">Account</button>
+                            <button class="settings-nav-item" data-settings="security">Security</button>
+                            <button class="settings-nav-item" data-settings="notifications">Notifications</button>
+                        </div>
+                        
+                        <!-- Settings Content -->
+                        <div class="settings-content">
+                            <!-- Profile Settings Section -->
+                            <div class="settings-section active" id="profile-settings">
+                                <h2 class="settings-title">Profile Settings</h2>
+                                <p class="settings-description">Update your profile information and how others see you.</p>
+                                
+                                <div class="settings-card">
+                                    <h3 class="card-subtitle">Profile Picture</h3>
+                                    <div class="profile-picture-setting">
+                                        <div class="current-avatar">
+                                            <div class="avatar large">
+                                                <span class="avatar-initial" id="avatar-initial">P</span>
+                                            </div>
+                                        </div>
+                                        <div class="avatar-actions">
+                                            <button class="action-btn" id="upload-avatar-btn">Upload Image</button>
+                                            <button class="action-btn secondary" id="remove-avatar-btn">Remove</button>
+                                            <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
+                                        </div>
+                                    </div>
+                                    
+                                    <h3 class="card-subtitle">Basic Information</h3>
+                                    <div class="form-group">
+                                        <label for="display-name-input">Display Name</label>
+                                        <input type="text" id="display-name-input" placeholder="Your display name">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="bio-input">Bio</label>
+                                        <textarea id="bio-input" rows="3" placeholder="Tell others a bit about yourself"></textarea>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="website-input">Website</label>
+                                        <input type="url" id="website-input" placeholder="https://yourwebsite.com">
+                                    </div>
+                                    
+                                    <div class="form-actions">
+                                        <button id="save-profile-btn" class="save-btn">Save Changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Account Settings Section -->
+                            <div class="settings-section" id="account-settings">
+                                <h2 class="settings-title">Account Settings</h2>
+                                <p class="settings-description">Manage your username and email preferences.</p>
+                                
+                                <div class="settings-card">
+                                    <h3 class="card-subtitle">Username</h3>
+                                    <div class="form-group">
+                                        <label for="username-input">Username</label>
+                                        <div class="username-input-group">
+                                            <span class="username-prefix">@</span>
+                                            <input type="text" id="username-input" placeholder="username">
+                                        </div>
+                                        <div class="username-status" id="settings-username-status"></div>
+                                        <p class="input-help">Your unique username for this platform.</p>
+                                    </div>
+                                    
+                                    <h3 class="card-subtitle">Email Address</h3>
+                                    <div class="form-group">
+                                        <label for="email-input">Email</label>
+                                        <input type="email" id="email-input" disabled>
+                                        <p class="input-help">You cannot change the email associated with your account.</p>
+                                    </div>
+                                    
+                                    <div class="form-actions">
+                                        <button id="save-account-btn" class="save-btn">Save Changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Security Settings Section -->
+                            <div class="settings-section" id="security-settings">
+                                <h2 class="settings-title">Security Settings</h2>
+                                <p class="settings-description">Update your password and manage security settings.</p>
+                                
+                                <div class="settings-card">
+                                    <h3 class="card-subtitle">Change Password</h3>
+                                    
+                                    <div id="password-change-form">
+                                        <div class="form-group">
+                                            <label for="current-password">Current Password</label>
+                                            <input type="password" id="current-password" placeholder="Enter current password">
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="new-password">New Password</label>
+                                            <input type="password" id="new-password" placeholder="Enter new password">
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="confirm-new-password">Confirm New Password</label>
+                                            <input type="password" id="confirm-new-password" placeholder="Confirm new password">
+                                        </div>
+                                        
+                                        <div class="form-actions">
+                                            <button id="change-password-btn" class="save-btn">Update Password</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="social-auth-password-message" style="display: none;">
+                                        <p class="message-info">You signed in using a social account (Google or GitHub). Password management is handled by your provider.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Notifications Settings Section -->
+                            <div class="settings-section" id="notifications-settings">
+                                <h2 class="settings-title">Notification Settings</h2>
+                                <p class="settings-description">Control what notifications you receive.</p>
+                                
+                                <div class="settings-card">
+                                    <h3 class="card-subtitle">Email Notifications</h3>
+                                    
+                                    <div class="toggle-setting">
+                                        <div class="toggle-info">
+                                            <span class="toggle-label">Comments on your posts</span>
+                                            <span class="toggle-description">Receive emails when someone comments on your blog posts.</span>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="comment-notifications" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="toggle-setting">
+                                        <div class="toggle-info">
+                                            <span class="toggle-label">Site updates and news</span>
+                                            <span class="toggle-description">Receive occasional updates about new features and improvements.</span>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="update-notifications" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-actions">
+                                        <button id="save-notifications-btn" class="save-btn">Save Preferences</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Status Message -->
+                    <div id="settings-message" class="settings-message"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/sidebar.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/profile.js"></script>
+    <script src="assets/js/settings.js"></script>
+</body>
+</html>

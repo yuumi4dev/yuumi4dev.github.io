@@ -1,126 +1,84 @@
-/* 인증 컨테이너 */
+/* Authentication Container */
 .auth-container {
     max-width: 480px;
-    margin: 0 auto;
-    padding: 20px 0;
+    margin: 2rem auto;
 }
 
-/* 인증 카드 */
+/* Authentication Cards */
 .auth-card {
-    background-color: var(--card-bg);
-    border-radius: 16px;
+    background-color: var(--bg-primary);
+    border-radius: var(--radius-lg);
     box-shadow: var(--card-shadow);
-    padding: 32px;
-    margin-bottom: 24px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
 }
 
 .card-title {
-    font-size: 22px;
+    font-size: 1.5rem;
     font-weight: 600;
-    margin-bottom: 16px;
+    margin-bottom: 0.5rem;
     color: var(--text-primary);
 }
 
 .card-description {
-    font-size: 15px;
+    font-size: 0.9375rem;
     color: var(--text-secondary);
-    margin-bottom: 24px;
+    margin-bottom: 1.5rem;
 }
 
-/* 탭 */
+/* Auth Tabs */
 .auth-tabs {
     display: flex;
-    margin-bottom: 24px;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-light);
 }
 
 .auth-tab {
     flex: 1;
-    background: none;
-    border: none;
-    padding: 12px 16px;
-    font-size: 16px;
+    padding: 1rem;
+    text-align: center;
+    font-size: 1rem;
     font-weight: 500;
     color: var(--text-secondary);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
     cursor: pointer;
     transition: color 0.2s ease, border-color 0.2s ease;
-    border-bottom: 2px solid transparent;
 }
 
 .auth-tab.active {
-    color: var(--accent-color);
-    border-bottom-color: var(--accent-color);
+    color: var(--accent-primary);
+    border-bottom-color: var(--accent-primary);
 }
 
-/* 폼 */
+/* Auth Forms */
 .auth-form {
     display: none;
+    padding: 1.5rem;
 }
 
 .auth-form.active {
     display: block;
 }
 
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 12px 16px;
-    font-size: 15px;
-    font-family: 'SD Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.form-group input:focus {
-    outline: none;
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
-}
-
-.form-group input::placeholder {
-    color: var(--text-muted);
-}
-
-/* 액션 버튼 */
-.form-action {
-    margin-top: 28px;
-}
-
+/* Buttons */
 .auth-button {
     display: block;
     width: 100%;
-    padding: 14px;
-    font-size: 16px;
+    padding: 0.875rem;
+    font-size: 1rem;
     font-weight: 500;
     text-align: center;
-    cursor: pointer;
+    border-radius: var(--radius-md);
+    background-color: var(--accent-primary);
+    color: white;
     border: none;
-    border-radius: 8px;
-    font-family: 'SD Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+    cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-.auth-button {
-    background-color: var(--accent-color);
-    color: white;
-}
-
 .auth-button:hover {
-    background-color: var(--accent-hover);
+    background-color: var(--accent-primary-hover);
 }
 
 .auth-button:active {
@@ -130,17 +88,22 @@
 .auth-button.secondary {
     background-color: var(--bg-tertiary);
     color: var(--text-primary);
-    margin-top: 12px;
+    margin-top: 0.75rem;
 }
 
 .auth-button.secondary:hover {
-    background-color: var(--border-color);
+    background-color: var(--border-regular);
 }
 
-/* 소셜 로그인 */
+/* Form Actions */
+.form-action {
+    margin-top: 1.75rem;
+}
+
+/* Divider */
 .auth-divider {
     text-align: center;
-    margin: 24px 0;
+    margin: 1.5rem 0;
     position: relative;
 }
 
@@ -151,38 +114,38 @@
     left: 0;
     right: 0;
     height: 1px;
-    background-color: var(--border-color);
+    background-color: var(--border-light);
 }
 
 .auth-divider span {
     position: relative;
     display: inline-block;
-    padding: 0 16px;
-    background-color: var(--card-bg);
+    padding: 0 1rem;
+    background-color: var(--bg-primary);
     color: var(--text-muted);
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 
+/* Social Login Buttons */
 .social-login {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 0.75rem;
 }
 
 .social-button {
     display: flex;
     align-items: center;
     width: 100%;
-    padding: 12px 16px;
-    font-size: 15px;
+    padding: 0.75rem 1rem;
+    font-size: 0.9375rem;
     font-weight: 500;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border: 1px solid var(--border-regular);
+    border-radius: var(--radius-md);
     background-color: var(--bg-primary);
     color: var(--text-primary);
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease;
-    font-family: 'SD Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .social-button:hover {
@@ -200,8 +163,8 @@
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    margin-right: 12px;
-    font-size: 14px;
+    margin-right: 0.75rem;
+    font-size: 0.875rem;
     font-weight: 700;
 }
 
@@ -215,32 +178,91 @@
     color: white;
 }
 
-/* 알림 메시지 */
+/* Auth Message */
 .auth-message {
-    padding: 16px;
-    border-radius: 8px;
-    margin-bottom: 24px;
-    font-size: 15px;
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+    font-size: 0.9375rem;
     display: none;
 }
 
 .auth-message.success {
-    background-color: rgba(52, 199, 89, 0.1);
-    color: #34c759;
-    border: 1px solid rgba(52, 199, 89, 0.3);
+    background-color: rgba(56, 161, 105, 0.1);
+    border: 1px solid rgba(56, 161, 105, 0.2);
+    color: var(--success);
     display: block;
 }
 
 .auth-message.error {
-    background-color: rgba(255, 59, 48, 0.1);
-    color: #ff3b30;
-    border: 1px solid rgba(255, 59, 48, 0.3);
+    background-color: rgba(229, 62, 62, 0.1);
+    border: 1px solid rgba(229, 62, 62, 0.2);
+    color: var(--error);
     display: block;
 }
 
-/* 반응형 */
-@media (max-width: 560px) {
-    .auth-card {
-        padding: 24px;
+/* Forgot Password Link */
+.forgot-password-link {
+    display: block;
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--accent-primary);
+}
+
+.forgot-password-link:hover {
+    text-decoration: underline;
+}
+
+/* Username Input Group */
+.username-input-group {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.username-prefix {
+    position: absolute;
+    left: 1rem;
+    color: var(--text-tertiary);
+    font-size: 0.9375rem;
+}
+
+.username-input-group input {
+    padding-left: 2rem;
+}
+
+.username-status {
+    height: 1.25rem;
+    margin-top: 0.375rem;
+    font-size: 0.8125rem;
+}
+
+.username-available {
+    color: var(--success);
+}
+
+.username-unavailable {
+    color: var(--error);
+}
+
+.username-checking {
+    color: var(--info);
+}
+
+/* Password Reset Card */
+#reset-password-card, #social-auth-card {
+    padding: 1.5rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 576px) {
+    .auth-container {
+        max-width: 100%;
+        padding: 0 1rem;
+    }
+    
+    .auth-form {
+        padding: 1.25rem;
     }
 }

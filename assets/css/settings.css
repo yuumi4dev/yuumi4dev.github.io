@@ -1,248 +1,255 @@
-/* 설정 컨테이너 */
+/* Settings Container */
 .settings-container {
-    max-width: 680px;
-    margin: 0 auto;
-}
-
-/* 설정 섹션 */
-.settings-section {
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    padding: 28px;
-    margin-bottom: 24px;
-    box-shadow: var(--card-shadow);
-}
-
-.section-title {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 24px;
-    color: var(--text-primary);
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border-color);
-}
-
-/* 폼 그룹 */
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 12px 16px;
-    font-size: 15px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.form-group input:focus {
-    outline: none;
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
-}
-
-.form-group input:disabled {
-    background-color: var(--bg-secondary);
-    cursor: not-allowed;
-}
-
-.form-helper {
-    display: block;
-    margin-top: 6px;
-    font-size: 13px;
-    color: var(--text-muted);
-}
-
-.form-helper.warning {
-    color: var(--warning-color);
-}
-
-.form-helper.error {
-    color: var(--danger-color);
-}
-
-.form-helper.success {
-    color: var(--success-color);
-}
-
-/* 사용자 아이디 입력 필드 */
-.username-input {
-    position: relative;
     display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Settings Navigation */
+.settings-nav {
+    flex: 0 0 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: sticky;
+    top: calc(var(--navbar-height) + 2rem);
+    align-self: flex-start;
+}
+
+.settings-nav-item {
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    background-color: transparent;
+    color: var(--text-primary);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-align: left;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.settings-nav-item:hover {
+    background-color: var(--bg-tertiary);
+}
+
+.settings-nav-item.active {
+    background-color: var(--accent-secondary);
+    color: var(--accent-primary);
+}
+
+/* Settings Content */
+.settings-content {
+    flex: 1;
+}
+
+/* Settings Section */
+.settings-section {
+    display: none;
+}
+
+.settings-section.active {
+    display: block;
+}
+
+.settings-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.settings-description {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+/* Settings Card */
+.settings-card {
+    background-color: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--card-shadow);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.card-subtitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+/* Profile Picture Setting */
+.profile-picture-setting {
+    display: flex;
+    gap: 1.5rem;
     align-items: center;
+    margin-bottom: 2rem;
 }
 
-.username-prefix {
-    position: absolute;
-    left: 16px;
-    color: var(--text-muted);
-    font-size: 15px;
+.current-avatar {
+    flex-shrink: 0;
 }
 
-.username-input input {
-    padding-left: 30px;
+.avatar-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
 }
 
-/* 버튼 */
-.save-btn {
-    padding: 12px 20px;
-    background-color: var(--accent-color);
+.action-btn {
+    padding: 0.625rem 1rem;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 500;
+    background-color: var(--accent-primary);
     color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.action-btn:hover {
+    background-color: var(--accent-primary-hover);
+}
+
+.action-btn:active {
+    transform: scale(0.98);
+}
+
+.action-btn.secondary {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.action-btn.secondary:hover {
+    background-color: var(--border-regular);
+}
+
+/* Toggle Setting */
+.toggle-setting {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.toggle-setting:last-child {
+    border-bottom: none;
+}
+
+.toggle-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.toggle-label {
     font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.toggle-description {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* Form Actions */
+.form-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.save-btn {
+    padding: 0.625rem 1.25rem;
+    border-radius: var(--radius-md);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    background-color: var(--accent-primary);
+    color: white;
+    border: none;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .save-btn:hover {
-    background-color: var(--accent-hover);
+    background-color: var(--accent-primary-hover);
 }
 
 .save-btn:active {
     transform: scale(0.98);
 }
 
-.danger-btn {
-    padding: 12px 20px;
-    background-color: var(--danger-color);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-.danger-btn:hover {
-    background-color: #ff2d20;
-}
-
-.danger-btn:active {
-    transform: scale(0.98);
-}
-
-/* 계정 버튼 그룹 */
-.account-buttons {
-    margin-bottom: 12px;
-}
-
-/* 로딩 상태 */
-.settings-loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 0;
-}
-
-.settings-loading p {
-    margin-top: 16px;
-    color: var(--text-secondary);
-    font-size: 16px;
-}
-
-/* 로그인 필요 메시지 */
-.login-required-message {
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    padding: 32px;
-    display: flex;
-    align-items: center;
-    box-shadow: var(--card-shadow);
-}
-
-.message-icon {
-    font-size: 36px;
-    color: var(--warning-color);
-    margin-right: 24px;
-}
-
-.message-content h3 {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: var(--text-primary);
-}
-
-.message-content p {
-    font-size: 16px;
-    color: var(--text-secondary);
-    margin-bottom: 16px;
-}
-
-.login-redirect-btn {
-    display: inline-block;
-    padding: 10px 16px;
-    background-color: var(--accent-color);
-    color: white;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    transition: background-color 0.2s ease;
-}
-
-.login-redirect-btn:hover {
-    background-color: var(--accent-hover);
-    color: white;
-}
-
-/* 알림 메시지 */
+/* Settings Message */
 .settings-message {
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+    font-size: 0.9375rem;
     display: none;
-    padding: 14px 18px;
-    border-radius: 8px;
-    margin-bottom: 24px;
-    font-size: 15px;
 }
 
 .settings-message.success {
+    background-color: rgba(56, 161, 105, 0.1);
+    border: 1px solid rgba(56, 161, 105, 0.2);
+    color: var(--success);
     display: block;
-    background-color: rgba(52, 199, 89, 0.1);
-    color: var(--success-color);
-    border: 1px solid rgba(52, 199, 89, 0.3);
 }
 
 .settings-message.error {
+    background-color: rgba(229, 62, 62, 0.1);
+    border: 1px solid rgba(229, 62, 62, 0.2);
+    color: var(--error);
     display: block;
-    background-color: rgba(255, 59, 48, 0.1);
-    color: var(--danger-color);
-    border: 1px solid rgba(255, 59, 48, 0.3);
 }
 
-/* 반응형 */
+.settings-message.info {
+    background-color: rgba(66, 153, 225, 0.1);
+    border: 1px solid rgba(66, 153, 225, 0.2);
+    color: var(--info);
+    display: block;
+}
+
+/* Messages */
+.message-info {
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    background-color: rgba(66, 153, 225, 0.1);
+    border: 1px solid rgba(66, 153, 225, 0.2);
+    color: var(--info);
+    font-size: 0.9375rem;
+}
+
+/* Responsive Adjustments */
 @media (max-width: 768px) {
-    .settings-section {
-        padding: 20px;
-    }
-    
-    .login-required-message {
+    .settings-container {
         flex-direction: column;
-        text-align: center;
-        padding: 24px;
+        gap: 1.5rem;
     }
     
-    .message-icon {
-        margin-right: 0;
-        margin-bottom: 16px;
+    .settings-nav {
+        flex: none;
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        position: static;
+    }
+    
+    .settings-nav-item {
+        white-space: nowrap;
     }
 }
 
-@media (max-width: 480px) {
-    .settings-section {
-        padding: 16px;
+@media (max-width: 576px) {
+    .settings-card {
+        padding: 1.25rem;
+    }
+    
+    .profile-picture-setting {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
     }
 }
