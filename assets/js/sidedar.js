@@ -3,6 +3,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const sidebar = document.getElementById('sidebar');
     const mainContent = document.getElementById('main-content');
     
+    // Ensure elements exist before trying to manipulate them
+    if (!sidebarToggleBtn || !sidebar || !mainContent) {
+        console.error('Required DOM elements not found for sidebar toggle functionality');
+        return;
+    }
+    
+    console.log('Sidebar JS loaded', { sidebarToggleBtn, sidebar, mainContent });
+    
     // Check for saved sidebar state
     const sidebarCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
     
@@ -13,65 +21,86 @@ document.addEventListener('DOMContentLoaded', function() {
         mainContent.classList.add('expanded');
     }
     
-    // Toggle sidebar when button is clicked
-    sidebarToggleBtn.addEventListener('click', function() {
+    // Mobile view detection
+    const isMobileView = () => window.innerWidth <= 768;
+    
+    // Toggle sidebar function for desktop
+    function toggleDesktopSidebar() {
+        console.log('Toggle desktop sidebar');
         sidebar.classList.toggle('collapsed');
-        this.classList.toggle('active');
+        sidebarToggleBtn.classList.toggle('active');
         mainContent.classList.toggle('expanded');
         
         // Save state to localStorage
         const isCollapsed = sidebar.classList.contains('collapsed');
         localStorage.setItem('sidebar-collapsed', isCollapsed);
-    });
+    }
     
-    // Handle sidebar on mobile
-    function handleMobileView() {
-        if (window.innerWidth <= 768) {
-            // Mobile: change to open/close behavior instead of collapse
+    // Toggle sidebar function for mobile
+    function toggleMobileSidebar(e) {
+        console.log('Toggle mobile sidebar');
+        if (e) e.stopPropagation();
+        sidebarToggleBtn.classList.toggle('active');
+        sidebar.classList.toggle('open');
+        document.body.classList.toggle('sidebar-open');
+    }
+    
+    // Initial setup based on view size
+    function setupSidebarBehavior() {
+        // Remove all event listeners first
+        sidebarToggleBtn.removeEventListener('click', toggleDesktopSidebar);
+        sidebarToggleBtn.removeEventListener('click', toggleMobileSidebar);
+        
+        if (isMobileView()) {
+            console.log('Setting up mobile sidebar behavior');
+            // Mobile behavior
             sidebar.classList.remove('collapsed');
             mainContent.classList.remove('expanded');
             
-            if (sidebarToggleBtn.classList.contains('active')) {
-                sidebar.classList.add('open');
-            }
+            // Add mobile toggle behavior
+            sidebarToggleBtn.addEventListener('click', toggleMobileSidebar);
             
-            // Change toggle behavior
-            sidebarToggleBtn.onclick = function(e) {
-                e.stopPropagation();
-                this.classList.toggle('active');
-                sidebar.classList.toggle('open');
-            };
-            
-            // Close sidebar when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!sidebar.contains(e.target) && !sidebarToggleBtn.contains(e.target)) {
-                    sidebar.classList.remove('open');
-                    sidebarToggleBtn.classList.remove('active');
-                }
-            });
+            // Force sidebar to be closed on mobile initially
+            sidebar.classList.remove('open');
+            sidebarToggleBtn.classList.remove('active');
+            document.body.classList.remove('sidebar-open');
         } else {
-            // Desktop: revert to collapse behavior
-            if (sidebarToggleBtn.classList.contains('active')) {
+            console.log('Setting up desktop sidebar behavior');
+            // Desktop behavior
+            sidebar.classList.remove('open');
+            document.body.classList.remove('sidebar-open');
+            
+            // Apply saved collapsed state if any
+            if (sidebarCollapsed) {
                 sidebar.classList.add('collapsed');
+                sidebarToggleBtn.classList.add('active');
                 mainContent.classList.add('expanded');
             }
             
-            // Restore original toggle behavior
-            sidebarToggleBtn.onclick = function() {
-                sidebar.classList.toggle('collapsed');
-                this.classList.toggle('active');
-                mainContent.classList.toggle('expanded');
-                
-                // Save state to localStorage
-                const isCollapsed = sidebar.classList.contains('collapsed');
-                localStorage.setItem('sidebar-collapsed', isCollapsed);
-            };
+            // Add desktop toggle behavior
+            sidebarToggleBtn.addEventListener('click', toggleDesktopSidebar);
         }
     }
     
-    // Initial call
-    handleMobileView();
+    // Close sidebar when clicking outside (mobile only)
+    document.addEventListener('click', function(e) {
+        if (isMobileView() && 
+            sidebar.classList.contains('open') && 
+            !sidebar.contains(e.target) && 
+            !sidebarToggleBtn.contains(e.target)) {
+            
+            console.log('Closing mobile sidebar on outside click');
+            sidebar.classList.remove('open');
+            sidebarToggleBtn.classList.remove('active');
+            document.body.classList.remove('sidebar-open');
+        }
+    });
+    
+    // Initial setup
+    setupSidebarBehavior();
     
     // Handle resize
-    window.addEventListener('resize', handleMobileView);
+    window.addEventListener('resize', function() {
+        setupSidebarBehavior();
+    });
 });

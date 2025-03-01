@@ -1,233 +1,298 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio | Authentication</title>
+    <title data-lang="ko">포트폴리오 | 로그인</title>
+    <title data-lang="en">Portfolio | Login</title>
+    <title data-lang="es">Portafolio | Iniciar sesión</title>
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/auth.css">
+    <link rel="stylesheet" href="assets/css/language-selector.css">
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="assets/js/firebase-init.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Top Navigation Bar -->
-        <header class="top-navbar">
-            <div class="navbar-left">
-                <button id="sidebar-toggle" class="sidebar-toggle-btn" aria-label="Toggle sidebar">
-                    <span class="toggle-icon"></span>
+    <!-- 상단 헤더 -->
+    <header class="top-header">
+        <div class="menu-toggle">
+            <button id="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <div class="site-title">
+            <h1 data-lang="ko">계정</h1>
+            <h1 data-lang="en">Account</h1>
+            <h1 data-lang="es">Cuenta</h1>
+        </div>
+        
+        <div class="user-profile">
+            <!-- 로그인 상태 -->
+            <div id="user-logged-in" style="display: none;">
+                <button id="profile-button" class="profile-button">
+                    <div class="avatar">
+                        <span id="profile-initial">P</span>
+                    </div>
+                    <div class="user-info">
+                        <span id="user-name" class="user-name">사용자명</span>
+                        <span id="user-id" class="user-id">@userid</span>
+                    </div>
                 </button>
-                <a href="index.html" class="logo">Portfolio</a>
+                <div id="profile-dropdown" class="profile-dropdown">
+                    <ul>
+                        <li><a href="settings.html" data-lang="ko">설정</a><a href="settings.html" data-lang="en">Settings</a><a href="settings.html" data-lang="es">Configuración</a></li>
+                        <li><button id="logout-btn" data-lang="ko">로그아웃</button><button id="logout-btn" data-lang="en">Logout</button><button id="logout-btn" data-lang="es">Cerrar sesión</button></li>
+                    </ul>
+                </div>
             </div>
             
-            <div class="navbar-right">
-                <div class="theme-language-controls">
-                    <div class="language-selector">
-                        <button class="lang-btn">EN</button>
+            <!-- 비로그인 상태 -->
+            <div id="user-logged-out">
+                <a href="auth.html" class="login-button">
+                    <i class="fas fa-user-circle"></i>
+                    <span data-lang="ko">로그인</span>
+                    <span data-lang="en">Sign in</span>
+                    <span data-lang="es">Iniciar sesión</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 사이드바 네비게이션 -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="sidebar-menu">
+                <li class="menu-item">
+                    <a href="index.html">
+                        <span class="icon"><i class="fas fa-home"></i></span>
+                        <span class="menu-text" data-lang="ko">홈</span>
+                        <span class="menu-text" data-lang="en">Home</span>
+                        <span class="menu-text" data-lang="es">Inicio</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="blog.html">
+                        <span class="icon"><i class="fas fa-edit"></i></span>
+                        <span class="menu-text" data-lang="ko">블로그</span>
+                        <span class="menu-text" data-lang="en">Blog</span>
+                        <span class="menu-text" data-lang="es">Blog</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="portfolio.html">
+                        <span class="icon"><i class="fas fa-palette"></i></span>
+                        <span class="menu-text" data-lang="ko">포트폴리오</span>
+                        <span class="menu-text" data-lang="en">Portfolio</span>
+                        <span class="menu-text" data-lang="es">Portafolio</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="projects.html">
+                        <span class="icon"><i class="fas fa-project-diagram"></i></span>
+                        <span class="menu-text" data-lang="ko">프로젝트</span>
+                        <span class="menu-text" data-lang="en">Projects</span>
+                        <span class="menu-text" data-lang="es">Proyectos</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <!-- 언어 전환 버튼 -->
+            <div class="language-switcher">
+                <button id="change-language" class="language-switch-btn">
+                    <span id="current-language-icon">🇰🇷</span>
+                    <span id="current-language-text" data-lang="ko">한국어</span>
+                    <span id="current-language-text" data-lang="en">English</span>
+                    <span id="current-language-text" data-lang="es">Español</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div id="language-dropdown" class="language-dropdown">
+                    <ul>
+                        <li data-lang="ko"><span class="lang-flag">🇰🇷</span> 한국어</li>
+                        <li data-lang="en"><span class="lang-flag">🇺🇸</span> English</li>
+                        <li data-lang="es"><span class="lang-flag">🇪🇸</span> Español</li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- 메인 콘텐츠 -->
+        <main class="main-content" id="main-content">
+            <header class="page-header">
+                <h1 class="page-title" data-lang="ko">계정</h1>
+                <h1 class="page-title" data-lang="en">Account</h1>
+                <h1 class="page-title" data-lang="es">Cuenta</h1>
+                <div class="theme-toggle">
+                    <button id="theme-toggle-btn">🌙</button>
+                </div>
+            </header>
+            
+            <div class="auth-container">
+                <div class="auth-card">
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" data-tab="login" data-lang="ko">로그인</button>
+                        <button class="auth-tab active" data-tab="login" data-lang="en">Login</button>
+                        <button class="auth-tab active" data-tab="login" data-lang="es">Iniciar sesión</button>
+                        <button class="auth-tab" data-tab="signup" data-lang="ko">회원가입</button>
+                        <button class="auth-tab" data-tab="signup" data-lang="en">Sign up</button>
+                        <button class="auth-tab" data-tab="signup" data-lang="es">Registrarse</button>
                     </div>
-                    <div class="theme-toggle">
-                        <button id="theme-toggle-btn" aria-label="Toggle theme">🌙</button>
+                    
+                    <!-- 로그인 폼 -->
+                    <div class="auth-form active" id="login-form">
+                        <div class="form-group">
+                            <label for="login-email" data-lang="ko">이메일</label>
+                            <label for="login-email" data-lang="en">Email</label>
+                            <label for="login-email" data-lang="es">Correo electrónico</label>
+                            <input type="email" id="login-email" placeholder="email@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password" data-lang="ko">비밀번호</label>
+                            <label for="login-password" data-lang="en">Password</label>
+                            <label for="login-password" data-lang="es">Contraseña</label>
+                            <input type="password" id="login-password" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-action">
+                            <button id="login-button" class="auth-button" data-lang="ko">로그인</button>
+                            <button id="login-button" class="auth-button" data-lang="en">Login</button>
+                            <button id="login-button" class="auth-button" data-lang="es">Iniciar sesión</button>
+                        </div>
+                        <div class="auth-divider">
+                            <span data-lang="ko">또는</span>
+                            <span data-lang="en">or</span>
+                            <span data-lang="es">o</span>
+                        </div>
+                        <div class="social-login">
+                            <button id="google-login" class="social-button google">
+                                <span class="social-icon">G</span>
+                                <span data-lang="ko">Google 계정으로 로그인</span>
+                                <span data-lang="en">Login with Google</span>
+                                <span data-lang="es">Iniciar sesión con Google</span>
+                            </button>
+                            <button id="github-login" class="social-button github">
+                                <span class="social-icon">GH</span>
+                                <span data-lang="ko">GitHub 계정으로 로그인</span>
+                                <span data-lang="en">Login with GitHub</span>
+                                <span data-lang="es">Iniciar sesión con GitHub</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 회원가입 폼 -->
+                    <div class="auth-form" id="signup-form">
+                        <div class="form-group">
+                            <label for="signup-name" data-lang="ko">이름</label>
+                            <label for="signup-name" data-lang="en">Name</label>
+                            <label for="signup-name" data-lang="es">Nombre</label>
+                            <input type="text" id="signup-name" placeholder="Anonymous" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-email" data-lang="ko">이메일</label>
+                            <label for="signup-email" data-lang="en">Email</label>
+                            <label for="signup-email" data-lang="es">Correo electrónico</label>
+                            <input type="email" id="signup-email" placeholder="email@example.com" required>
+                            <small class="form-helper" id="email-helper" data-lang="ko">가입에 사용할 유효한 이메일 주소를 입력하세요</small>
+                            <small class="form-helper" id="email-helper" data-lang="en">Enter a valid email address for registration</small>
+                            <small class="form-helper" id="email-helper" data-lang="es">Ingrese una dirección de correo electrónico válida para el registro</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-username" data-lang="ko">사용자 ID</label>
+                            <label for="signup-username" data-lang="en">Username</label>
+                            <label for="signup-username" data-lang="es">Nombre de usuario</label>
+                            <div class="username-input">
+                                <span class="username-prefix">@</span>
+                                <input type="text" id="signup-username" placeholder="username" required>
+                            </div>
+                            <small class="form-helper" id="username-helper" data-lang="ko">영문, 숫자, 밑줄(_)만 사용 가능합니다</small>
+                            <small class="form-helper" id="username-helper" data-lang="en">Only letters, numbers, and underscores (_) are allowed</small>
+                            <small class="form-helper" id="username-helper" data-lang="es">Solo se permiten letras, números y guiones bajos (_)</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-password" data-lang="ko">비밀번호</label>
+                            <label for="signup-password" data-lang="en">Password</label>
+                            <label for="signup-password" data-lang="es">Contraseña</label>
+                            <input type="password" id="signup-password" placeholder="••••••••" required>
+                            <small class="form-helper" id="password-helper" data-lang="ko">비밀번호는 최소 6자 이상이어야 합니다</small>
+                            <small class="form-helper" id="password-helper" data-lang="en">Password must be at least 6 characters</small>
+                            <small class="form-helper" id="password-helper" data-lang="es">La contraseña debe tener al menos 6 caracteres</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-confirm-password" data-lang="ko">비밀번호 확인</label>
+                            <label for="signup-confirm-password" data-lang="en">Confirm Password</label>
+                            <label for="signup-confirm-password" data-lang="es">Confirmar Contraseña</label>
+                            <input type="password" id="signup-confirm-password" placeholder="••••••••" required>
+                            <small class="form-helper" id="confirm-password-helper" data-lang="ko">비밀번호를 한번 더 입력하세요</small>
+                            <small class="form-helper" id="confirm-password-helper" data-lang="en">Enter your password again</small>
+                            <small class="form-helper" id="confirm-password-helper" data-lang="es">Ingrese su contraseña nuevamente</small>
+                        </div>
+                        <div class="form-action">
+                            <button id="signup-button" class="auth-button" data-lang="ko">회원가입</button>
+                            <button id="signup-button" class="auth-button" data-lang="en">Sign up</button>
+                            <button id="signup-button" class="auth-button" data-lang="es">Registrarse</button>
+                        </div>
+                        <div class="auth-divider">
+                            <span data-lang="ko">또는</span>
+                            <span data-lang="en">or</span>
+                            <span data-lang="es">o</span>
+                        </div>
+                        <div class="social-login">
+                            <button id="google-signup" class="social-button google">
+                                <span class="social-icon">G</span>
+                                <span data-lang="ko">Google 계정으로 가입</span>
+                                <span data-lang="en">Sign up with Google</span>
+                                <span data-lang="es">Registrarse con Google</span>
+                            </button>
+                            <button id="github-signup" class="social-button github">
+                                <span class="social-icon">GH</span>
+                                <span data-lang="ko">GitHub 계정으로 가입</span>
+                                <span data-lang="en">Sign up with GitHub</span>
+                                <span data-lang="es">Registrarse con GitHub</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="profile-section">
-                    <div id="login-container">
-                        <a href="auth.html" class="login-btn active">
-                            <span class="login-icon">👤</span>
-                            <span class="login-text">Login</span>
-                        </a>
+                <!-- 비밀번호 재설정 카드 -->
+                <div class="auth-card" id="reset-password-card" style="display: none;">
+                    <h3 class="card-title" data-lang="ko">비밀번호 재설정</h3>
+                    <h3 class="card-title" data-lang="en">Reset Password</h3>
+                    <h3 class="card-title" data-lang="es">Restablecer Contraseña</h3>
+                    <p class="card-description" data-lang="ko">가입하신 이메일 주소로 비밀번호 재설정 링크를 보내드립니다.</p>
+                    <p class="card-description" data-lang="en">We will send a password reset link to your registered email address.</p>
+                    <p class="card-description" data-lang="es">Enviaremos un enlace para restablecer la contraseña a su dirección de correo electrónico registrada.</p>
+                    <div class="form-group">
+                        <label for="reset-email" data-lang="ko">이메일</label>
+                        <label for="reset-email" data-lang="en">Email</label>
+                        <label for="reset-email" data-lang="es">Correo electrónico</label>
+                        <input type="email" id="reset-email" placeholder="email@example.com" required>
                     </div>
-                    <div id="user-container" style="display: none;">
-                        <div class="user-profile-btn" id="profile-dropdown-btn">
-                            <div class="avatar">
-                                <span class="avatar-initial">P</span>
-                            </div>
-                            <div class="user-info">
-                                <span class="username" id="display-name">Username</span>
-                                <span class="user-id" id="user-handle">@username</span>
-                            </div>
-                        </div>
-                        <div class="profile-dropdown" id="profile-dropdown">
-                            <div class="dropdown-header">
-                                <div class="dropdown-user-info">
-                                    <span class="dropdown-username" id="dropdown-name">Username</span>
-                                    <span class="dropdown-user-id" id="dropdown-handle">@username</span>
-                                </div>
-                            </div>
-                            <ul class="dropdown-menu">
-                                <li><a href="profile.html" class="dropdown-item">My Profile</a></li>
-                                <li><a href="settings.html" class="dropdown-item">Settings</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><button id="logout-btn" class="dropdown-item logout-item">Logout</button></li>
-                            </ul>
-                        </div>
+                    <div class="form-action">
+                        <button id="reset-button" class="auth-button" data-lang="ko">비밀번호 재설정 링크 보내기</button>
+                        <button id="reset-button" class="auth-button" data-lang="en">Send Reset Link</button>
+                        <button id="reset-button" class="auth-button" data-lang="es">Enviar Enlace de Restablecimiento</button>
+                        <button id="back-to-login" class="auth-button secondary" data-lang="ko">로그인으로 돌아가기</button>
+                        <button id="back-to-login" class="auth-button secondary" data-lang="en">Back to Login</button>
+                        <button id="back-to-login" class="auth-button secondary" data-lang="es">Volver al Inicio de Sesión</button>
                     </div>
                 </div>
+                
+                <!-- 알림 메시지 -->
+                <div id="auth-message" class="auth-message"></div>
             </div>
-        </header>
-    
-        <div class="main-wrapper">
-            <!-- Sidebar Navigation -->
-            <nav class="sidebar" id="sidebar">
-                <ul class="sidebar-menu">
-                    <li class="menu-item">
-                        <a href="index.html">
-                            <span class="icon">🏠</span>
-                            <span class="menu-text">Home</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="blog.html">
-                            <span class="icon">📝</span>
-                            <span class="menu-text">Blog</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="portfolio.html">
-                            <span class="icon">🎨</span>
-                            <span class="menu-text">Portfolio</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="projects.html">
-                            <span class="icon">💻</span>
-                            <span class="menu-text">Projects</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-            
-            <!-- Main Content -->
-            <main class="main-content" id="main-content">
-                <div class="content-container">
-                    <div class="auth-container">
-                        <div class="auth-card" id="main-auth-card">
-                            <div class="auth-tabs">
-                                <button class="auth-tab active" data-tab="login">Login</button>
-                                <button class="auth-tab" data-tab="signup">Sign Up</button>
-                            </div>
-                            
-                            <!-- Login Form -->
-                            <div class="auth-form active" id="login-form">
-                                <div class="form-group">
-                                    <label for="login-email">Email</label>
-                                    <input type="email" id="login-email" placeholder="Enter your email address" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="login-password">Password</label>
-                                    <input type="password" id="login-password" placeholder="Enter your password" required>
-                                </div>
-                                <div class="form-action">
-                                    <button id="login-button" class="auth-button">Login</button>
-                                </div>
-                                <div class="auth-divider">
-                                    <span>or</span>
-                                </div>
-                                <div class="social-login">
-                                    <button id="google-login" class="social-button google">
-                                        <span class="social-icon">G</span>
-                                        <span>Login with Google</span>
-                                    </button>
-                                    <button id="github-login" class="social-button github">
-                                        <span class="social-icon">GH</span>
-                                        <span>Login with GitHub</span>
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- Sign Up Form -->
-                            <div class="auth-form" id="signup-form">
-                                <div class="form-group">
-                                    <label for="signup-name">Display Name</label>
-                                    <input type="text" id="signup-name" placeholder="Enter your name" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="signup-username">Username</label>
-                                    <div class="username-input-group">
-                                        <span class="username-prefix">@</span>
-                                        <input type="text" id="signup-username" placeholder="Choose a unique username" required>
-                                    </div>
-                                    <div class="username-status" id="username-status"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="signup-email">Email</label>
-                                    <input type="email" id="signup-email" placeholder="Enter your email address" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="signup-password">Password</label>
-                                    <input type="password" id="signup-password" placeholder="Create a password (min. 6 characters)" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="signup-confirm-password">Confirm Password</label>
-                                    <input type="password" id="signup-confirm-password" placeholder="Confirm your password" required>
-                                </div>
-                                <div class="form-action">
-                                    <button id="signup-button" class="auth-button">Sign Up</button>
-                                </div>
-                                <div class="auth-divider">
-                                    <span>or</span>
-                                </div>
-                                <div class="social-login">
-                                    <button id="google-signup" class="social-button google">
-                                        <span class="social-icon">G</span>
-                                        <span>Sign Up with Google</span>
-                                    </button>
-                                    <button id="github-signup" class="social-button github">
-                                        <span class="social-icon">GH</span>
-                                        <span>Sign Up with GitHub</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Password Reset Card -->
-                        <div class="auth-card" id="reset-password-card" style="display: none;">
-                            <h3 class="card-title">Reset Password</h3>
-                            <p class="card-description">We'll send a password reset link to your email address.</p>
-                            <div class="form-group">
-                                <label for="reset-email">Email</label>
-                                <input type="email" id="reset-email" placeholder="Enter your email address" required>
-                            </div>
-                            <div class="form-action">
-                                <button id="reset-button" class="auth-button">Send Reset Link</button>
-                                <button id="back-to-login" class="auth-button secondary">Back to Login</button>
-                            </div>
-                        </div>
-                        
-                        <!-- Social Auth Additional Info Card -->
-                        <div class="auth-card" id="social-auth-card" style="display: none;">
-                            <h3 class="card-title">Complete Your Profile</h3>
-                            <p class="card-description">Just a couple more details to set up your account.</p>
-                            <div class="form-group">
-                                <label for="social-auth-name">Display Name</label>
-                                <input type="text" id="social-auth-name" placeholder="Enter your name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="social-auth-username">Username</label>
-                                <div class="username-input-group">
-                                    <span class="username-prefix">@</span>
-                                    <input type="text" id="social-auth-username" placeholder="Choose a unique username" required>
-                                </div>
-                                <div class="username-status" id="social-username-status"></div>
-                            </div>
-                            <div class="form-action">
-                                <button id="complete-social-auth" class="auth-button">Complete Registration</button>
-                            </div>
-                        </div>
-                        
-                        <!-- Alert Messages -->
-                        <div id="auth-message" class="auth-message"></div>
-                    </div>
-                </div>
-            </main>
-        </div>
+        </main>
     </div>
     
     <script src="assets/js/auth.js"></script>
-    <script src="assets/js/sidebar.js"></script>
     <script src="assets/js/theme.js"></script>
+    <script src="assets/js/language.js"></script>
+    <script src="assets/js/sidebar.js"></script>
+    <script src="assets/js/profile.js"></script>
+    <script src="assets/js/debug.js"></script>
+    
 </body>
 </html>
