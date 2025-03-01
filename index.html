@@ -18,13 +18,13 @@
     <!-- 언어 선택 모달 -->
     <div id="language-modal" class="language-modal">
         <div class="language-modal-content">
-            <h2 class="language-title" data-lang="ko">Select a language</h2>
+            <h2 class="language-title" data-lang="ko">언어 선택</h2>
             <h2 class="language-title" data-lang="en">Select a language</h2>
             <h2 class="language-title" data-lang="es">Seleccione un idioma</h2>
             
             <div class="language-options">
                 <button class="language-option" data-lang="ko">
-                    <span class="language-flag">kr</span>
+                    <span class="language-flag">🇰🇷</span>
                     <span class="language-name">한국어</span>
                 </button>
                 <button class="language-option" data-lang="en">
@@ -67,12 +67,8 @@
                 </button>
                 <div id="profile-dropdown" class="profile-dropdown">
                     <ul>
-                        <li><a href="settings.html" data-lang="en">Settings</a><a href="settings.html" data-lang="ko">설정</a></li>
-                        <li><button id="logout-btn" data-lang="en">Logout</button><button id="logout-btn" data-lang="ko">로그아웃</button></li>
-                        <li><a href="settings.html" data-lang="en">Settings</a><a href="settings.html" data-lang="en">Setting</a></li>
-                        <li><button id="logout-btn" data-lang="en">Logout</button><button id="logout-btn" data-lang="en">Logout</button></li>
-                        <li><a href="settings.html" data-lang="en">Settings</a><a href="settings.html" data-lang="es">Configuración</a></li>
-                        <li><button id="logout-btn" data-lang="en">Logout</button><button id="logout-btn" data-lang="es">Cerrar sesión</button></li>
+                        <li><a href="settings.html" data-lang="ko">설정</a><a href="settings.html" data-lang="en">Settings</a><a href="settings.html" data-lang="es">Configuración</a></li>
+                        <li><button id="logout-btn" data-lang="ko">로그아웃</button><button id="logout-btn" data-lang="en">Logout</button><button id="logout-btn" data-lang="es">Cerrar sesión</button></li>
                     </ul>
                 </div>
             </div>
@@ -81,6 +77,7 @@
             <div id="user-logged-out">
                 <a href="auth.html" class="login-button">
                     <i class="fas fa-user-circle"></i>
+                    <span data-lang="ko">로그인</span>
                     <span data-lang="en">Sign in</span>
                     <span data-lang="es">Iniciar sesión</span>
                 </a>
@@ -103,6 +100,7 @@
                 <li class="menu-item">
                     <a href="blog.html">
                         <span class="icon"><i class="fas fa-edit"></i></span>
+                        <span class="menu-text" data-lang="ko">블로그</span>
                         <span class="menu-text" data-lang="en">Blog</span>
                         <span class="menu-text" data-lang="es">Blog</span>
                     </a>
@@ -110,6 +108,7 @@
                 <li class="menu-item">
                     <a href="portfolio.html">
                         <span class="icon"><i class="fas fa-palette"></i></span>
+                        <span class="menu-text" data-lang="ko">포트폴리오</span>
                         <span class="menu-text" data-lang="en">Portfolio</span>
                         <span class="menu-text" data-lang="es">Portafolio</span>
                     </a>
@@ -117,6 +116,7 @@
                 <li class="menu-item">
                     <a href="projects.html">
                         <span class="icon"><i class="fas fa-project-diagram"></i></span>
+                        <span class="menu-text" data-lang="ko">프로젝트</span>
                         <span class="menu-text" data-lang="en">Projects</span>
                         <span class="menu-text" data-lang="es">Proyectos</span>
                     </a>
@@ -127,12 +127,14 @@
             <div class="language-switcher">
                 <button id="change-language" class="language-switch-btn">
                     <span id="current-language-icon">🇺🇸</span>
+                    <span id="current-language-text" data-lang="ko">한국어</span>
                     <span id="current-language-text" data-lang="en">English</span>
                     <span id="current-language-text" data-lang="es">Español</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div id="language-dropdown" class="language-dropdown">
                     <ul>
+                        <li data-lang="ko"><span class="lang-flag">🇰🇷</span> 한국어</li>
                         <li data-lang="en"><span class="lang-flag">🇺🇸</span> English</li>
                         <li data-lang="es"><span class="lang-flag">🇪🇸</span> Español</li>
                     </ul>
@@ -143,6 +145,7 @@
         <!-- 메인 콘텐츠 -->
         <main class="main-content" id="main-content">
             <header class="page-header">
+                <h1 class="page-title" data-lang="ko">안녕하세요 👋</h1>
                 <h1 class="page-title" data-lang="en">Hello 👋</h1>
                 <h1 class="page-title" data-lang="es">Hola 👋</h1>
                 <div class="theme-toggle">
@@ -152,8 +155,13 @@
             
             <section class="hero-section">
                 <div class="hero-content">
+                    <h2 class="hero-title" data-lang="ko">내 포트폴리오 & 블로그에 오신 것을 환영합니다</h2>
                     <h2 class="hero-title" data-lang="en">Welcome to my Portfolio & Blog</h2>
                     <h2 class="hero-title" data-lang="es">Bienvenido a mi Portafolio & Blog</h2>
+                    <p class="hero-description" data-lang="ko">
+                        여기서 저는 제 작업물, 프로젝트, 생각을 공유합니다.
+                        깔끔한 Notion 스타일 인터페이스를 통해 자유롭게 둘러보세요.
+                    </p>
                     <p class="hero-description" data-lang="en">
                         Here I share my work, projects, and thoughts.
                         Feel free to explore using this clean, Notion-style interface.
@@ -163,8 +171,10 @@
                         Siéntase libre de explorar utilizando esta interfaz limpia de estilo Notion.
                     </p>
                     <div class="cta-buttons">
+                        <a href="portfolio.html" class="cta-btn primary" data-lang="ko">포트폴리오 보기</a>
                         <a href="portfolio.html" class="cta-btn primary" data-lang="en">View Portfolio</a>
                         <a href="portfolio.html" class="cta-btn primary" data-lang="es">Ver Portafolio</a>
+                        <a href="blog.html" class="cta-btn secondary" data-lang="ko">블로그 읽기</a>
                         <a href="blog.html" class="cta-btn secondary" data-lang="en">Read Blog</a>
                         <a href="blog.html" class="cta-btn secondary" data-lang="es">Leer Blog</a>
                     </div>
@@ -177,69 +187,68 @@
             </section>
             
             <section class="featured-section">
-                <section class="featured-section">
-                    <h3 class="section-title" data-lang="ko">주요 프로젝트</h3>
-                    <h3 class="section-title" data-lang="en">Featured Projects</h3>
-                    <h3 class="section-title" data-lang="es">Proyectos Destacados</h3>
-                    <div class="card-grid">
-                        <div class="card">
-                            <div class="card-image">
-                                <div class="image-placeholder">
-                                    <span>📱</span>
-                                </div>
-                            </div>
-                            <div class="card-content">
-                                <h4 class="card-title" data-lang="ko">모바일 앱 프로젝트</h4>
-                                <h4 class="card-title" data-lang="en">Mobile App Project</h4>
-                                <h4 class="card-title" data-lang="es">Proyecto de Aplicación Móvil</h4>
-                                <p class="card-description" data-lang="ko">사용자 경험에 중점을 둔 iOS/Android 애플리케이션 디자인 및 개발</p>
-                                <p class="card-description" data-lang="en">Design and development of iOS/Android applications focused on user experience</p>
-                                <p class="card-description" data-lang="es">Diseño y desarrollo de aplicaciones iOS/Android centradas en la experiencia del usuario</p>
-                                <a href="projects.html" class="card-link" data-lang="ko">자세히 보기 →</a>
-                                <a href="projects.html" class="card-link" data-lang="en">Learn more →</a>
-                                <a href="projects.html" class="card-link" data-lang="es">Más información →</a>
+                <h3 class="section-title" data-lang="ko">주요 프로젝트</h3>
+                <h3 class="section-title" data-lang="en">Featured Projects</h3>
+                <h3 class="section-title" data-lang="es">Proyectos Destacados</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-image">
+                            <div class="image-placeholder">
+                                <span>📱</span>
                             </div>
                         </div>
-                        
-                        <div class="card">
-                            <div class="card-image">
-                                <div class="image-placeholder">
-                                    <span>🖥️</span>
-                                </div>
-                            </div>
-                            <div class="card-content">
-                                <h4 class="card-title" data-lang="ko">웹 개발 프로젝트</h4>
-                                <h4 class="card-title" data-lang="en">Web Development Project</h4>
-                                <h4 class="card-title" data-lang="es">Proyecto de Desarrollo Web</h4>
-                                <p class="card-description" data-lang="ko">최신 웹 기술을 활용한 반응형 웹사이트 및 웹 애플리케이션 개발</p>
-                                <p class="card-description" data-lang="en">Responsive websites and web applications using the latest web technologies</p>
-                                <p class="card-description" data-lang="es">Sitios web responsivos y aplicaciones web utilizando las últimas tecnologías web</p>
-                                <a href="projects.html" class="card-link" data-lang="ko">자세히 보기 →</a>
-                                <a href="projects.html" class="card-link" data-lang="en">Learn more →</a>
-                                <a href="projects.html" class="card-link" data-lang="es">Más información →</a>
-                            </div>
-                        </div>
-                        
-                        <div class="card">
-                            <div class="card-image">
-                                <div class="image-placeholder">
-                                    <span>🎨</span>
-                                </div>
-                            </div>
-                            <div class="card-content">
-                                <h4 class="card-title" data-lang="ko">UI/UX 디자인</h4>
-                                <h4 class="card-title" data-lang="en">UI/UX Design</h4>
-                                <h4 class="card-title" data-lang="es">Diseño UI/UX</h4>
-                                <p class="card-description" data-lang="ko">직관적이고 미니멀한 사용자 인터페이스 디자인 및 사용자 경험 개선</p>
-                                <p class="card-description" data-lang="en">Intuitive and minimal user interface design and user experience enhancement</p>
-                                <p class="card-description" data-lang="es">Diseño de interfaz de usuario intuitivo y minimalista y mejora de la experiencia del usuario</p>
-                                <a href="portfolio.html" class="card-link" data-lang="ko">자세히 보기 →</a>
-                                <a href="portfolio.html" class="card-link" data-lang="en">Learn more →</a>
-                                <a href="portfolio.html" class="card-link" data-lang="es">Más información →</a>
-                            </div>
+                        <div class="card-content">
+                            <h4 class="card-title" data-lang="ko">모바일 앱 프로젝트</h4>
+                            <h4 class="card-title" data-lang="en">Mobile App Project</h4>
+                            <h4 class="card-title" data-lang="es">Proyecto de Aplicación Móvil</h4>
+                            <p class="card-description" data-lang="ko">사용자 경험에 중점을 둔 iOS/Android 애플리케이션 디자인 및 개발</p>
+                            <p class="card-description" data-lang="en">Design and development of iOS/Android applications focused on user experience</p>
+                            <p class="card-description" data-lang="es">Diseño y desarrollo de aplicaciones iOS/Android centradas en la experiencia del usuario</p>
+                            <a href="projects.html" class="card-link" data-lang="ko">자세히 보기 →</a>
+                            <a href="projects.html" class="card-link" data-lang="en">Learn more →</a>
+                            <a href="projects.html" class="card-link" data-lang="es">Más información →</a>
                         </div>
                     </div>
-                </section>            
+                    
+                    <div class="card">
+                        <div class="card-image">
+                            <div class="image-placeholder">
+                                <span>🖥️</span>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h4 class="card-title" data-lang="ko">웹 개발 프로젝트</h4>
+                            <h4 class="card-title" data-lang="en">Web Development Project</h4>
+                            <h4 class="card-title" data-lang="es">Proyecto de Desarrollo Web</h4>
+                            <p class="card-description" data-lang="ko">최신 웹 기술을 활용한 반응형 웹사이트 및 웹 애플리케이션 개발</p>
+                            <p class="card-description" data-lang="en">Responsive websites and web applications using the latest web technologies</p>
+                            <p class="card-description" data-lang="es">Sitios web responsivos y aplicaciones web utilizando las últimas tecnologías web</p>
+                            <a href="projects.html" class="card-link" data-lang="ko">자세히 보기 →</a>
+                            <a href="projects.html" class="card-link" data-lang="en">Learn more →</a>
+                            <a href="projects.html" class="card-link" data-lang="es">Más información →</a>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-image">
+                            <div class="image-placeholder">
+                                <span>🎨</span>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h4 class="card-title" data-lang="ko">UI/UX 디자인</h4>
+                            <h4 class="card-title" data-lang="en">UI/UX Design</h4>
+                            <h4 class="card-title" data-lang="es">Diseño UI/UX</h4>
+                            <p class="card-description" data-lang="ko">직관적이고 미니멀한 사용자 인터페이스 디자인 및 사용자 경험 개선</p>
+                            <p class="card-description" data-lang="en">Intuitive and minimal user interface design and user experience enhancement</p>
+                            <p class="card-description" data-lang="es">Diseño de interfaz de usuario intuitivo y minimalista y mejora de la experiencia del usuario</p>
+                            <a href="portfolio.html" class="card-link" data-lang="ko">자세히 보기 →</a>
+                            <a href="portfolio.html" class="card-link" data-lang="en">Learn more →</a>
+                            <a href="portfolio.html" class="card-link" data-lang="es">Más información →</a>
+                        </div>
+                    </div>
+                </div>
+            </section>            
             <section class="latest-posts-section">
                 <h3 class="section-title" data-lang="ko">최근 블로그 포스트</h3>
                 <h3 class="section-title" data-lang="en">Latest Blog Posts</h3>

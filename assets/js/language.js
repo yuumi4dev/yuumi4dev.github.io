@@ -1,145 +1,124 @@
+// 언어 설정 관련 JavaScript
+
+// 언어 설정 초기화
 document.addEventListener('DOMContentLoaded', function() {
-    // 언어 선택 모달 요소
-    const languageModal = document.getElementById('language-modal');
+    // 저장된 언어 설정 불러오기
+    const savedLanguage = localStorage.getItem('selectedLanguage') || 'ko';
+    setLanguage(savedLanguage);
     
-    // 언어 선택 버튼들
+    // 언어 모달 열기 (첫 방문시)
+    const isFirstVisit = localStorage.getItem('visited') !== 'true';
+    if (isFirstVisit) {
+        showLanguageModal();
+        localStorage.setItem('visited', 'true');
+    }
+    
+    // 현재 언어 표시 업데이트
+    updateCurrentLanguageDisplay(savedLanguage);
+    
+    // 언어 전환 버튼 클릭 이벤트
+    const languageSwitchBtn = document.getElementById('change-language');
+    if (languageSwitchBtn) {
+        languageSwitchBtn.addEventListener('click', function() {
+            toggleLanguageDropdown();
+        });
+    }
+    
+    // 언어 드롭다운 항목 클릭 이벤트
+    const languageDropdownItems = document.querySelectorAll('#language-dropdown li');
+    languageDropdownItems.forEach(function(item) {
+        item.addEventListener('click', function() {
+            const language = this.getAttribute('data-lang');
+            setLanguage(language);
+            updateCurrentLanguageDisplay(language);
+            toggleLanguageDropdown();
+        });
+    });
+    
+    // 언어 모달 옵션 클릭 이벤트
     const languageOptions = document.querySelectorAll('.language-option');
+    languageOptions.forEach(function(option) {
+        option.addEventListener('click', function() {
+            const language = this.getAttribute('data-lang');
+            setLanguage(language);
+            updateCurrentLanguageDisplay(language);
+            hideLanguageModal();
+        });
+    });
     
-    // 언어 전환 버튼
-    const changeLanguageBtn = document.getElementById('change-language');
-    
-    // 언어 드롭다운
-    const languageDropdown = document.getElementById('language-dropdown');
-    
-    // 현재 언어 아이콘
-    const currentLanguageIcon = document.getElementById('current-language-icon');
-    
-    // 사용자 선호 언어 가져오기 (로컬 스토리지)
-    const savedLanguage = localStorage.getItem('preferredLanguage');
+    // 문서 클릭 시 언어 드롭다운 닫기
+    document.addEventListener('click', function(event) {
+        const languageDropdown = document.getElementById('language-dropdown');
+        const languageSwitchBtn = document.getElementById('change-language');
+        
+        if (languageDropdown && languageSwitchBtn) {
+            if (!languageSwitchBtn.contains(event.target) && !languageDropdown.contains(event.target)) {
+                languageDropdown.classList.remove('show');
+            }
+        }
+    });
+});
+
+// 언어 설정 변경 함수
+function setLanguage(language) {
+    document.body.setAttribute('data-language', language);
+    localStorage.setItem('selectedLanguage', language);
     
     // 언어별 아이콘 매핑
     const languageIcons = {
+        'ko': '🇰🇷',
         'en': '🇺🇸',
         'es': '🇪🇸'
     };
     
-    // 언어별 이름 매핑
-    const languageNames = {
+    // 현재 언어 아이콘 업데이트
+    const currentLanguageIcon = document.getElementById('current-language-icon');
+    if (currentLanguageIcon) {
+        currentLanguageIcon.textContent = languageIcons[language] || '🌐';
+    }
+}
+
+// 현재 언어 표시 업데이트
+function updateCurrentLanguageDisplay(language) {
+    // 언어별 표시 텍스트
+    const languageTexts = {
+        'ko': '한국어',
         'en': 'English',
         'es': 'Español'
     };
     
-    // 언어가 저장되어 있지 않으면 모달 표시
-    if (!savedLanguage || savedLanguage === 'ko') { // 한국어가 저장되어 있는 경우에도 모달 표시
-        // 기본 언어를 영어로 설정
-        applyLanguage('en');
-        saveLanguagePreference('en');
-        
-        // 언어 선택 모달 표시
-        languageModal.style.display = 'flex';
-    } else {
-        // 저장된 언어 설정 적용
-        applyLanguage(savedLanguage);
-    }
-    
-    // 언어 선택 버튼 이벤트 리스너
-    languageOptions.forEach(option => {
-        option.addEventListener('click', function() {
-            const selectedLanguage = this.getAttribute('data-lang');
-            applyLanguage(selectedLanguage);
-            saveLanguagePreference(selectedLanguage);
-            languageModal.style.display = 'none';
-        });
-    });
-    
-    // 언어 전환 버튼 이벤트 리스너
-    if (changeLanguageBtn) {
-        changeLanguageBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            languageDropdown.classList.toggle('show');
-        });
-    }
-    
-    // 언어 드롭다운 항목 이벤트 리스너
-    if (languageDropdown) {
-        const languageItems = languageDropdown.querySelectorAll('li');
-        languageItems.forEach(item => {
-            item.addEventListener('click', function() {
-                const selectedLanguage = this.getAttribute('data-lang');
-                applyLanguage(selectedLanguage);
-                saveLanguagePreference(selectedLanguage);
-                languageDropdown.classList.remove('show');
-            });
-        });
-    }
-    
-    // 문서 클릭 시 드롭다운 닫기
-    document.addEventListener('click', function(e) {
-        if (languageDropdown && languageDropdown.classList.contains('show') &&
-            !changeLanguageBtn.contains(e.target) && !languageDropdown.contains(e.target)) {
-            languageDropdown.classList.remove('show');
+    // 언어 옵션 활성화 상태 업데이트
+    const languageOptions = document.querySelectorAll('.language-option');
+    languageOptions.forEach(function(option) {
+        const optionLang = option.getAttribute('data-lang');
+        if (optionLang === language) {
+            option.classList.add('active');
+        } else {
+            option.classList.remove('active');
         }
     });
-    
-    // 선택한 언어를 적용하는 함수
-    function applyLanguage(language) {
-        // HTML lang 속성 변경
-        document.documentElement.lang = language;
-        
-        // 현재 언어 아이콘 업데이트
-        if (currentLanguageIcon) {
-            currentLanguageIcon.textContent = languageIcons[language];
-        }
-        
-        // 문서 제목 업데이트 (페이지 타이틀)
-        const titleElements = document.querySelectorAll(`title[data-lang="${language}"]`);
-        if (titleElements.length > 0) {
-            document.title = titleElements[0].textContent;
-        }
-        
-        // Firebase 사용자가 로그인되어 있으면 언어 설정 업데이트
-        const user = firebase.auth().currentUser;
-        if (user && firebase.firestore) {
-            firebase.firestore().collection('users').doc(user.uid).update({
-                preferredLanguage: language,
-                lastUpdated: new Date()
-            }).catch(error => {
-                console.error('Language setting save error:', error);
-            });
-        }
+}
+
+// 언어 드롭다운 토글
+function toggleLanguageDropdown() {
+    const dropdown = document.getElementById('language-dropdown');
+    if (dropdown) {
+        dropdown.classList.toggle('show');
     }
-    
-    // 선택한 언어를 로컬 스토리지에 저장하는 함수
-    function saveLanguagePreference(language) {
-        localStorage.setItem('preferredLanguage', language);
+}
+
+// 언어 모달 표시
+function showLanguageModal() {
+    const modal = document.getElementById('language-modal');
+    if (modal) {
+        modal.classList.add('show');
     }
-    
-    // 새로운 사용자가 로그인할 때 언어 설정 로드
-    firebase.auth().onAuthStateChanged(function(user) {
-        if (user && firebase.firestore) {
-            firebase.firestore().collection('users').doc(user.uid).get()
-                .then(doc => {
-                    if (doc.exists && doc.data().preferredLanguage) {
-                        const userLanguage = doc.data().preferredLanguage;
-                        
-                        // 한국어인 경우 영어로 변경
-                        if (userLanguage === 'ko') {
-                            applyLanguage('en');
-                            saveLanguagePreference('en');
-                            return;
-                        }
-                        
-                        // 로컬 저장소와 다른 경우만 업데이트
-                        const currentLanguage = localStorage.getItem('preferredLanguage');
-                        if (currentLanguage !== userLanguage) {
-                            applyLanguage(userLanguage);
-                            saveLanguagePreference(userLanguage);
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error loading user language settings:', error);
-                });
-        }
-    });
-});
+}
+
+// 언어 모달 숨기기
+function hideLanguageModal() {
+    const modal = document.getElementById('language-modal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
