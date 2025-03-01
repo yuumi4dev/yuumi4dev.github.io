@@ -19,20 +19,23 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 언어별 아이콘 매핑
     const languageIcons = {
-        'ko': '🇰🇷',
         'en': '🇺🇸',
         'es': '🇪🇸'
     };
     
     // 언어별 이름 매핑
     const languageNames = {
-        'ko': '한국어',
         'en': 'English',
         'es': 'Español'
     };
     
     // 언어가 저장되어 있지 않으면 모달 표시
-    if (!savedLanguage) {
+    if (!savedLanguage || savedLanguage === 'ko') { // 한국어가 저장되어 있는 경우에도 모달 표시
+        // 기본 언어를 영어로 설정
+        applyLanguage('en');
+        saveLanguagePreference('en');
+        
+        // 언어 선택 모달 표시
         languageModal.style.display = 'flex';
     } else {
         // 저장된 언어 설정 적용
@@ -101,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 preferredLanguage: language,
                 lastUpdated: new Date()
             }).catch(error => {
-                console.error('언어 설정 저장 오류:', error);
+                console.error('Language setting save error:', error);
             });
         }
     }
@@ -119,6 +122,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (doc.exists && doc.data().preferredLanguage) {
                         const userLanguage = doc.data().preferredLanguage;
                         
+                        // 한국어인 경우 영어로 변경
+                        if (userLanguage === 'ko') {
+                            applyLanguage('en');
+                            saveLanguagePreference('en');
+                            return;
+                        }
+                        
                         // 로컬 저장소와 다른 경우만 업데이트
                         const currentLanguage = localStorage.getItem('preferredLanguage');
                         if (currentLanguage !== userLanguage) {
@@ -128,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 })
                 .catch(error => {
-                    console.error('사용자 언어 설정 로드 오류:', error);
+                    console.error('Error loading user language settings:', error);
                 });
         }
     });
