@@ -1,78 +1,174 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en" data-language="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>포트폴리오 | 블로그</title>
+    <title data-lang="ko">포트폴리오 | 블로그</title>
+    <title data-lang="en">Portfolio | Blog</title>
+    <title data-lang="es">Portafolio | Blog</title>
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/blog.css">
+    <link rel="stylesheet" href="assets/css/language-selector.css">
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="assets/js/firebase-init.js"></script>
 </head>
-<body>
-    <div class="container">
-        <!-- 사이드바 네비게이션 -->
-        <nav class="sidebar">
-            <div class="sidebar-header">
-                <div class="profile-image">
-                    <div class="profile-placeholder">
-                        <span class="profile-initial">P</span>
+<body data-language="en">
+    <!-- 상단 언어 선택 버튼 -->
+    <div class="top-language-selector">
+        <button class="top-language-btn" data-lang="ko" onclick="setLanguage('ko')">
+            <span class="lang-flag">🇰🇷</span>
+            <span>한국어</span>
+        </button>
+        <button class="top-language-btn" data-lang="en" onclick="setLanguage('en')">
+            <span class="lang-flag">🇺🇸</span>
+            <span>English</span>
+        </button>
+        <button class="top-language-btn" data-lang="es" onclick="setLanguage('es')">
+            <span class="lang-flag">🇪🇸</span>
+            <span>Español</span>
+        </button>
+    </div>
+
+    <!-- 언어 선택 모달 -->
+    <div id="language-modal" class="language-modal">
+        <div class="language-modal-content">
+            <h2 class="language-title" data-lang="ko">언어 선택</h2>
+            <h2 class="language-title" data-lang="en">Select a language</h2>
+            <h2 class="language-title" data-lang="es">Seleccione un idioma</h2>
+            
+            <div class="language-options">
+                <button class="language-option" data-lang="ko">
+                    <span class="language-flag">🇰🇷</span>
+                    <span class="language-name">한국어</span>
+                </button>
+                <button class="language-option" data-lang="en">
+                    <span class="language-flag">🇺🇸</span>
+                    <span class="language-name">English</span>
+                </button>
+                <button class="language-option" data-lang="es">
+                    <span class="language-flag">🇪🇸</span>
+                    <span class="language-name">Español</span>
+                </button>
+            </div>
+            
+            <button class="language-close-btn" onclick="hideLanguageModal()">
+                <span data-lang="ko">확인</span>
+                <span data-lang="en">Confirm</span>
+                <span data-lang="es">Confirmar</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- 상단 헤더 -->
+    <header class="top-header">
+        <div class="menu-toggle">
+            <button id="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <div class="site-title">
+            <h1 data-lang="ko">블로그</h1>
+            <h1 data-lang="en">Blog</h1>
+            <h1 data-lang="es">Blog</h1>
+        </div>
+        
+        <div class="user-profile">
+            <!-- 로그인 상태 -->
+            <div id="user-logged-in" style="display: none;">
+                <button id="profile-button" class="profile-button">
+                    <div class="avatar">
+                        <span id="profile-initial">P</span>
                     </div>
-                </div>
-                <div class="user-info">
-                    <h3 class="username">사용자님</h3>
-                    <p class="user-status">포트폴리오</p>
+                    <div class="user-info">
+                        <span id="user-name" class="user-name">Username</span>
+                        <span id="user-id" class="user-id">@userid</span>
+                    </div>
+                </button>
+                <div id="profile-dropdown" class="profile-dropdown">
+                    <ul>
+                        <li><a href="settings.html" data-lang="ko">설정</a><a href="settings.html" data-lang="en">Settings</a><a href="settings.html" data-lang="es">Configuración</a></li>
+                        <li><button id="logout-btn" data-lang="ko">로그아웃</button><button id="logout-btn" data-lang="en">Logout</button><button id="logout-btn" data-lang="es">Cerrar sesión</button></li>
+                    </ul>
                 </div>
             </div>
             
+            <!-- 비로그인 상태 -->
+            <div id="user-logged-out">
+                <a href="auth.html" class="login-button">
+                    <i class="fas fa-user-circle"></i>
+                    <span data-lang="ko">로그인</span>
+                    <span data-lang="en">Sign in</span>
+                    <span data-lang="es">Iniciar sesión</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 사이드바 네비게이션 -->
+        <nav class="sidebar" id="sidebar">
             <ul class="sidebar-menu">
                 <li class="menu-item">
                     <a href="index.html">
-                        <span class="icon">🏠</span>
-                        <span class="menu-text">홈</span>
+                        <span class="icon"><i class="fas fa-home"></i></span>
+                        <span class="menu-text" data-lang="ko">홈</span>
+                        <span class="menu-text" data-lang="en">Home</span>
+                        <span class="menu-text" data-lang="es">Inicio</span>
                     </a>
                 </li>
                 <li class="menu-item active">
                     <a href="blog.html">
-                        <span class="icon">📝</span>
-                        <span class="menu-text">블로그</span>
+                        <span class="icon"><i class="fas fa-edit"></i></span>
+                        <span class="menu-text" data-lang="ko">블로그</span>
+                        <span class="menu-text" data-lang="en">Blog</span>
+                        <span class="menu-text" data-lang="es">Blog</span>
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="portfolio.html">
-                        <span class="icon">🎨</span>
-                        <span class="menu-text">포트폴리오</span>
+                        <span class="icon"><i class="fas fa-palette"></i></span>
+                        <span class="menu-text" data-lang="ko">포트폴리오</span>
+                        <span class="menu-text" data-lang="en">Portfolio</span>
+                        <span class="menu-text" data-lang="es">Portafolio</span>
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="projects.html">
-                        <span class="icon">💻</span>
-                        <span class="menu-text">프로젝트</span>
+                        <span class="icon"><i class="fas fa-project-diagram"></i></span>
+                        <span class="menu-text" data-lang="ko">프로젝트</span>
+                        <span class="menu-text" data-lang="en">Projects</span>
+                        <span class="menu-text" data-lang="es">Proyectos</span>
                     </a>
                 </li>
             </ul>
             
-            <div class="login-status">
-                <div id="login-container">
-                    <a href="auth.html" class="login-btn">로그인</a>
-                </div>
-                <div id="user-container" style="display: none;">
-                    <p id="user-email"></p>
-                    <button id="logout-btn" class="logout-btn">로그아웃</button>
-                </div>
+            <!-- 언어 전환 버튼 -->
+            <div class="language-switcher">
+                <button id="change-language" class="language-switch-btn">
+                    <span id="current-language-icon">🇺🇸</span>
+                    <span id="current-language-text" data-lang="ko">언어 변경</span>
+                    <span id="current-language-text" data-lang="en">Change Language</span>
+                    <span id="current-language-text" data-lang="es">Cambiar Idioma</span>
+                    <i class="fas fa-globe"></i>
+                </button>
             </div>
         </nav>
         
         <!-- 메인 콘텐츠 -->
         <main class="main-content">
             <header class="page-header">
-                <h1 class="page-title">블로그</h1>
+                <h1 class="page-title" data-lang="ko">블로그</h1>
+                <h1 class="page-title" data-lang="en">Blog</h1>
+                <h1 class="page-title" data-lang="es">Blog</h1>
                 <div class="blog-actions">
                     <div class="search-container">
-                        <input type="text" id="search-input" placeholder="검색..." class="search-input">
+                        <input type="text" id="search-input" placeholder="Search..." class="search-input" data-lang-attr="placeholder" data-lang-ko="검색..." data-lang-en="Search..." data-lang-es="Buscar...">
                         <button id="search-button" class="search-button">🔍</button>
                     </div>
                     <div class="theme-toggle">
@@ -84,51 +180,94 @@
             <div class="blog-container">
                 <div class="blog-sidebar">
                     <div class="categories-section">
-                        <h3 class="sidebar-title">카테고리</h3>
+                        <h3 class="sidebar-title" data-lang="ko">카테고리</h3>
+                        <h3 class="sidebar-title" data-lang="en">Categories</h3>
+                        <h3 class="sidebar-title" data-lang="es">Categorías</h3>
                         <ul class="categories-list">
                             <li class="category-item active">
-                                <a href="#" data-category="all">전체 <span class="count">(12)</span></a>
+                                <a href="#" data-category="all">
+                                    <span data-lang="ko">전체</span>
+                                    <span data-lang="en">All</span>
+                                    <span data-lang="es">Todos</span>
+                                    <span class="count">(12)</span>
+                                </a>
                             </li>
                             <li class="category-item">
-                                <a href="#" data-category="web-dev">웹 개발 <span class="count">(5)</span></a>
+                                <a href="#" data-category="web-dev">
+                                    <span data-lang="ko">웹 개발</span>
+                                    <span data-lang="en">Web Development</span>
+                                    <span data-lang="es">Desarrollo Web</span>
+                                    <span class="count">(5)</span>
+                                </a>
                             </li>
                             <li class="category-item">
-                                <a href="#" data-category="ui-design">UI 디자인 <span class="count">(3)</span></a>
+                                <a href="#" data-category="ui-design">
+                                    <span data-lang="ko">UI 디자인</span>
+                                    <span data-lang="en">UI Design</span>
+                                    <span data-lang="es">Diseño UI</span>
+                                    <span class="count">(3)</span>
+                                </a>
                             </li>
                             <li class="category-item">
-                                <a href="#" data-category="productivity">생산성 <span class="count">(2)</span></a>
+                                <a href="#" data-category="productivity">
+                                    <span data-lang="ko">생산성</span>
+                                    <span data-lang="en">Productivity</span>
+                                    <span data-lang="es">Productividad</span>
+                                    <span class="count">(2)</span>
+                                </a>
                             </li>
                             <li class="category-item">
-                                <a href="#" data-category="other">기타 <span class="count">(2)</span></a>
+                                <a href="#" data-category="other">
+                                    <span data-lang="ko">기타</span>
+                                    <span data-lang="en">Other</span>
+                                    <span data-lang="es">Otros</span>
+                                    <span class="count">(2)</span>
+                                </a>
                             </li>
                         </ul>
                     </div>
                     
                     <div class="recent-posts-section">
-                        <h3 class="sidebar-title">최근 포스트</h3>
+                        <h3 class="sidebar-title" data-lang="ko">최근 포스트</h3>
+                        <h3 class="sidebar-title" data-lang="en">Recent Posts</h3>
+                        <h3 class="sidebar-title" data-lang="es">Publicaciones Recientes</h3>
                         <ul class="recent-posts-list">
                             <li class="recent-post-item">
-                                <a href="blog-post.html?id=post1">모던 웹 개발 트렌드</a>
+                                <a href="blog-post.html?id=post1" data-lang="ko">모던 웹 개발 트렌드</a>
+                                <a href="blog-post.html?id=post1" data-lang="en">Modern Web Development Trends</a>
+                                <a href="blog-post.html?id=post1" data-lang="es">Tendencias de Desarrollo Web Moderno</a>
                             </li>
                             <li class="recent-post-item">
-                                <a href="blog-post.html?id=post2">효과적인 UI 디자인 팁</a>
+                                <a href="blog-post.html?id=post2" data-lang="ko">효과적인 UI 디자인 팁</a>
+                                <a href="blog-post.html?id=post2" data-lang="en">Effective UI Design Tips</a>
+                                <a href="blog-post.html?id=post2" data-lang="es">Consejos Efectivos de Diseño UI</a>
                             </li>
                             <li class="recent-post-item">
-                                <a href="blog-post.html?id=post3">개발자를 위한 생산성 도구</a>
+                                <a href="blog-post.html?id=post3" data-lang="ko">개발자를 위한 생산성 도구</a>
+                                <a href="blog-post.html?id=post3" data-lang="en">Productivity Tools for Developers</a>
+                                <a href="blog-post.html?id=post3" data-lang="es">Herramientas de Productividad para Desarrolladores</a>
                             </li>
                         </ul>
                     </div>
                     
                     <div class="tags-section">
-                        <h3 class="sidebar-title">태그</h3>
+                        <h3 class="sidebar-title" data-lang="ko">태그</h3>
+                        <h3 class="sidebar-title" data-lang="en">Tags</h3>
+                        <h3 class="sidebar-title" data-lang="es">Etiquetas</h3>
                         <div class="tags-cloud">
                             <a href="#" class="tag" data-tag="javascript">JavaScript</a>
                             <a href="#" class="tag" data-tag="html">HTML</a>
                             <a href="#" class="tag" data-tag="css">CSS</a>
                             <a href="#" class="tag" data-tag="react">React</a>
-                            <a href="#" class="tag" data-tag="design">디자인</a>
-                            <a href="#" class="tag" data-tag="tools">도구</a>
-                            <a href="#" class="tag" data-tag="tips">팁</a>
+                            <a href="#" class="tag" data-tag="design" data-lang="ko">디자인</a>
+                            <a href="#" class="tag" data-tag="design" data-lang="en">Design</a>
+                            <a href="#" class="tag" data-tag="design" data-lang="es">Diseño</a>
+                            <a href="#" class="tag" data-tag="tools" data-lang="ko">도구</a>
+                            <a href="#" class="tag" data-tag="tools" data-lang="en">Tools</a>
+                            <a href="#" class="tag" data-tag="tools" data-lang="es">Herramientas</a>
+                            <a href="#" class="tag" data-tag="tips" data-lang="ko">팁</a>
+                            <a href="#" class="tag" data-tag="tips" data-lang="en">Tips</a>
+                            <a href="#" class="tag" data-tag="tips" data-lang="es">Consejos</a>
                         </div>
                     </div>
                 </div>
@@ -145,17 +284,33 @@
                                 </div>
                                 <div class="post-content">
                                     <div class="post-meta">
-                                        <span class="post-category">웹 개발</span>
-                                        <span class="post-date">2023년 05월 15일</span>
+                                        <span class="post-category" data-lang="ko">웹 개발</span>
+                                        <span class="post-category" data-lang="en">Web Development</span>
+                                        <span class="post-category" data-lang="es">Desarrollo Web</span>
+                                        <span class="post-date" data-lang="ko">2023년 05월 15일</span>
+                                        <span class="post-date" data-lang="en">May 15, 2023</span>
+                                        <span class="post-date" data-lang="es">15 de Mayo, 2023</span>
                                     </div>
-                                    <h2 class="post-title">모던 웹 개발 트렌드: 2023년 알아야 할 것들</h2>
-                                    <p class="post-excerpt">
+                                    <h2 class="post-title" data-lang="ko">모던 웹 개발 트렌드: 2023년 알아야 할 것들</h2>
+                                    <h2 class="post-title" data-lang="en">Modern Web Development Trends: What to Know in 2023</h2>
+                                    <h2 class="post-title" data-lang="es">Tendencias de Desarrollo Web Moderno: Lo que Debes Saber en 2023</h2>
+                                    <p class="post-excerpt" data-lang="ko">
                                         웹 개발 생태계는 빠르게 변화하고 있습니다. 이 글에서는 2023년 현재 주목해야 할 웹 개발 트렌드와 기술들을 소개합니다.
+                                    </p>
+                                    <p class="post-excerpt" data-lang="en">
+                                        The web development ecosystem is changing rapidly. In this article, we introduce web development trends and technologies to watch in 2023.
+                                    </p>
+                                    <p class="post-excerpt" data-lang="es">
+                                        El ecosistema de desarrollo web está cambiando rápidamente. En este artículo, presentamos las tendencias y tecnologías de desarrollo web a tener en cuenta en 2023.
                                     </p>
                                     <div class="post-tags">
                                         <span class="tag">JavaScript</span>
-                                        <span class="tag">웹 개발</span>
-                                        <span class="tag">트렌드</span>
+                                        <span class="tag" data-lang="ko">웹 개발</span>
+                                        <span class="tag" data-lang="en">Web Development</span>
+                                        <span class="tag" data-lang="es">Desarrollo Web</span>
+                                        <span class="tag" data-lang="ko">트렌드</span>
+                                        <span class="tag" data-lang="en">Trends</span>
+                                        <span class="tag" data-lang="es">Tendencias</span>
                                     </div>
                                 </div>
                             </a>
@@ -170,15 +325,29 @@
                                 </div>
                                 <div class="post-content">
                                     <div class="post-meta">
-                                        <span class="post-category">UI 디자인</span>
-                                        <span class="post-date">2023년 04월 28일</span>
+                                        <span class="post-category" data-lang="ko">UI 디자인</span>
+                                        <span class="post-category" data-lang="en">UI Design</span>
+                                        <span class="post-category" data-lang="es">Diseño UI</span>
+                                        <span class="post-date" data-lang="ko">2023년 04월 28일</span>
+                                        <span class="post-date" data-lang="en">April 28, 2023</span>
+                                        <span class="post-date" data-lang="es">28 de Abril, 2023</span>
                                     </div>
-                                    <h2 class="post-title">효과적인 UI 디자인을 위한 10가지 팁</h2>
-                                    <p class="post-excerpt">
+                                    <h2 class="post-title" data-lang="ko">효과적인 UI 디자인을 위한 10가지 팁</h2>
+                                    <h2 class="post-title" data-lang="en">10 Tips for Effective UI Design</h2>
+                                    <h2 class="post-title" data-lang="es">10 Consejos para un Diseño UI Efectivo</h2>
+                                    <p class="post-excerpt" data-lang="ko">
                                         사용자 경험을 향상시키는 효과적인 UI 디자인을 위한 10가지 실용적인 팁을 소개합니다. 이 팁들은 즉시 적용할 수 있으며 디자인 품질을 향상시킬 것입니다.
                                     </p>
+                                    <p class="post-excerpt" data-lang="en">
+                                        Introducing 10 practical tips for effective UI design that enhance user experience. These tips can be applied immediately and will improve the quality of your designs.
+                                    </p>
+                                    <p class="post-excerpt" data-lang="es">
+                                        Presentamos 10 consejos prácticos para un diseño UI efectivo que mejore la experiencia del usuario. Estos consejos se pueden aplicar de inmediato y mejorarán la calidad de tus diseños.
+                                    </p>
                                     <div class="post-tags">
-                                        <span class="tag">디자인</span>
+                                        <span class="tag" data-lang="ko">디자인</span>
+                                        <span class="tag" data-lang="en">Design</span>
+                                        <span class="tag" data-lang="es">Diseño</span>
                                         <span class="tag">UI</span>
                                         <span class="tag">UX</span>
                                     </div>
@@ -195,34 +364,58 @@
                                 </div>
                                 <div class="post-content">
                                     <div class="post-meta">
-                                        <span class="post-category">생산성</span>
-                                        <span class="post-date">2023년 04월 15일</span>
+                                        <span class="post-category" data-lang="ko">생산성</span>
+                                        <span class="post-category" data-lang="en">Productivity</span>
+                                        <span class="post-category" data-lang="es">Productividad</span>
+                                        <span class="post-date" data-lang="ko">2023년 04월 15일</span>
+                                        <span class="post-date" data-lang="en">April 15, 2023</span>
+                                        <span class="post-date" data-lang="es">15 de Abril, 2023</span>
                                     </div>
-                                    <h2 class="post-title">개발자를 위한 필수 생산성 도구와 확장 프로그램</h2>
-                                    <p class="post-excerpt">
+                                    <h2 class="post-title" data-lang="ko">개발자를 위한 필수 생산성 도구와 확장 프로그램</h2>
+                                    <h2 class="post-title" data-lang="en">Essential Productivity Tools and Extensions for Developers</h2>
+                                    <h2 class="post-title" data-lang="es">Herramientas y Extensiones de Productividad Esenciales para Desarrolladores</h2>
+                                    <p class="post-excerpt" data-lang="ko">
                                         개발 생산성을 크게 향상시키는 도구와 확장 프로그램들을 소개합니다. 코드 에디터 플러그인부터 협업 도구까지, 개발 워크플로우를 개선하는 방법을 알아보세요.
                                     </p>
+                                    <p class="post-excerpt" data-lang="en">
+                                        Introducing tools and extensions that greatly improve development productivity. Learn how to enhance your development workflow, from code editor plugins to collaboration tools.
+                                    </p>
+                                    <p class="post-excerpt" data-lang="es">
+                                        Presentamos herramientas y extensiones que mejoran en gran medida la productividad del desarrollo. Aprenda a mejorar su flujo de trabajo de desarrollo, desde complementos de editor de código hasta herramientas de colaboración.
+                                    </p>
                                     <div class="post-tags">
-                                        <span class="tag">도구</span>
-                                        <span class="tag">생산성</span>
-                                        <span class="tag">개발</span>
+                                        <span class="tag" data-lang="ko">도구</span>
+                                        <span class="tag" data-lang="en">Tools</span>
+                                        <span class="tag" data-lang="es">Herramientas</span>
+                                        <span class="tag" data-lang="ko">생산성</span>
+                                        <span class="tag" data-lang="en">Productivity</span>
+                                        <span class="tag" data-lang="es">Productividad</span>
+                                        <span class="tag" data-lang="ko">개발</span>
+                                        <span class="tag" data-lang="en">Development</span>
+                                        <span class="tag" data-lang="es">Desarrollo</span>
                                     </div>
                                 </div>
                             </a>
                         </article>
-                        
-                        <!-- 더 많은 블로그 포스트 추가 -->
                     </div>
                     
                     <!-- 페이지네이션 -->
                     <div class="pagination">
-                        <button class="pagination-btn" disabled>이전</button>
+                        <button class="pagination-btn" disabled>
+                            <span data-lang="ko">이전</span>
+                            <span data-lang="en">Previous</span>
+                            <span data-lang="es">Anterior</span>
+                        </button>
                         <div class="pagination-numbers">
                             <a href="#" class="pagination-number active">1</a>
                             <a href="#" class="pagination-number">2</a>
                             <a href="#" class="pagination-number">3</a>
                         </div>
-                        <button class="pagination-btn">다음</button>
+                        <button class="pagination-btn">
+                            <span data-lang="ko">다음</span>
+                            <span data-lang="en">Next</span>
+                            <span data-lang="es">Siguiente</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -232,5 +425,8 @@
     <script src="assets/js/auth.js"></script>
     <script src="assets/js/theme.js"></script>
     <script src="assets/js/blog.js"></script>
+    <script src="assets/js/language.js"></script>
+    <script src="assets/js/sidebar.js"></script>
+    <script src="assets/js/profile.js"></script>
 </body>
 </html>

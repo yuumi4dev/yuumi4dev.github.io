@@ -181,8 +181,9 @@
 
 .modal-loading {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     height: 200px;
 }
 
@@ -193,6 +194,11 @@
     border-top-color: var(--accent-color);
     border-radius: 50%;
     animation: spinner 1s linear infinite;
+}
+
+.modal-loading p {
+    margin-top: 16px;
+    color: var(--text-secondary);
 }
 
 @keyframes spinner {
@@ -351,7 +357,45 @@
     background-color: var(--border-color);
 }
 
-/* 반응형 */
+/* 다국어 지원 */
+[data-lang] {
+    display: none;
+}
+
+body[data-language="ko"] [data-lang="ko"],
+body[data-language="en"] [data-lang="en"],
+body[data-language="es"] [data-lang="es"] {
+    display: block;
+}
+
+span[data-lang], 
+a[data-lang], 
+button[data-lang] {
+    display: none;
+}
+
+body[data-language="ko"] span[data-lang="ko"],
+body[data-language="ko"] a[data-lang="ko"],
+body[data-language="ko"] button[data-lang="ko"],
+body[data-language="en"] span[data-lang="en"],
+body[data-language="en"] a[data-lang="en"],
+body[data-language="en"] button[data-lang="en"],
+body[data-language="es"] span[data-lang="es"],
+body[data-language="es"] a[data-lang="es"],
+body[data-language="es"] button[data-lang="es"] {
+    display: inline-flex;
+}
+
+/* 오류 메시지 */
+.error-message {
+    text-align: center;
+    padding: 20px;
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    color: var(--danger-color);
+}
+
+/* 반응형 스타일 */
 @media (max-width: 768px) {
     .portfolio-grid {
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -363,6 +407,14 @@
     
     .modal-body {
         padding: 30px 20px;
+    }
+    
+    .project-cta {
+        flex-direction: column;
+    }
+    
+    .gallery-main {
+        height: 300px;
     }
 }
 
@@ -378,5 +430,13 @@
     
     .portfolio-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .modal-body {
+        padding: 20px 16px;
+    }
+    
+    .project-title {
+        font-size: 24px;
     }
 }

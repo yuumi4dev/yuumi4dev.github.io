@@ -1,75 +1,179 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en" data-language="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>포트폴리오 | 작업물</title>
+    <title data-lang="ko">포트폴리오 | 작업물</title>
+    <title data-lang="en">Portfolio | Works</title>
+    <title data-lang="es">Portafolio | Trabajos</title>
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/portfolio.css">
+    <link rel="stylesheet" href="assets/css/language-selector.css">
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="assets/js/firebase-init.js"></script>
 </head>
-<body>
-    <div class="container">
-        <!-- 사이드바 네비게이션 -->
-        <nav class="sidebar">
-            <div class="sidebar-header">
-                <div class="profile-image">
-                    <div class="profile-placeholder">
-                        <span class="profile-initial">P</span>
-                    </div>
-                </div>
-                <div class="user-info">
-                    <h3 class="username">사용자님</h3>
-                    <p class="user-status">포트폴리오</p>
-                </div>
+<body data-language="en">
+    <!-- 상단 언어 선택 버튼 -->
+    <div class="top-language-selector">
+        <button class="top-language-btn" data-lang="ko" onclick="setLanguage('ko')">
+            <span class="lang-flag">🇰🇷</span>
+            <span>한국어</span>
+        </button>
+        <button class="top-language-btn" data-lang="en" onclick="setLanguage('en')">
+            <span class="lang-flag">🇺🇸</span>
+            <span>English</span>
+        </button>
+        <button class="top-language-btn" data-lang="es" onclick="setLanguage('es')">
+            <span class="lang-flag">🇪🇸</span>
+            <span>Español</span>
+        </button>
+    </div>
+
+    <!-- 언어 선택 모달 -->
+    <div id="language-modal" class="language-modal">
+        <div class="language-modal-content">
+            <h2 class="language-title" data-lang="ko">언어 선택</h2>
+            <h2 class="language-title" data-lang="en">Select a language</h2>
+            <h2 class="language-title" data-lang="es">Seleccione un idioma</h2>
+            
+            <div class="language-options">
+                <button class="language-option" data-lang="ko">
+                    <span class="language-flag">🇰🇷</span>
+                    <span class="language-name">한국어</span>
+                </button>
+                <button class="language-option" data-lang="en">
+                    <span class="language-flag">🇺🇸</span>
+                    <span class="language-name">English</span>
+                </button>
+                <button class="language-option" data-lang="es">
+                    <span class="language-flag">🇪🇸</span>
+                    <span class="language-name">Español</span>
+                </button>
             </div>
             
+            <button class="language-close-btn" onclick="hideLanguageModal()">
+                <span data-lang="ko">확인</span>
+                <span data-lang="en">Confirm</span>
+                <span data-lang="es">Confirmar</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- 상단 헤더 -->
+    <header class="top-header">
+        <div class="menu-toggle">
+            <button id="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <div class="site-title">
+            <h1 data-lang="ko">포트폴리오</h1>
+            <h1 data-lang="en">Portfolio</h1>
+            <h1 data-lang="es">Portafolio</h1>
+        </div>
+        
+        <div class="user-profile">
+            <!-- 로그인 상태 -->
+            <div id="user-logged-in" style="display: none;">
+                <button id="profile-button" class="profile-button">
+                    <div class="avatar">
+                        <span id="profile-initial">P</span>
+                    </div>
+                    <div class="user-info">
+                        <span id="user-name" class="user-name">Username</span>
+                        <span id="user-id" class="user-id">@userid</span>
+                    </div>
+                </button>
+                <div id="user-profile-dropdown" class="profile-dropdown">
+                    <ul>
+                        <li>
+                            <a href="settings.html" class="settings-link" data-lang="ko">설정</a>
+                            <a href="settings.html" class="settings-link" data-lang="en">Settings</a>
+                            <a href="settings.html" class="settings-link" data-lang="es">Configuración</a>
+                        </li>
+                        <li>
+                            <button class="logout-btn" data-lang="ko">로그아웃</button>
+                            <button class="logout-btn" data-lang="en">Logout</button>
+                            <button class="logout-btn" data-lang="es">Cerrar sesión</button>
+                        </li>
+                    </ul>
+                </div>
+            
+            <!-- 비로그인 상태 -->
+            <div id="user-logged-out">
+                <a href="auth.html" class="login-button">
+                    <i class="fas fa-user-circle"></i>
+                    <span data-lang="ko">로그인</span>
+                    <span data-lang="en">Sign in</span>
+                    <span data-lang="es">Iniciar sesión</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 사이드바 네비게이션 -->
+        <nav class="sidebar" id="sidebar">
             <ul class="sidebar-menu">
                 <li class="menu-item">
                     <a href="index.html">
-                        <span class="icon">🏠</span>
-                        <span class="menu-text">홈</span>
+                        <span class="icon"><i class="fas fa-home"></i></span>
+                        <span class="menu-text" data-lang="ko">홈</span>
+                        <span class="menu-text" data-lang="en">Home</span>
+                        <span class="menu-text" data-lang="es">Inicio</span>
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="blog.html">
-                        <span class="icon">📝</span>
-                        <span class="menu-text">블로그</span>
+                        <span class="icon"><i class="fas fa-edit"></i></span>
+                        <span class="menu-text" data-lang="ko">블로그</span>
+                        <span class="menu-text" data-lang="en">Blog</span>
+                        <span class="menu-text" data-lang="es">Blog</span>
                     </a>
                 </li>
                 <li class="menu-item active">
                     <a href="portfolio.html">
-                        <span class="icon">🎨</span>
-                        <span class="menu-text">포트폴리오</span>
+                        <span class="icon"><i class="fas fa-palette"></i></span>
+                        <span class="menu-text" data-lang="ko">포트폴리오</span>
+                        <span class="menu-text" data-lang="en">Portfolio</span>
+                        <span class="menu-text" data-lang="es">Portafolio</span>
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="projects.html">
-                        <span class="icon">💻</span>
-                        <span class="menu-text">프로젝트</span>
+                        <span class="icon"><i class="fas fa-project-diagram"></i></span>
+                        <span class="menu-text" data-lang="ko">프로젝트</span>
+                        <span class="menu-text" data-lang="en">Projects</span>
+                        <span class="menu-text" data-lang="es">Proyectos</span>
                     </a>
                 </li>
             </ul>
             
-            <div class="login-status">
-                <div id="login-container">
-                    <a href="auth.html" class="login-btn">로그인</a>
-                </div>
-                <div id="user-container" style="display: none;">
-                    <p id="user-email"></p>
-                    <button id="logout-btn" class="logout-btn">로그아웃</button>
-                </div>
+            <!-- 언어 전환 버튼 -->
+            <div class="language-switcher">
+                <button id="change-language" class="language-switch-btn">
+                    <span id="current-language-icon">🇺🇸</span>
+                    <button class="current-language-text" data-lang="ko">언어 변경</button>
+                    <button class="current-language-text" data-lang="en">Change Language</button>
+                    <button class="current-language-text" data-lang="es">Cambiar Idioma</button>
+                    <i class="fas fa-globe">
+                    </i>
+                </button>
             </div>
         </nav>
         
         <!-- 메인 콘텐츠 -->
         <main class="main-content">
             <header class="page-header">
-                <h1 class="page-title">포트폴리오</h1>
+                <h1 class="page-title" data-lang="ko">포트폴리오</h1>
+                <h1 class="page-title" data-lang="en">Portfolio</h1>
+                <h1 class="page-title" data-lang="es">Portafolio</h1>
                 <div class="theme-toggle">
                     <button id="theme-toggle-btn">🌙</button>
                 </div>
@@ -78,10 +182,26 @@
             <!-- 필터 섹션 -->
             <div class="portfolio-filters">
                 <div class="filter-group">
-                    <button class="filter-btn active" data-filter="all">전체</button>
-                    <button class="filter-btn" data-filter="web">웹 개발</button>
-                    <button class="filter-btn" data-filter="mobile">모바일 앱</button>
-                    <button class="filter-btn" data-filter="design">UI/UX 디자인</button>
+                    <button class="filter-btn active" data-filter="all">
+                        <span data-lang="ko">전체</span>
+                        <span data-lang="en">All</span>
+                        <span data-lang="es">Todos</span>
+                    </button>
+                    <button class="filter-btn" data-filter="web">
+                        <span data-lang="ko">웹 개발</span>
+                        <span data-lang="en">Web Development</span>
+                        <span data-lang="es">Desarrollo Web</span>
+                    </button>
+                    <button class="filter-btn" data-filter="mobile">
+                        <span data-lang="ko">모바일 앱</span>
+                        <span data-lang="en">Mobile Apps</span>
+                        <span data-lang="es">Aplicaciones Móviles</span>
+                    </button>
+                    <button class="filter-btn" data-filter="design">
+                        <span data-lang="ko">UI/UX 디자인</span>
+                        <span data-lang="en">UI/UX Design</span>
+                        <span data-lang="es">Diseño UI/UX</span>
+                    </button>
                 </div>
             </div>
             
@@ -95,15 +215,27 @@
                         </div>
                         <div class="portfolio-overlay">
                             <div class="overlay-content">
-                                <h3 class="overlay-title">반응형 웹사이트</h3>
-                                <p class="overlay-category">웹 개발</p>
-                                <button class="view-details-btn" data-id="project1">상세 보기</button>
+                                <h3 class="overlay-title" data-lang="ko">반응형 웹사이트</h3>
+                                <h3 class="overlay-title" data-lang="en">Responsive Website</h3>
+                                <h3 class="overlay-title" data-lang="es">Sitio Web Responsivo</h3>
+                                <p class="overlay-category" data-lang="ko">웹 개발</p>
+                                <p class="overlay-category" data-lang="en">Web Development</p>
+                                <p class="overlay-category" data-lang="es">Desarrollo Web</p>
+                                <button class="view-details-btn" data-id="project1">
+                                    <span data-lang="ko">상세 보기</span>
+                                    <span data-lang="en">View Details</span>
+                                    <span data-lang="es">Ver Detalles</span>
+                                </button>
                             </div>
                         </div>
                     </div>
                     <div class="portfolio-info">
-                        <h3 class="portfolio-title">기업 반응형 웹사이트</h3>
-                        <p class="portfolio-desc">HTML, CSS, JavaScript로 구현한 모던 기업 웹사이트</p>
+                        <h3 class="portfolio-title" data-lang="ko">기업 반응형 웹사이트</h3>
+                        <h3 class="portfolio-title" data-lang="en">Corporate Responsive Website</h3>
+                        <h3 class="portfolio-title" data-lang="es">Sitio Web Corporativo Responsivo</h3>
+                        <p class="portfolio-desc" data-lang="ko">HTML, CSS, JavaScript로 구현한 모던 기업 웹사이트</p>
+                        <p class="portfolio-desc" data-lang="en">Modern corporate website built with HTML, CSS, JavaScript</p>
+                        <p class="portfolio-desc" data-lang="es">Sitio web corporativo moderno construido con HTML, CSS, JavaScript</p>
                     </div>
                 </div>
                 
@@ -115,15 +247,27 @@
                         </div>
                         <div class="portfolio-overlay">
                             <div class="overlay-content">
-                                <h3 class="overlay-title">헬스케어 앱</h3>
-                                <p class="overlay-category">모바일 앱</p>
-                                <button class="view-details-btn" data-id="project2">상세 보기</button>
+                                <h3 class="overlay-title" data-lang="ko">헬스케어 앱</h3>
+                                <h3 class="overlay-title" data-lang="en">Healthcare App</h3>
+                                <h3 class="overlay-title" data-lang="es">Aplicación de Salud</h3>
+                                <p class="overlay-category" data-lang="ko">모바일 앱</p>
+                                <p class="overlay-category" data-lang="en">Mobile App</p>
+                                <p class="overlay-category" data-lang="es">Aplicación Móvil</p>
+                                <button class="view-details-btn" data-id="project2">
+                                    <span data-lang="ko">상세 보기</span>
+                                    <span data-lang="en">View Details</span>
+                                    <span data-lang="es">Ver Detalles</span>
+                                </button>
                             </div>
                         </div>
                     </div>
                     <div class="portfolio-info">
-                        <h3 class="portfolio-title">헬스케어 모바일 앱</h3>
-                        <p class="portfolio-desc">React Native로 개발한 사용자 중심의 헬스케어 앱</p>
+                        <h3 class="portfolio-title" data-lang="ko">헬스케어 모바일 앱</h3>
+                        <h3 class="portfolio-title" data-lang="en">Healthcare Mobile App</h3>
+                        <h3 class="portfolio-title" data-lang="es">Aplicación Móvil de Salud</h3>
+                        <p class="portfolio-desc" data-lang="ko">React Native로 개발한 사용자 중심의 헬스케어 앱</p>
+                        <p class="portfolio-desc" data-lang="en">User-centered healthcare app developed with React Native</p>
+                        <p class="portfolio-desc" data-lang="es">Aplicación de salud centrada en el usuario desarrollada con React Native</p>
                     </div>
                 </div>
                 
@@ -135,15 +279,27 @@
                         </div>
                         <div class="portfolio-overlay">
                             <div class="overlay-content">
-                                <h3 class="overlay-title">UI 컴포넌트</h3>
-                                <p class="overlay-category">UI/UX 디자인</p>
-                                <button class="view-details-btn" data-id="project3">상세 보기</button>
+                                <h3 class="overlay-title" data-lang="ko">UI 컴포넌트</h3>
+                                <h3 class="overlay-title" data-lang="en">UI Components</h3>
+                                <h3 class="overlay-title" data-lang="es">Componentes UI</h3>
+                                <p class="overlay-category" data-lang="ko">UI/UX 디자인</p>
+                                <p class="overlay-category" data-lang="en">UI/UX Design</p>
+                                <p class="overlay-category" data-lang="es">Diseño UI/UX</p>
+                                <button class="view-details-btn" data-id="project3">
+                                    <span data-lang="ko">상세 보기</span>
+                                    <span data-lang="en">View Details</span>
+                                    <span data-lang="es">Ver Detalles</span>
+                                </button>
                             </div>
                         </div>
                     </div>
                     <div class="portfolio-info">
-                        <h3 class="portfolio-title">디자인 시스템</h3>
-                        <p class="portfolio-desc">일관된 사용자 경험을 위한 디자인 시스템 및 컴포넌트</p>
+                        <h3 class="portfolio-title" data-lang="ko">디자인 시스템</h3>
+                        <h3 class="portfolio-title" data-lang="en">Design System</h3>
+                        <h3 class="portfolio-title" data-lang="es">Sistema de Diseño</h3>
+                        <p class="portfolio-desc" data-lang="ko">일관된 사용자 경험을 위한 디자인 시스템 및 컴포넌트</p>
+                        <p class="portfolio-desc" data-lang="en">Design system and components for consistent user experience</p>
+                        <p class="portfolio-desc" data-lang="es">Sistema de diseño y componentes para una experiencia de usuario consistente</p>
                     </div>
                 </div>
                 
@@ -155,15 +311,27 @@
                         </div>
                         <div class="portfolio-overlay">
                             <div class="overlay-content">
-                                <h3 class="overlay-title">이커머스 플랫폼</h3>
-                                <p class="overlay-category">웹 개발</p>
-                                <button class="view-details-btn" data-id="project4">상세 보기</button>
+                                <h3 class="overlay-title" data-lang="ko">이커머스 플랫폼</h3>
+                                <h3 class="overlay-title" data-lang="en">E-commerce Platform</h3>
+                                <h3 class="overlay-title" data-lang="es">Plataforma de Comercio Electrónico</h3>
+                                <p class="overlay-category" data-lang="ko">웹 개발</p>
+                                <p class="overlay-category" data-lang="en">Web Development</p>
+                                <p class="overlay-category" data-lang="es">Desarrollo Web</p>
+                                <button class="view-details-btn" data-id="project4">
+                                    <span data-lang="ko">상세 보기</span>
+                                    <span data-lang="en">View Details</span>
+                                    <span data-lang="es">Ver Detalles</span>
+                                </button>
                             </div>
                         </div>
                     </div>
                     <div class="portfolio-info">
-                        <h3 class="portfolio-title">온라인 쇼핑몰</h3>
-                        <p class="portfolio-desc">React와 Node.js로 개발한 풀스택 이커머스 솔루션</p>
+                        <h3 class="portfolio-title" data-lang="ko">온라인 쇼핑몰</h3>
+                        <h3 class="portfolio-title" data-lang="en">Online Shop</h3>
+                        <h3 class="portfolio-title" data-lang="es">Tienda en Línea</h3>
+                        <p class="portfolio-desc" data-lang="ko">React와 Node.js로 개발한 풀스택 이커머스 솔루션</p>
+                        <p class="portfolio-desc" data-lang="en">Full-stack e-commerce solution developed with React and Node.js</p>
+                        <p class="portfolio-desc" data-lang="es">Solución de comercio electrónico full-stack desarrollada con React y Node.js</p>
                     </div>
                 </div>
                 
@@ -175,15 +343,27 @@
                         </div>
                         <div class="portfolio-overlay">
                             <div class="overlay-content">
-                                <h3 class="overlay-title">일정 관리 앱</h3>
-                                <p class="overlay-category">모바일 앱</p>
-                                <button class="view-details-btn" data-id="project5">상세 보기</button>
+                                <h3 class="overlay-title" data-lang="ko">일정 관리 앱</h3>
+                                <h3 class="overlay-title" data-lang="en">Schedule Management App</h3>
+                                <h3 class="overlay-title" data-lang="es">Aplicación de Gestión de Horarios</h3>
+                                <p class="overlay-category" data-lang="ko">모바일 앱</p>
+                                <p class="overlay-category" data-lang="en">Mobile App</p>
+                                <p class="overlay-category" data-lang="es">Aplicación Móvil</p>
+                                <button class="view-details-btn" data-id="project5">
+                                    <span data-lang="ko">상세 보기</span>
+                                    <span data-lang="en">View Details</span>
+                                    <span data-lang="es">Ver Detalles</span>
+                                </button>
                             </div>
                         </div>
                     </div>
                     <div class="portfolio-info">
-                        <h3 class="portfolio-title">프로덕티비티 앱</h3>
-                        <p class="portfolio-desc">Flutter로 개발한 크로스 플랫폼 일정 관리 앱</p>
+                        <h3 class="portfolio-title" data-lang="ko">프로덕티비티 앱</h3>
+                        <h3 class="portfolio-title" data-lang="en">Productivity App</h3>
+                        <h3 class="portfolio-title" data-lang="es">Aplicación de Productividad</h3>
+                        <p class="portfolio-desc" data-lang="ko">Flutter로 개발한 크로스 플랫폼 일정 관리 앱</p>
+                        <p class="portfolio-desc" data-lang="en">Cross-platform schedule management app developed with Flutter</p>
+                        <p class="portfolio-desc" data-lang="es">Aplicación de gestión de horarios multiplataforma desarrollada con Flutter</p>
                     </div>
                 </div>
                 
@@ -195,15 +375,27 @@
                         </div>
                         <div class="portfolio-overlay">
                             <div class="overlay-content">
-                                <h3 class="overlay-title">대시보드 디자인</h3>
-                                <p class="overlay-category">UI/UX 디자인</p>
-                                <button class="view-details-btn" data-id="project6">상세 보기</button>
+                                <h3 class="overlay-title" data-lang="ko">대시보드 디자인</h3>
+                                <h3 class="overlay-title" data-lang="en">Dashboard Design</h3>
+                                <h3 class="overlay-title" data-lang="es">Diseño de Panel</h3>
+                                <p class="overlay-category" data-lang="ko">UI/UX 디자인</p>
+                                <p class="overlay-category" data-lang="en">UI/UX Design</p>
+                                <p class="overlay-category" data-lang="es">Diseño UI/UX</p>
+                                <button class="view-details-btn" data-id="project6">
+                                    <span data-lang="ko">상세 보기</span>
+                                    <span data-lang="en">View Details</span>
+                                    <span data-lang="es">Ver Detalles</span>
+                                </button>
                             </div>
                         </div>
                     </div>
                     <div class="portfolio-info">
-                        <h3 class="portfolio-title">데이터 대시보드</h3>
-                        <p class="portfolio-desc">복잡한 데이터를 직관적으로 시각화한 대시보드 디자인</p>
+                        <h3 class="portfolio-title" data-lang="ko">데이터 대시보드</h3>
+                        <h3 class="portfolio-title" data-lang="en">Data Dashboard</h3>
+                        <h3 class="portfolio-title" data-lang="es">Panel de Datos</h3>
+                        <p class="portfolio-desc" data-lang="ko">복잡한 데이터를 직관적으로 시각화한 대시보드 디자인</p>
+                        <p class="portfolio-desc" data-lang="en">Dashboard design that intuitively visualizes complex data</p>
+                        <p class="portfolio-desc" data-lang="es">Diseño de panel que visualiza datos complejos de manera intuitiva</p>
                     </div>
                 </div>
             </div>
@@ -218,6 +410,9 @@
                 <!-- 모달 콘텐츠는 JavaScript로 동적 추가 -->
                 <div class="modal-loading">
                     <div class="spinner"></div>
+                    <p data-lang="ko">로딩 중...</p>
+                    <p data-lang="en">Loading...</p>
+                    <p data-lang="es">Cargando...</p>
                 </div>
             </div>
         </div>
@@ -226,5 +421,8 @@
     <script src="assets/js/auth.js"></script>
     <script src="assets/js/theme.js"></script>
     <script src="assets/js/portfolio.js"></script>
+    <script src="assets/js/language.js"></script>
+    <script src="assets/js/sidebar.js"></script>
+    <script src="assets/js/profile.js"></script>
 </body>
 </html>

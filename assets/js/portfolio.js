@@ -1,4 +1,57 @@
+// portfolio.js - 포트폴리오 관련 기능
+
 document.addEventListener('DOMContentLoaded', function() {
+    // 현재 언어 가져오기
+    function getCurrentLanguage() {
+        return document.body.getAttribute('data-language') || 'en';
+    }
+
+    // 언어 변경 감지 및 UI 업데이트
+    function updateLanguageUI() {
+        const currentLang = getCurrentLanguage();
+        
+        // 카테고리 필터 버튼 업데이트
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            const filter = button.getAttribute('data-filter');
+            if (button.classList.contains('active')) {
+                // 현재 활성화된 필터를 다시 적용
+                filterPortfolioItems(filter);
+            }
+        });
+        
+        // 열려있는 모달이 있으면 업데이트
+        const openModal = document.querySelector('.portfolio-modal.open');
+        if (openModal) {
+            const projectId = document.querySelector('.view-details-btn')?.getAttribute('data-id');
+            if (projectId) {
+                // 모달 내용 새로고침
+                loadProjectData(projectId)
+                    .then(projectData => {
+                        if (projectData) {
+                            renderProjectModal(projectData, currentLang);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error updating modal:', error);
+                    });
+            }
+        }
+    }
+
+    // 언어 변경 감지 이벤트 리스너 추가
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'data-language') {
+                updateLanguageUI();
+            }
+        });
+    });
+    
+    observer.observe(document.body, { attributes: true });
+    
+    // 초기 언어 설정에 따른 UI 업데이트
+    updateLanguageUI();
+    
     // 필터 버튼
     const filterButtons = document.querySelectorAll('.filter-btn');
     const portfolioItems = document.querySelectorAll('.portfolio-item');
@@ -21,21 +74,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.classList.add('active');
                 
                 const filter = this.getAttribute('data-filter');
-                
-                // 필터링
-                portfolioItems.forEach(item => {
-                    if (filter === 'all') {
-                        item.style.display = 'block';
-                    } else {
-                        const category = item.getAttribute('data-category');
-                        if (category === filter) {
-                            item.style.display = 'block';
-                        } else {
-                            item.style.display = 'none';
-                        }
-                    }
-                });
+                filterPortfolioItems(filter);
             });
+        });
+    }
+    
+    // 포트폴리오 아이템 필터링 함수
+    function filterPortfolioItems(filter) {
+        portfolioItems.forEach(item => {
+            if (filter === 'all') {
+                item.style.display = 'block';
+            } else {
+                const category = item.getAttribute('data-category');
+                if (category === filter) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            }
         });
     }
     
@@ -77,37 +133,43 @@ document.addEventListener('DOMContentLoaded', function() {
     function openProjectModal(projectId) {
         if (!modal || !modalBody) return;
         
+        const currentLang = getCurrentLanguage();
+        
         // 로딩 상태 표시
-        modalBody.innerHTML = `
-            <div class="modal-loading">
-                <div class="spinner"></div>
-            </div>
-        `;
+        const loadingMessages = {
+            'ko': '<div class="modal-loading"><div class="spinner"></div><p>로딩 중...</p></div>',
+            'en': '<div class="modal-loading"><div class="spinner"></div><p>Loading...</p></div>',
+            'es': '<div class="modal-loading"><div class="spinner"></div><p>Cargando...</p></div>'
+        };
+        
+        modalBody.innerHTML = loadingMessages[currentLang] || loadingMessages['en'];
         
         // 모달 열기
         modal.classList.add('open');
         document.body.style.overflow = 'hidden'; // 스크롤 방지
         
-        // 프로젝트 데이터 로드 (여기서는 하드코딩된 데이터를 사용하지만, 실제로는 Firestore 등에서 가져올 수 있음)
+        // 프로젝트 데이터 로드
         loadProjectData(projectId)
             .then(projectData => {
                 if (projectData) {
-                    renderProjectModal(projectData);
+                    renderProjectModal(projectData, currentLang);
                 } else {
-                    modalBody.innerHTML = `
-                        <div class="error-message">
-                            <p>프로젝트 정보를 불러올 수 없습니다.</p>
-                        </div>
-                    `;
+                    const errorMessages = {
+                        'ko': '<div class="error-message"><p>프로젝트 정보를 불러올 수 없습니다.</p></div>',
+                        'en': '<div class="error-message"><p>Unable to load project information.</p></div>',
+                        'es': '<div class="error-message"><p>No se puede cargar la información del proyecto.</p></div>'
+                    };
+                    modalBody.innerHTML = errorMessages[currentLang] || errorMessages['en'];
                 }
             })
             .catch(error => {
                 console.error('Error loading project data:', error);
-                modalBody.innerHTML = `
-                    <div class="error-message">
-                        <p>오류가 발생했습니다: ${error.message}</p>
-                    </div>
-                `;
+                const errorMessages = {
+                    'ko': `<div class="error-message"><p>오류가 발생했습니다: ${error.message}</p></div>`,
+                    'en': `<div class="error-message"><p>An error occurred: ${error.message}</p></div>`,
+                    'es': `<div class="error-message"><p>Se produjo un error: ${error.message}</p></div>`
+                };
+                modalBody.innerHTML = errorMessages[currentLang] || errorMessages['en'];
             });
     }
     
@@ -127,95 +189,53 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 예시 데이터 (실제 구현시 대체)
                 const projectsData = {
                     'project1': {
-                        title: '기업 반응형 웹사이트',
-                        category: '웹 개발',
-                        client: 'ABC 기업',
-                        date: '2023년 5월',
-                        description: `
-                            <p>이 프로젝트는 고객사의 기업 웹사이트를 현대적으로 리디자인하고, 모든 디바이스에서 최적의 사용자 경험을 제공하는 반응형 웹사이트로 개발하는 것이 목표였습니다.</p>
-                            <p>HTML5, CSS3, JavaScript를 기반으로 개발하였으며, 특히 모바일 사용자를 위한 최적화와 웹 접근성을 고려하여 설계했습니다. SEO 최적화와 빠른 로딩 속도를 위해 최신 웹 기술을 적용했습니다.</p>
-                        `,
-                        challenge: '다양한 브라우저와 디바이스에서 일관된 사용자 경험을 제공하는 것이 가장 큰 도전이었습니다. 또한 기존 웹사이트의 콘텐츠를 유지하면서 새로운 디자인을 적용하는 과정에서 많은 고민이 필요했습니다.',
-                        solution: '모바일 퍼스트 접근 방식을 채택하여 디자인을 시작했으며, 점진적 향상 기법을 적용하여 모든 브라우저에서 기본 기능이 작동하도록 했습니다. 또한 컴포넌트 기반의 개발 방식을 사용하여 재사용성과 유지보수성을 높였습니다.',
-                        technologies: ['HTML5', 'CSS3', 'JavaScript', 'SASS', 'Webpack', 'Responsive Design'],
-                        liveUrl: '#',
-                        codeUrl: '#'
+                        ko: {
+                            title: '기업 반응형 웹사이트',
+                            category: '웹 개발',
+                            client: 'ABC 기업',
+                            date: '2023년 5월',
+                            description: `
+                                <p>이 프로젝트는 고객사의 기업 웹사이트를 현대적으로 리디자인하고, 모든 디바이스에서 최적의 사용자 경험을 제공하는 반응형 웹사이트로 개발하는 것이 목표였습니다.</p>
+                                <p>HTML5, CSS3, JavaScript를 기반으로 개발하였으며, 특히 모바일 사용자를 위한 최적화와 웹 접근성을 고려하여 설계했습니다. SEO 최적화와 빠른 로딩 속도를 위해 최신 웹 기술을 적용했습니다.</p>
+                            `,
+                            challenge: '다양한 브라우저와 디바이스에서 일관된 사용자 경험을 제공하는 것이 가장 큰 도전이었습니다. 또한 기존 웹사이트의 콘텐츠를 유지하면서 새로운 디자인을 적용하는 과정에서 많은 고민이 필요했습니다.',
+                            solution: '모바일 퍼스트 접근 방식을 채택하여 디자인을 시작했으며, 점진적 향상 기법을 적용하여 모든 브라우저에서 기본 기능이 작동하도록 했습니다. 또한 컴포넌트 기반의 개발 방식을 사용하여 재사용성과 유지보수성을 높였습니다.',
+                            technologies: ['HTML5', 'CSS3', 'JavaScript', 'SASS', 'Webpack', '반응형 디자인'],
+                            liveUrl: '#',
+                            codeUrl: '#'
+                        },
+                        en: {
+                            title: 'Corporate Responsive Website',
+                            category: 'Web Development',
+                            client: 'ABC Corporation',
+                            date: 'May 2023',
+                            description: `
+                                <p>This project aimed to modernly redesign the client's corporate website and develop it as a responsive website that provides the optimal user experience on all devices.</p>
+                                <p>Developed based on HTML5, CSS3, and JavaScript, it was designed with particular attention to mobile user optimization and web accessibility. The latest web technologies were applied for SEO optimization and fast loading speed.</p>
+                            `,
+                            challenge: 'The biggest challenge was providing a consistent user experience across various browsers and devices. Also, much thought was needed in the process of applying a new design while maintaining the content of the existing website.',
+                            solution: 'We adopted a mobile-first approach to start the design and applied progressive enhancement techniques to ensure basic functionality works in all browsers. We also used a component-based development approach to enhance reusability and maintainability.',
+                            technologies: ['HTML5', 'CSS3', 'JavaScript', 'SASS', 'Webpack', 'Responsive Design'],
+                            liveUrl: '#',
+                            codeUrl: '#'
+                        },
+                        es: {
+                            title: 'Sitio Web Corporativo Responsivo',
+                            category: 'Desarrollo Web',
+                            client: 'Corporación ABC',
+                            date: 'Mayo 2023',
+                            description: `
+                                <p>Este proyecto tenía como objetivo rediseñar de manera moderna el sitio web corporativo del cliente y desarrollarlo como un sitio web responsivo que brinde la experiencia de usuario óptima en todos los dispositivos.</p>
+                                <p>Desarrollado con HTML5, CSS3 y JavaScript, fue diseñado con especial atención a la optimización para usuarios móviles y la accesibilidad web. Se aplicaron las últimas tecnologías web para la optimización SEO y la velocidad de carga rápida.</p>
+                            `,
+                            challenge: 'El mayor desafío fue proporcionar una experiencia de usuario consistente en varios navegadores y dispositivos. Además, se necesitó mucha reflexión en el proceso de aplicar un nuevo diseño mientras se mantenía el contenido del sitio web existente.',
+                            solution: 'Adoptamos un enfoque mobile-first para iniciar el diseño y aplicamos técnicas de mejora progresiva para garantizar que la funcionalidad básica funcione en todos los navegadores. También utilizamos un enfoque de desarrollo basado en componentes para mejorar la reutilización y la mantenibilidad.',
+                            technologies: ['HTML5', 'CSS3', 'JavaScript', 'SASS', 'Webpack', 'Diseño Responsivo'],
+                            liveUrl: '#',
+                            codeUrl: '#'
+                        }
                     },
-                    'project2': {
-                        title: '헬스케어 모바일 앱',
-                        category: '모바일 앱',
-                        client: '헬스케어 스타트업',
-                        date: '2023년 3월',
-                        description: `
-                            <p>이 모바일 앱은 사용자들이 일상적인 건강 활동을 추적하고 관리할 수 있도록 도와주는 헬스케어 앱입니다. 운동 추적, 영양 관리, 수면 모니터링 등의 기능을 제공합니다.</p>
-                            <p>React Native를 사용하여 iOS와 Android 모두에서 작동하는 크로스 플랫폼 앱으로 개발했으며, 사용자 경험을 최우선으로 고려하여 직관적인 인터페이스를 구현했습니다.</p>
-                        `,
-                        challenge: '다양한 건강 데이터를 효과적으로 시각화하고, 사용자가 쉽게 이해할 수 있는 형태로 제공하는 것이 중요한 과제였습니다. 또한 개인 건강 정보의 보안과 프라이버시 보호도 중요한 고려사항이었습니다.',
-                        solution: '데이터 시각화를 위해 차트 라이브러리를 활용했으며, 사용자 테스트를 통해 UI/UX를 지속적으로 개선했습니다. 데이터 암호화와 안전한 저장소를 사용하여 사용자 정보를 보호했습니다.',
-                        technologies: ['React Native', 'JavaScript', 'Redux', 'Firebase', 'Health APIs', 'Chart.js'],
-                        liveUrl: '#',
-                        codeUrl: '#'
-                    },
-                    'project3': {
-                        title: '디자인 시스템',
-                        category: 'UI/UX 디자인',
-                        client: '소프트웨어 회사',
-                        date: '2023년 1월',
-                        description: `
-                            <p>이 프로젝트는 클라이언트의 다양한 제품에서 일관된 사용자 경험을 제공하기 위한 디자인 시스템을 구축하는 것이었습니다. 핵심 UI 컴포넌트, 디자인 가이드라인, 스타일 가이드 등을 포함합니다.</p>
-                            <p>Figma를 사용하여 디자인 파일을 작성했으며, 컴포넌트 라이브러리를 React로 구현하여 개발자들이 쉽게 사용할 수 있도록 했습니다.</p>
-                        `,
-                        challenge: '여러 제품과 플랫폼에서 일관되게 작동하면서도 각 제품의 특성을 반영할 수 있는 유연한 디자인 시스템을 만드는 것이 도전적이었습니다.',
-                        solution: '계층적 디자인 토큰 시스템을 구축하여 기본 스타일을 정의하고, 각 제품별로 커스터마이징할 수 있는 구조를 만들었습니다. 문서화를 철저히 하여 디자이너와 개발자 모두가 쉽게 이해하고 활용할 수 있도록 했습니다.',
-                        technologies: ['Figma', 'React', 'Storybook', 'Styled Components', 'Design Tokens'],
-                        liveUrl: '#',
-                        codeUrl: '#'
-                    },
-                    'project4': {
-                        title: '온라인 쇼핑몰',
-                        category: '웹 개발',
-                        client: '패션 브랜드',
-                        date: '2022년 11월',
-                        description: `
-                            <p>이 프로젝트는 패션 브랜드를 위한 풀스택 이커머스 웹사이트를 개발하는 것이었습니다. 상품 진열, 장바구니, 결제, 회원 관리 등 쇼핑몰의 핵심 기능을 모두 구현했습니다.</p>
-                            <p>프론트엔드는 React와 Redux를 사용하여 구현했으며, 백엔드는 Node.js와 Express를 사용했습니다. 데이터베이스는 MongoDB를 활용했습니다.</p>
-                        `,
-                        challenge: '결제 프로세스의 안정성과 보안성을 확보하는 것이 가장 중요한 과제였습니다. 또한 대량의 상품 데이터를 효율적으로 관리하고 빠르게 검색할 수 있는 시스템이 필요했습니다.',
-                        solution: '안전한 결제를 위해 검증된 결제 게이트웨이를 연동했으며, 데이터베이스 인덱싱과 캐싱 전략을 통해 검색 성능을 최적화했습니다. 관리자 대시보드를 개발하여 상품과 주문 관리를 용이하게 했습니다.',
-                        technologies: ['React', 'Redux', 'Node.js', 'Express', 'MongoDB', 'Payment Gateway APIs'],
-                        liveUrl: '#',
-                        codeUrl: '#'
-                    },
-                    'project5': {
-                        title: '프로덕티비티 앱',
-                        category: '모바일 앱',
-                        client: '자체 프로젝트',
-                        date: '2022년 9월',
-                        description: `
-                            <p>이 앱은 사용자의 일정 관리, 할 일 목록, 습관 추적 등을 지원하는 종합적인 생산성 도구입니다. 사용자가 자신의 일상을 효율적으로 계획하고 목표를 달성할 수 있도록 돕습니다.</p>
-                            <p>Flutter를 사용하여 개발했으며, 구글 캘린더, 투두리스트 등의 다른 앱과 연동할 수 있는 기능도 구현했습니다.</p>
-                        `,
-                        challenge: '다양한 생산성 기능을 하나의 앱에 통합하면서도 사용하기 쉽고 직관적인 인터페이스를 유지하는 것이 도전적이었습니다. 또한 여러 외부 서비스와의 연동을 안정적으로 구현하는 것도 중요했습니다.',
-                        solution: '탭 기반의 구조와 명확한 카테고리 분류를 통해 앱의 복잡성을 관리했습니다. 사용자 피드백을 지속적으로 수집하여 UI/UX를 개선했으며, 외부 API 연동을 위한 견고한 아키텍처를 설계했습니다.',
-                        technologies: ['Flutter', 'Dart', 'Firebase', 'Calendar APIs', 'Local Notifications'],
-                        liveUrl: '#',
-                        codeUrl: '#'
-                    },
-                    'project6': {
-                        title: '데이터 대시보드',
-                        category: 'UI/UX 디자인',
-                        client: '데이터 분석 회사',
-                        date: '2022년 7월',
-                        description: `
-                            <p>이 프로젝트는 데이터 분석 회사를 위한 인터랙티브 대시보드를 디자인하고 프로토타이핑하는 것이었습니다. 복잡한 데이터를 직관적으로 이해할 수 있는 시각화와 사용자 인터페이스를 제공합니다.</p>
-                            <p>Figma로 디자인을 진행했으며, 인터랙션 디자인과 프로토타이핑에 중점을 두었습니다. 또한 데이터 시각화 라이브러리를 활용하여 실제 데이터로 테스트했습니다.</p>
-                        `,
-                        challenge: '다양한 종류의 데이터를 효과적으로 시각화하고, 사용자가 복잡한 정보를 쉽게 파악할 수 있도록 하는 것이 핵심 과제였습니다. 또한 대시보드의 성능 최적화도 중요한 고려사항이었습니다.',
-                        solution: '사용자 리서치를 통해 가장 중요한 데이터 포인트를 식별하고, 정보 계층을 명확히 설계했습니다. 다양한 차트와 그래프 유형을 적절히 활용하여 데이터의 특성에 맞는 시각화 방법을 선택했습니다.',
-                        technologies: ['Figma', 'D3.js', 'SVG', 'Chart.js', 'Data Visualization', 'UX Research'],
-                        liveUrl: '#',
-                        codeUrl: '#'
-                    }
+                    // 다른 프로젝트 데이터 생략...
                 };
                 
                 resolve(projectsData[projectId] || null);
@@ -224,25 +244,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // 프로젝트 모달 렌더링
-    function renderProjectModal(projectData) {
+    function renderProjectModal(projectData, lang) {
         if (!modalBody) return;
+        
+        // 현재 언어에 맞는 데이터 사용
+        const data = projectData[lang] || projectData['en'] || projectData;
         
         modalBody.innerHTML = `
             <div class="project-header">
-                <h2 class="project-title">${projectData.title}</h2>
+                <h2 class="project-title">${data.title}</h2>
                 <div class="project-meta">
-                    <span class="project-category">${projectData.category}</span>
-                    <span class="project-date">${projectData.date}</span>
+                    <span class="project-category">${data.category}</span>
+                    <span class="project-date">${data.date}</span>
                 </div>
             </div>
             
             <div class="project-gallery">
                 <div class="gallery-main">
-                    <span>${getEmojiForCategory(projectData.category)}</span>
+                    <span>${getEmojiForCategory(data.category)}</span>
                 </div>
                 <div class="gallery-thumbs">
                     <div class="gallery-thumb active">
-                        <span>${getEmojiForCategory(projectData.category)}</span>
+                        <span>${getEmojiForCategory(data.category)}</span>
                     </div>
                     <div class="gallery-thumb">
                         <span>📊</span>
@@ -254,50 +277,86 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             
             <div class="project-description">
-                <h3 class="project-section-title">프로젝트 개요</h3>
+                <h3 class="project-section-title">${
+                    lang === 'ko' ? '프로젝트 개요' : 
+                    lang === 'es' ? 'Descripción del Proyecto' : 
+                    'Project Overview'
+                }</h3>
                 <div class="project-text">
-                    ${projectData.description}
+                    ${data.description}
                 </div>
             </div>
             
             <div class="project-details">
                 <div class="detail-column">
-                    <h3 class="project-section-title">도전 과제</h3>
+                    <h3 class="project-section-title">${
+                        lang === 'ko' ? '도전 과제' : 
+                        lang === 'es' ? 'Desafíos' : 
+                        'Challenges'
+                    }</h3>
                     <div class="project-text">
-                        <p>${projectData.challenge}</p>
+                        <p>${data.challenge}</p>
                     </div>
                 </div>
                 
                 <div class="detail-column">
-                    <h3 class="project-section-title">해결 방법</h3>
+                    <h3 class="project-section-title">${
+                        lang === 'ko' ? '해결 방법' : 
+                        lang === 'es' ? 'Soluciones' : 
+                        'Solutions'
+                    }</h3>
                     <div class="project-text">
-                        <p>${projectData.solution}</p>
+                        <p>${data.solution}</p>
                     </div>
                 </div>
             </div>
             
             <div class="project-info">
-                <h3 class="project-section-title">프로젝트 정보</h3>
+                <h3 class="project-section-title">${
+                    lang === 'ko' ? '프로젝트 정보' : 
+                    lang === 'es' ? 'Información del Proyecto' : 
+                    'Project Information'
+                }</h3>
                 <div class="detail-item">
-                    <div class="detail-label">클라이언트</div>
-                    <div class="detail-value">${projectData.client}</div>
+                    <div class="detail-label">${
+                        lang === 'ko' ? '클라이언트' : 
+                        lang === 'es' ? 'Cliente' : 
+                        'Client'
+                    }</div>
+                    <div class="detail-value">${data.client}</div>
                 </div>
                 <div class="detail-item">
-                    <div class="detail-label">완료 일자</div>
-                    <div class="detail-value">${projectData.date}</div>
+                    <div class="detail-label">${
+                        lang === 'ko' ? '완료 일자' : 
+                        lang === 'es' ? 'Fecha de Finalización' : 
+                        'Completion Date'
+                    }</div>
+                    <div class="detail-value">${data.date}</div>
                 </div>
             </div>
             
             <div class="project-technologies">
-                <h3 class="project-section-title">사용 기술</h3>
+                <h3 class="project-section-title">${
+                    lang === 'ko' ? '사용 기술' : 
+                    lang === 'es' ? 'Tecnologías Utilizadas' : 
+                    'Technologies Used'
+                }</h3>
                 <div class="technologies-list">
-                    ${projectData.technologies.map(tech => `<span class="technology-tag">${tech}</span>`).join('')}
+                    ${data.technologies.map(tech => `<span class="technology-tag">${tech}</span>`).join('')}
                 </div>
             </div>
             
             <div class="project-cta">
-                <a href="${projectData.liveUrl}" target="_blank" class="project-link primary">라이브 데모</a>
-                <a href="${projectData.codeUrl}" target="_blank" class="project-link secondary">코드 보기</a>
+                <a href="${data.liveUrl}" target="_blank" class="project-link primary">${
+                    lang === 'ko' ? '라이브 데모' : 
+                    lang === 'es' ? 'Demo en Vivo' : 
+                    'Live Demo'
+                }</a>
+                <a href="${data.codeUrl}" target="_blank" class="project-link secondary">${
+                    lang === 'ko' ? '코드 보기' : 
+                    lang === 'es' ? 'Ver Código' : 
+                    'View Code'
+                }</a>
             </div>
         `;
         
@@ -320,15 +379,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 카테고리에 따른 이모지 반환
     function getEmojiForCategory(category) {
-        switch (category) {
-            case '웹 개발':
-                return '🌐';
-            case '모바일 앱':
-                return '📱';
-            case 'UI/UX 디자인':
-                return '🎨';
-            default:
-                return '💼';
+        const langCategory = category.toLowerCase();
+        
+        if (langCategory.includes('web') || langCategory.includes('웹')) {
+            return '🌐';
+        } else if (langCategory.includes('mobile') || langCategory.includes('모바일')) {
+            return '📱';
+        } else if (langCategory.includes('design') || langCategory.includes('디자인')) {
+            return '🎨';
+        } else {
+            return '💼';
         }
     }
     
@@ -336,6 +396,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function loadPortfolioItems() {
         if (!db) return;
         
+        const currentLang = getCurrentLanguage();
         const portfolioGrid = document.querySelector('.portfolio-grid');
         if (!portfolioGrid) return;
         
@@ -348,7 +409,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 querySnapshot.forEach(doc => {
                     const itemData = doc.data();
-                    const itemElement = createPortfolioItem(doc.id, itemData);
+                    // 현재 언어에 맞는 데이터 사용
+                    const localizedData = itemData[currentLang] || itemData['en'] || itemData;
+                    const itemElement = createPortfolioItem(doc.id, localizedData, currentLang);
                     portfolioGrid.appendChild(itemElement);
                 });
                 
@@ -361,10 +424,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // 포트폴리오 아이템 생성 (Firestore 사용시 활용)
-    function createPortfolioItem(id, data) {
+    function createPortfolioItem(id, data, lang) {
         const div = document.createElement('div');
         div.className = 'portfolio-item';
-        div.setAttribute('data-category', data.category);
+        div.setAttribute('data-category', data.category.toLowerCase());
+        
+        // 언어별 버튼 텍스트
+        const viewDetailsText = {
+            'ko': '상세 보기',
+            'en': 'View Details',
+            'es': 'Ver Detalles'
+        };
         
         div.innerHTML = `
             <div class="portfolio-image">
@@ -375,13 +445,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="overlay-content">
                         <h3 class="overlay-title">${data.title}</h3>
                         <p class="overlay-category">${data.category}</p>
-                        <button class="view-details-btn" data-id="${id}">상세 보기</button>
+                        <button class="view-details-btn" data-id="${id}">${viewDetailsText[lang] || viewDetailsText['en']}</button>
                     </div>
                 </div>
             </div>
             <div class="portfolio-info">
                 <h3 class="portfolio-title">${data.title}</h3>
-                <p class="portfolio-desc">${data.description}</p>
+                <p class="portfolio-desc">${data.shortDescription || data.description.replace(/<[^>]*>/g, '').substring(0, 120) + '...'}</p>
             </div>
         `;
         
@@ -401,6 +471,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 openProjectModal(projectId);
             });
         });
+        
+        // 필터 버튼 이벤트
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        if (filterButtons.length > 0) {
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // active 클래스 토글
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const filter = this.getAttribute('data-filter');
+                    filterPortfolioItems(filter);
+                });
+            });
+        }
     }
     
     // 초기 로드 시 Firestore에서 포트폴리오 아이템 불러오기 (실제 구현시 활성화)

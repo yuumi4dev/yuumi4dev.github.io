@@ -62,8 +62,8 @@
                 </button>
                 <div id="profile-dropdown" class="profile-dropdown">
                     <ul>
-                        <li><a href="settings.html" data-lang="ko">설정</a><a href="settings.html" data-lang="en">Settings</a><a href="settings.html" data-lang="es">Configuración</a></li>
-                        <li><button id="logout-btn" data-lang="ko">로그아웃</button><button id="logout-btn" data-lang="en">Logout</button><button id="logout-btn" data-lang="es">Cerrar sesión</button></li>
+                        <li><a href="settings.html" class="settings-link" data-lang="ko">설정</a><a href="settings.html" class="settings-link" data-lang="en">Settings</a><a href="settings.html" class="settings-link" data-lang="es">Configuración</a></li>
+                        <li><button class="logout-btn" data-lang="ko">로그아웃</button><button class="logout-btn" data-lang="en">Logout</button><button class="logout-btn" data-lang="es">Cerrar sesión</button></li>
                     </ul>
                 </div>
             </div>
@@ -72,9 +72,9 @@
             <div id="user-logged-out">
                 <a href="auth.html" class="login-button">
                     <i class="fas fa-user-circle"></i>
-                    <span data-lang="ko">로그인</span>
-                    <span data-lang="en">Sign in</span>
-                    <span data-lang="es">Iniciar sesión</span>
+                    <span class="login-text" data-lang="ko">로그인</span>
+                    <span class="login-text" data-lang="en">Sign in</span>
+                    <span class="login-text" data-lang="es">Iniciar sesión</span>
                 </a>
             </div>
         </div>
@@ -121,19 +121,12 @@
             <!-- 언어 전환 버튼 -->
             <div class="language-switcher">
                 <button id="change-language" class="language-switch-btn">
-                    <span id="current-language-icon">🇰🇷</span>
-                    <span id="current-language-text" data-lang="ko">한국어</span>
-                    <span id="current-language-text" data-lang="en">English</span>
-                    <span id="current-language-text" data-lang="es">Español</span>
-                    <i class="fas fa-chevron-down"></i>
+                    <span id="current-language-icon">🇺🇸</span>
+                    <span class="current-language-text" data-lang="ko">언어 변경</span>
+                    <span class="current-language-text" data-lang="en">Change Language</span>
+                    <span class="current-language-text" data-lang="es">Cambiar Idioma</span>
+                    <i class="fas fa-globe"></i>
                 </button>
-                <div id="language-dropdown" class="language-dropdown">
-                    <ul>
-                        <li data-lang="ko"><span class="lang-flag">🇰🇷</span> 한국어</li>
-                        <li data-lang="en"><span class="lang-flag">🇺🇸</span> English</li>
-                        <li data-lang="es"><span class="lang-flag">🇪🇸</span> Español</li>
-                    </ul>
-                </div>
             </div>
         </nav>
         
@@ -174,9 +167,9 @@
                             <input type="password" id="login-password" placeholder="••••••••" required>
                         </div>
                         <div class="form-action">
-                            <button id="login-button" class="auth-button" data-lang="ko">로그인</button>
-                            <button id="login-button" class="auth-button" data-lang="en">Login</button>
-                            <button id="login-button" class="auth-button" data-lang="es">Iniciar sesión</button>
+                            <button id="login-button-ko" class="auth-button login-button-js" data-lang="ko">로그인</button>
+                            <button id="login-button-en" class="auth-button login-button-js" data-lang="en">Login</button>
+                            <button id="login-button-es" class="auth-button login-button-js" data-lang="es">Iniciar sesión</button>
                         </div>
                         <div class="auth-divider">
                             <span data-lang="ko">또는</span>
@@ -212,9 +205,9 @@
                             <label for="signup-email" data-lang="en">Email</label>
                             <label for="signup-email" data-lang="es">Correo electrónico</label>
                             <input type="email" id="signup-email" placeholder="email@example.com" required>
-                            <small class="form-helper" id="email-helper" data-lang="ko">가입에 사용할 유효한 이메일 주소를 입력하세요</small>
-                            <small class="form-helper" id="email-helper" data-lang="en">Enter a valid email address for registration</small>
-                            <small class="form-helper" id="email-helper" data-lang="es">Ingrese una dirección de correo electrónico válida para el registro</small>
+                            <small class="form-helper email-helper" data-lang="ko">가입에 사용할 유효한 이메일 주소를 입력하세요</small>
+                            <small class="form-helper email-helper" data-lang="en">Enter a valid email address for registration</small>
+                            <small class="form-helper email-helper" data-lang="es">Ingrese una dirección de correo electrónico válida para el registro</small>
                         </div>
                         <div class="form-group">
                             <label for="signup-username" data-lang="ko">사용자 ID</label>
@@ -224,32 +217,32 @@
                                 <span class="username-prefix">@</span>
                                 <input type="text" id="signup-username" placeholder="username" required>
                             </div>
-                            <small class="form-helper" id="username-helper" data-lang="ko">영문, 숫자, 밑줄(_)만 사용 가능합니다</small>
-                            <small class="form-helper" id="username-helper" data-lang="en">Only letters, numbers, and underscores (_) are allowed</small>
-                            <small class="form-helper" id="username-helper" data-lang="es">Solo se permiten letras, números y guiones bajos (_)</small>
+                            <small class="form-helper username-helper" data-lang="ko">영문, 숫자, 밑줄(_)만 사용 가능합니다</small>
+                            <small class="form-helper username-helper" data-lang="en">Only letters, numbers, and underscores (_) are allowed</small>
+                            <small class="form-helper username-helper" data-lang="es">Solo se permiten letras, números y guiones bajos (_)</small>
                         </div>
                         <div class="form-group">
                             <label for="signup-password" data-lang="ko">비밀번호</label>
                             <label for="signup-password" data-lang="en">Password</label>
                             <label for="signup-password" data-lang="es">Contraseña</label>
                             <input type="password" id="signup-password" placeholder="••••••••" required>
-                            <small class="form-helper" id="password-helper" data-lang="ko">비밀번호는 최소 6자 이상이어야 합니다</small>
-                            <small class="form-helper" id="password-helper" data-lang="en">Password must be at least 6 characters</small>
-                            <small class="form-helper" id="password-helper" data-lang="es">La contraseña debe tener al menos 6 caracteres</small>
+                            <small class="form-helper password-helper" data-lang="ko">비밀번호는 최소 6자 이상이어야 합니다</small>
+                            <small class="form-helper password-helper" data-lang="en">Password must be at least 6 characters</small>
+                            <small class="form-helper password-helper" data-lang="es">La contraseña debe tener al menos 6 caracteres</small>
                         </div>
                         <div class="form-group">
                             <label for="signup-confirm-password" data-lang="ko">비밀번호 확인</label>
                             <label for="signup-confirm-password" data-lang="en">Confirm Password</label>
                             <label for="signup-confirm-password" data-lang="es">Confirmar Contraseña</label>
                             <input type="password" id="signup-confirm-password" placeholder="••••••••" required>
-                            <small class="form-helper" id="confirm-password-helper" data-lang="ko">비밀번호를 한번 더 입력하세요</small>
-                            <small class="form-helper" id="confirm-password-helper" data-lang="en">Enter your password again</small>
-                            <small class="form-helper" id="confirm-password-helper" data-lang="es">Ingrese su contraseña nuevamente</small>
+                            <small class="form-helper confirm-password-helper" data-lang="ko">비밀번호를 한번 더 입력하세요</small>
+                            <small class="form-helper confirm-password-helper" data-lang="en">Enter your password again</small>
+                            <small class="form-helper confirm-password-helper" data-lang="es">Ingrese su contraseña nuevamente</small>
                         </div>
                         <div class="form-action">
-                            <button id="signup-button" class="auth-button" data-lang="ko">회원가입</button>
-                            <button id="signup-button" class="auth-button" data-lang="en">Sign up</button>
-                            <button id="signup-button" class="auth-button" data-lang="es">Registrarse</button>
+                            <button id="signup-button-ko" class="auth-button signup-button-js" data-lang="ko">회원가입</button>
+                            <button id="signup-button-en" class="auth-button signup-button-js" data-lang="en">Sign up</button>
+                            <button id="signup-button-es" class="auth-button signup-button-js" data-lang="es">Registrarse</button>
                         </div>
                         <div class="auth-divider">
                             <span data-lang="ko">또는</span>
@@ -288,12 +281,12 @@
                         <input type="email" id="reset-email" placeholder="email@example.com" required>
                     </div>
                     <div class="form-action">
-                        <button id="reset-button" class="auth-button" data-lang="ko">비밀번호 재설정 링크 보내기</button>
-                        <button id="reset-button" class="auth-button" data-lang="en">Send Reset Link</button>
-                        <button id="reset-button" class="auth-button" data-lang="es">Enviar Enlace de Restablecimiento</button>
-                        <button id="back-to-login" class="auth-button secondary" data-lang="ko">로그인으로 돌아가기</button>
-                        <button id="back-to-login" class="auth-button secondary" data-lang="en">Back to Login</button>
-                        <button id="back-to-login" class="auth-button secondary" data-lang="es">Volver al Inicio de Sesión</button>
+                        <button id="reset-button-ko" class="auth-button reset-button-js" data-lang="ko">비밀번호 재설정 링크 보내기</button>
+                        <button id="reset-button-en" class="auth-button reset-button-js" data-lang="en">Send Reset Link</button>
+                        <button id="reset-button-es" class="auth-button reset-button-js" data-lang="es">Enviar Enlace de Restablecimiento</button>
+                        <button class="auth-button secondary back-to-login-btn" data-lang="ko">로그인으로 돌아가기</button>
+                        <button class="auth-button secondary back-to-login-btn" data-lang="en">Back to Login</button>
+                        <button class="auth-button secondary back-to-login-btn" data-lang="es">Volver al Inicio de Sesión</button>
                     </div>
                 </div>
                 

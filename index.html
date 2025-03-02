@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-language="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio | Home</title>
+    <title data-lang="ko">포트폴리오 | 홈</title>
+    <title data-lang="en">Portfolio | Home</title>
+    <title data-lang="es">Portafolio | Inicio</title>
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/language-selector.css">
     <!-- Firebase SDK -->
@@ -14,7 +16,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="assets/js/firebase-init.js"></script>
 </head>
-<body>
+<body data-language="en">
+    
     <!-- 상단 언어 선택 버튼 -->
     <div class="top-language-selector">
         <button class="top-language-btn" data-lang="ko" onclick="setLanguage('ko')">
@@ -149,18 +152,11 @@
             <div class="language-switcher">
                 <button id="change-language" class="language-switch-btn">
                     <span id="current-language-icon">🇺🇸</span>
-                    <span id="current-language-text" data-lang="ko">한국어</span>
-                    <span id="current-language-text" data-lang="en">English</span>
-                    <span id="current-language-text" data-lang="es">Español</span>
-                    <i class="fas fa-chevron-down"></i>
+                    <span id="current-language-text" data-lang="ko">언어 변경</span>
+                    <span id="current-language-text" data-lang="en">Change Language</span>
+                    <span id="current-language-text" data-lang="es">Cambiar Idioma</span>
+                    <i class="fas fa-globe"></i>
                 </button>
-                <div id="language-dropdown" class="language-dropdown">
-                    <ul>
-                        <li data-lang="ko"><span class="lang-flag">🇰🇷</span> 한국어</li>
-                        <li data-lang="en"><span class="lang-flag">🇺🇸</span> English</li>
-                        <li data-lang="es"><span class="lang-flag">🇪🇸</span> Español</li>
-                    </ul>
-                </div>
             </div>
         </nav>
         
@@ -182,15 +178,12 @@
                     <h2 class="hero-title" data-lang="es">Bienvenido a mi Portafolio & Blog</h2>
                     <p class="hero-description" data-lang="ko">
                         여기서 저는 제 작업물, 프로젝트, 생각을 공유합니다.
-                        깔끔한 Notion 스타일 인터페이스를 통해 자유롭게 둘러보세요.
                     </p>
                     <p class="hero-description" data-lang="en">
                         Here I share my work, projects, and thoughts.
-                        Feel free to explore using this clean, Notion-style interface.
                     </p>
                     <p class="hero-description" data-lang="es">
                         Aquí comparto mi trabajo, proyectos y pensamientos.
-                        Siéntase libre de explorar utilizando esta interfaz limpia de estilo Notion.
                     </p>
                     <div class="cta-buttons">
                         <a href="portfolio.html" class="cta-btn primary" data-lang="ko">포트폴리오 보기</a>

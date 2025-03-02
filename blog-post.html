@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" data-language="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang="ko">포트폴리오 | 블로그 포스트</title>
+    <title data-lang="en">Portfolio | Blog Post</title>
+    <title data-lang="es">Portafolio | Publicación del Blog</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/blog.css">
+    <link rel="stylesheet" href="assets/css/blog-post.css">
+    <link rel="stylesheet" href="assets/css/language-selector.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="assets/js/firebase-init.js"></script>
+</head>
+<body data-language="en">
+    <!-- 상단 언어 선택 버튼 -->
+    <div class="top-language-selector">
+        <button class="top-language-btn" data-lang="ko" onclick="setLanguage('ko')">
+            <span class="lang-flag">🇰🇷</span>
+            <span>한국어</span>
+        </button>
+        <button class="top-language-btn" data-lang="en" onclick="setLanguage('en')">
+            <span class="lang-flag">🇺🇸</span>
+            <span>English</span>
+        </button>
+        <button class="top-language-btn" data-lang="es" onclick="setLanguage('es')">
+            <span class="lang-flag">🇪🇸</span>
+            <span>Español</span>
+        </button>
+    </div>
+
+    <!-- 언어 선택 모달 -->
+    <div id="language-modal" class="language-modal">
+        <div class="language-modal-content">
+            <h2 class="language-title" data-lang="ko">언어 선택</h2>
+            <h2 class="language-title" data-lang="en">Select a language</h2>
+            <h2 class="language-title" data-lang="es">Seleccione un idioma</h2>
+            
+            <div class="language-options">
+                <button class="language-option" data-lang="ko">
+                    <span class="language-flag">🇰🇷</span>
+                    <span class="language-name">한국어</span>
+                </button>
+                <button class="language-option" data-lang="en">
+                    <span class="language-flag">🇺🇸</span>
+                    <span class="language-name">English</span>
+                </button>
+                <button class="language-option" data-lang="es">
+                    <span class="language-flag">🇪🇸</span>
+                    <span class="language-name">Español</span>
+                </button>
+            </div>
+            
+            <button class="language-close-btn" onclick="hideLanguageModal()">
+                <span data-lang="ko">확인</span>
+                <span data-lang="en">Confirm</span>
+                <span data-lang="es">Confirmar</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- 상단 헤더 -->
+    <header class="top-header">
+        <div class="menu-toggle">
+            <button id="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <div class="site-title">
+            <h1 data-lang="ko">블로그</h1>
+            <h1 data-lang="en">Blog</h1>
+            <h1 data-lang="es">Blog</h1>
+        </div>
+        
+        <div class="user-profile">
+            <!-- 로그인 상태 -->
+            <div id="user-logged-in" style="display: none;">
+                <button id="profile-button" class="profile-button">
+                    <div class="avatar">
+                        <span id="profile-initial">P</span>
+                    </div>
+                    <div class="user-info">
+                        <span id="user-name" class="user-name">Username</span>
+                        <span id="user-id" class="user-id">@userid</span>
+                    </div>
+                </button>
+                <div id="profile-dropdown" class="profile-dropdown">
+                    <ul>
+                        <li><a href="settings.html" data-lang="ko">설정</a><a href="settings.html" data-lang="en">Settings</a><a href="settings.html" data-lang="es">Configuración</a></li>
+                        <li><button id="logout-btn" data-lang="ko">로그아웃</button><button id="logout-btn" data-lang="en">Logout</button><button id="logout-btn" data-lang="es">Cerrar sesión</button></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 비로그인 상태 -->
+            <div id="user-logged-out">
+                <a href="auth.html" class="login-button">
+                    <i class="fas fa-user-circle"></i>
+                    <span data-lang="ko">로그인</span>
+                    <span data-lang="en">Sign in</span>
+                    <span data-lang="es">Iniciar sesión</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 사이드바 네비게이션 -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="sidebar-menu">
+                <li class="menu-item">
+                    <a href="index.html">
+                        <span class="icon"><i class="fas fa-home"></i></span>
+                        <span class="menu-text" data-lang="ko">홈</span>
+                        <span class="menu-text" data-lang="en">Home</span>
+                        <span class="menu-text" data-lang="es">Inicio</span>
